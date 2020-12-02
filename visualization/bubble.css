@@ -39,6 +39,10 @@ text-anchor: middle;
 fill: white;
 }
 
+/* .forceLogo {
+    text-anchor: middle;
+    } */
+
 /* .xAxis text, .yAxis text{
 fill: silver;
 font-size: 10px;

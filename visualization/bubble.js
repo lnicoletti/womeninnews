@@ -1,4 +1,4 @@
-let width5 = 1500;
+    let width5 = 1500;
     let height5 = 540;
     
     let barchart = d3.select("div#chart").select("#bubblechart")
@@ -20,6 +20,32 @@ let width5 = 1500;
 
     // let selectedCountry = undefined;
 
+    // define links to logos
+    logoData = [{site:"nytimes.com", link:"https://www.vectorlogo.zone/logos/nytimes/nytimes-icon.svg"},
+                {site:"dailymail.co.uk", link:""},
+                {site:"cnn.com", link:"https://www.vectorlogo.zone/logos/cnn/cnn-icon.svg"},//https://www.vectorlogo.zone/logos/cnn/cnn-wordmark.svg
+                {site:"bbc.co.uk", link:"https://www.vectorlogo.zone/logos/bbc/bbc-icon.svg"},
+                {site:"telegraph.co.uk", link:""},
+                {site:"washingtonpost.com", link:"https://www.vectorlogo.zone/logos/washingtonpost/washingtonpost-icon.svg"},
+                {site:"forbes.com", link:"https://www.vectorlogo.zone/logos/forbes/forbes-icon.svg"},
+                {site:"abcnews.go.com", link:"https://www.vectorlogo.zone/logos/abcgo/abcgo-icon.svg"},
+                {site:"foxnews.com", link:"https://www.vectorlogo.zone/logos/fox/fox-icon.svg"},
+                {site:"ksl.com", link:""},
+                {site:"bloomberg.com", link: "https://www.vectorlogo.zone/logos/bloomberg/bloomberg-icon.svg"},
+                {site:"breitbart.com", link:""},
+                {site:"popsugar.com", link:""},
+                {site:"nbcnews.com", link:"https://www.vectorlogo.zone/logos/nbc/nbc-icon.svg"},
+                {site:"buzzfeed.com", link:"https://www.vectorlogo.zone/logos/buzzfeed/buzzfeed-icon.svg"},
+                {site:"cnet.com", link:"https://www.vectorlogo.zone/logos/cnet/cnet-icon.svg"},
+                {site:"politico.com", link:"https://www.vectorlogo.zone/logos/politico/politico-icon.svg"},
+                {site:"usatoday.com", link:"https://www.vectorlogo.zone/logos/usatoday/usatoday-icon.svg"},
+                {site:"nydailynews.com", link:""},
+                {site:"businessinsider.com", link:""},
+                {site:"espn.go.com", link:""},
+                {site:"huffingtonpost.com", link:"https://www.vectorlogo.zone/logos/huffingtonpost/huffingtonpost-icon.svg"}
+            ]
+
+    console.log(logoData.filter(d=>d.site=='bloomberg.com')[0]["link"])
     Promise.all([
         d3.csv("https://gist.githubusercontent.com/lnicoletti/c312a25a680167989141e8315b26c92a/raw/707ead31e5bdbb886ff8f7dc5635d5d0568a0a81/citiesYearDeathsHT_party_n.csv"),
         d3.csv("../data/processed/headlines_site.csv")
@@ -33,6 +59,18 @@ let width5 = 1500;
             console.log(data2) 
             type = "most"
             kind = "tot"
+            // add logo links
+            // dataLogos = data2.map((item, i) => Object.assign({}, item, logoData[i]));
+            // let dataLogos = [];
+
+            // for(let i=0; i<data2.length; i++) {
+            //     dataLogos.push({
+            //     ...data2[i], 
+            //     ...(logoData.find((itmInner) => itmInner.site === data2[i].site))}
+            //     );
+            // }
+
+            console.log(data2)
             // drawBubbleChart(data, type, 2020, kind)
             drawBubbleChart2(data2)
         })
@@ -53,7 +91,8 @@ let width5 = 1500;
             // filterData = data.filter(d=>+d.population > popFilter)
             filterData = data2.filter(d=>(+d.monthly_visits !== 0)&(+d.bias !== 0))
             filterData = filterData.filter(d=>(d.site !== "msn.com")&(d.site !== "sports.yahoo.com")&
-                                              (d.site !== "finance.yahoo.com")&(d.site !== "news.google.com"))
+                                              (d.site !== "finance.yahoo.com")&(d.site !== "news.google.com")&
+                                              (d.site !== "news.yahoo.com")&(d.site !== "bbc.com"))
 
             console.log(filterData)
             // var xScale = d3.scaleSymlog()
@@ -92,6 +131,10 @@ let width5 = 1500;
             var fontScale = d3.scaleLinear()
                                 .domain(extentvisits)
                                 .range([1, 20])
+
+            var logoScale = d3.scaleLinear()
+                                .domain(extentvisits)
+                                .range([20, 100])
     
             console.log(fontScale(10000000)+"px")
             // xScale.domain(d3.extent(filterData, function(d) { return +d.death_count; }));
@@ -100,6 +143,8 @@ let width5 = 1500;
             //     console.log('init alpha decay');
             //     simulation.alphaDecay(0.1);
             // }, 8000);
+
+            console.log(filterData.filter(d=>+d.monthly_visits>150000000))
     
             let simulation = d3.forceSimulation()
                         .nodes(filterData)
@@ -130,14 +175,18 @@ let width5 = 1500;
             annot = barchart.select(".body")
                             .selectAll('text')
                             .data(filterData);
+
+            logos = barchart.select(".body")
+                            .selectAll('image')
+                            .data(filterData);
                 
             newCircles = circles.enter()
                 .append('circle')
                 .attr("class", "forceCircles")
                 // .attr("fill", "#03071e")
-                .attr("fill", d=>+d.polarity > 0.5? 'darkred':'grey')
+                // .attr("fill", d=>+d.polarity > 0.5? 'darkred':'grey')
                 // .attr("fill", d=>colorScale(d.country_of_pub))
-                // .attr("fill", "black")
+                .attr("fill", "grey")
                 .attr("opacity", "0.8")
                 // .style('stroke', "white")
                 .style('stroke', "#323232")
@@ -180,13 +229,26 @@ let width5 = 1500;
                 //     drawLineChart(dataType, d.county, ttip)
                 // })
     
-            newText = annot.enter()
-                    .append("text")
-                    .attr("class", "forceText")
-                    .text(d=>+d.monthly_visits>100000000 ? d.site:'')
+            // newText = annot.enter()
+            //         .append("text")
+            //         .attr("class", "forceText")
+            //         .text(d=>+d.monthly_visits>150000000 ? d.site:'')
+            //         // .text(d=>d.site)
+            //         .style("font-size", d=>fontScale(+d.monthly_visits)+"px")
+            
+            newLogos = logos.enter()
+                    .append("svg:image")
+                    .attr("class", "forceLogo")
+                    // .attr('x', -200)
+                    // .attr('y', 0)
+                    .attr("transform", "translate(-25,-25)")
+                    .attr('width', d=>logoScale(+d.monthly_visits))
+                    // .attr('width', 50)
+                    // .attr('height', 4)
+                    // .attr("xlink:href", d=>d.site === "bbc.co.uk" ? "https://www.vectorlogo.zone/logos/bbc/bbc-icon.svg":'')
+                    .attr("xlink:href", d=>+d.monthly_visits>150000000 ? logoData.filter(x=>x.site==d.site)[0]["link"]:'')
                     // .text(d=>d.site)
-                    .style("font-size", d=>fontScale(+d.monthly_visits)+"px")
-    
+                    // .style("font-size", d=>fontScale(+d.monthly_visits)+"px")
             // transition to new updated year
             circles.merge(newCircles)
                 .attr('cx', function(d) {
@@ -196,7 +258,15 @@ let width5 = 1500;
                     return d.y;
                 })
     
-            annot.merge(newText)
+            // annot.merge(newText)
+            //     .attr('x', function(d) {
+            //         return d.x;
+            //     })
+            //     .attr('y', function(d) {
+            //         return d.y;
+            //     })
+
+            logos.merge(newLogos)
                 .attr('x', function(d) {
                     return d.x;
                 })
