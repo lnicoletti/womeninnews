@@ -40,7 +40,14 @@ fill: white;
 }
 
 /* .forceLogo {
-    text-anchor: middle;
+    display: ;
+    margin-left: auto;
+    margin-right: auto;
+    width: 5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     } */
 
 /* .xAxis text, .yAxis text{

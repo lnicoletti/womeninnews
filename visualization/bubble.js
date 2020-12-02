@@ -135,8 +135,14 @@
             var logoScale = d3.scaleLinear()
                                 .domain(extentvisits)
                                 .range([20, 100])
+
+            var logoPosScale = d3.scaleLinear()
+                                .domain(extentvisits)
+                                .range([-50, 0])
     
-            console.log(fontScale(10000000)+"px")
+            // filterdata['transform'] = filterData.map(d=>logoPosScale(+d.monthly_visits))
+            // filterData['test'] = 1
+            console.log(filterData)
             // xScale.domain(d3.extent(filterData, function(d) { return +d.death_count; }));
             // var init_decay; 
             // init_decay = setTimeout(function(){
@@ -238,17 +244,26 @@
             
             newLogos = logos.enter()
                     .append("svg:image")
-                    .attr("class", "forceLogo")
-                    // .attr('x', -200)
-                    // .attr('y', 0)
-                    .attr("transform", "translate(-25,-25)")
+                    // .attr("class", "forceLogo")
+                    // .attr('x', d => d.cx)
+                    // .attr('y', d => d.cy)
+                    // .attr("transform", "translate("+(d=>logoPosScale(+d.monthly_visits))+","+(d=>logoPosScale(+d.monthly_visits))+")")
+                    // .attr("transform", "translate("+(d=>logoPosScale(+d.monthly_visits))+","+(d=>logoPosScale(+d.monthly_visits))+")")
+                    // .attr("transform", d=>+d.monthly_visits<600000000?"translate("+-25+","+-25+")":"translate("+-50+","+-50+")")
+                    // .attr("transform", "translate(-25,-25)")
+                    .attr("transform", d=>d.site=="bbc.co.uk" ? "translate(-50,-50)"
+                                        : d.site=="nytimes.com" ? "translate(-25,-25)"
+                                        : d.site=="washingtonpost.com" ? "translate(-20,-20)"
+                                        : "translate(-15,-15)")
                     .attr('width', d=>logoScale(+d.monthly_visits))
                     // .attr('width', 50)
                     // .attr('height', 4)
                     // .attr("xlink:href", d=>d.site === "bbc.co.uk" ? "https://www.vectorlogo.zone/logos/bbc/bbc-icon.svg":'')
+                    // .style("fill", d=>+d.monthly_visits>150000000 ? logoData.filter(x=>x.site==d.site)[0]["link"]:'')
                     .attr("xlink:href", d=>+d.monthly_visits>150000000 ? logoData.filter(x=>x.site==d.site)[0]["link"]:'')
-                    // .text(d=>d.site)
-                    // .style("font-size", d=>fontScale(+d.monthly_visits)+"px")
+                    // .attr('x', -200)
+                    // .attr('y', 0)
+
             // transition to new updated year
             circles.merge(newCircles)
                 .attr('cx', function(d) {
