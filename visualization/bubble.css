@@ -176,3 +176,14 @@ text-align: center;
 top: 0;
 left: 0;
 }
+
+#tooltipCluster {
+    border: solid 1px #ccc;
+    padding: 10px;
+    /* change the tooltip so that its position can be moved around */
+    position: fixed;
+    /* hide it for when theres no hovering */
+    display: block;
+    background-color: white;
+    color:#03071e;            
+}

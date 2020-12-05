@@ -130,6 +130,7 @@
             // console.log(ttip)
             // data = data.filter(d=>d.county === county)
             data = data.filter(d=>d.site === text1)
+            // data = d3.filter(data, d=>d.site === text1)
             console.log(data)
 
             // find a random headline
@@ -296,12 +297,19 @@
                 .attr("opacity", "0.8")
                 .style('stroke', "#323232")
                 .attr('r', d=>radius(+d.monthly_visits))
-                
-                .on("mouseenter", (d) => {
-                    showTooltip5(ttip, d.site, d.country_of_pub, d.monthly_visits, [d3.event.clientX, d3.event.clientY], headlines, d.polarity, d)
+                // v5
+                // .on("mouseenter", (d) => {
+                //     showTooltip5(ttip, d.site, d.country_of_pub, d.monthly_visits, [d3.event.clientX, d3.event.clientY], headlines, d.polarity, d)
+                // })
+                // .on("mousemove", (d) => {
+                //     showTooltip5(ttip, d.site, d.country_of_pub, d.monthly_visits,  [d3.event.clientX, d3.event.clientY], headlines, d.polarity, d)
+                // })
+                // v6
+                .on("mouseenter", (event, d) => {
+                    showTooltip5(ttip, d.site, d.country_of_pub, d.monthly_visits, [event.clientX, event.clientY], headlines, d.polarity, d)
                 })
-                .on("mousemove", (d) => {
-                    showTooltip5(ttip, d.site, d.country_of_pub, d.monthly_visits,  [d3.event.clientX, d3.event.clientY], headlines, d.polarity, d)
+                .on("mousemove", (event, d) => {
+                    showTooltip5(ttip, d.site, d.country_of_pub, d.monthly_visits,  [event.clientX, event.clientY], headlines, d.polarity, d)
                 })
                 .on("mouseleave", (d) => {
                     d3.select("#timeline").style("display", "none")
@@ -436,19 +444,25 @@
                 .style("font-weight", "bold")  
                 .style("font-family", "sans-serif")
 
-            }
+        }
+
+        
+        function tooltipCluster(word, freq, theme, country, coords) {
+            console.log(word)
+            d3.select("#tooltipMap")
+                .style("display", "block")
+                .style("top", (coords[1]+10) + "px")
+                .style("left", (coords[0]+10) + "px")
+                // .style("top", (d3.mouse(this)[0]+90) + "px")
+                // .style("left", (d3.mouse(this)[1]) + "px")
+                .style('font', '12px sans-serif')
+                // .style('fill-opacity', 0.5)
+                .attr('stroke', '#ccc')
+                // .text(text)
+                .html("<b>" + word + " (" + theme + ")" + "<br/> </b> used <b>" + freq + "</b> times in " + "<b>" + country + "</b> headlines")
+        }
 
         function drawWordClusters(data) {
-
-            var clusterColors = d3.scaleOrdinal()
-                .range(d3.schemeTableau10)
-                .domain(data.map(d =>d.cluster))
-
-            extentWordFreq = d3.extent(data, d=>+d.perc_freq)
-            // console.log(extentWordFreq)
-            var bubbleRadius = d3.scaleSqrt()
-                .domain(extentWordFreq)
-                .range([3, 60])
 
             //unique cluster/group id's
             var cs = [];
@@ -457,42 +471,244 @@
                         cs.push(d.cluster);
                     }
             });
-            console.log(cs)
-            
+            // number of nodes and groups
             n = data.length, // total number of nodes
             m = cs.length; // number of distinct clusters
+            console.log(n, m)
+            // group data for clusters
+            data = ({
+                children: Array.from(
+                d3.group(data,
+                    d => d.cluster
+                  ),
+                  ([, children]) => ({children})
+                )
+              })
 
-            clusters = new Array(m);
-            nodes = [];
+            console.log(data)
 
-            for (var i = 0; i<n; i++){
-                nodes.push(create_nodes(data,i));
-            }
+            color = d3.scaleOrdinal(d3.range(4), d3.schemeCategory10)
+
+            // define pack to access data hiearchy
+            pack = () => d3.pack()
+                .size([width5, height5])
+                .padding(1)
+            (d3.hierarchy(data)
+                .sum(d => +d.perc_freq))
+
+            // define drag
+            drag = simulation => {
+
+                function dragstarted(event, d) {
+                    if (!event.active) simulation.alphaTarget(0.3).restart();
+                    d.fx = d.x;
+                    d.fy = d.y;
+                }
+                
+                function dragged(event, d) {
+                    d.fx = event.x;
+                    d.fy = event.y;
+                }
+                
+                function dragended(event, d) {
+                    if (!event.active) simulation.alphaTarget(0);
+                    d.fx = null;
+                    d.fy = null;
+                }
+                
+                return d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended);
+                }
+
+            const nodes = pack().leaves();
             console.log(nodes)
+            const simulation = d3.forceSimulation(nodes)
+                .force("x", d3.forceX(width5 / 2).strength(0.01))
+                .force("y", d3.forceY(height5 / 3).strength(0.05))
+                .force("cluster", forceCluster())
+                .force("collide", forceCollide());
 
-            var svg = wordClusters
+            const svg = wordClusters
+
+            const node = svg.append("g")
+                .selectAll("circle")
+                .data(nodes)
+                .join("circle")
+                .attr("cx", d => d.x)
+                .attr("cy", d => d.y)
+                .attr("fill", d => color(d.data.country))
+                .on("mouseenter", (d, event) => {
+                    // show text and get x and y positon of mouse
+                    // showTooltip2(d.county + ": " + d.death_count + " Fatal Encounters With Police", [d3.event.clientX, d3.event.clientY])
+                    tooltipCluster(d.data.word, d.data.frequency, d.data.theme, d.data.country, [event.clientX, event.clientY])
+    
+                })
+                .on("mousemove", (d, event) => {
+                    // do the same thing on mousemove so that it follows the mouse
+                    // showTooltip2(d.county + ": " + d.death_count + " Fatal Encounters With Police", [d3.event.clientX, d3.event.clientY])
+                    tooltipCluster(d.data.word, d.data.frequency, d.data.theme, d.data.country, [event.clientX, event.clientY])
+                })
+                .on("mouseleave", d => {
+                    d3.select("#tooltipCluster").style("display", "none")
+                })
+                .call(drag(simulation));
+
+            node.transition()
+                .delay((d, i) => Math.random() * 500)
+                .duration(750)
+                .attrTween("r", d => {
+                  const i = d3.interpolate(0, d.r);
+                  return t => d.r = i(t);
+                });
+          
+            simulation.on("tick", () => {
+              node
+                  .attr("cx", d => d.x)
+                  .attr("cy", d => d.y);
+            });
+          
+            // invalidation.then(() => simulation.stop());
+          
+            // var clusterColors = d3.scaleOrdinal()
+            //     .range(d3.schemeTableau10)
+            //     .domain(data.map(d =>d.cluster))
+
+            // extentWordFreq = d3.extent(data, d=>+d.perc_freq)
+            // // console.log(extentWordFreq)
+            // var bubbleRadius = d3.scaleSqrt()
+            //     .domain(extentWordFreq)
+            //     .range([3, 60])
+
+            // //unique cluster/group id's
+            // var cs = [];
+            // data.forEach(function(d){
+            //         if(!cs.includes(d.cluster)) {
+            //             cs.push(d.cluster);
+            //         }
+            // });
+            // console.log(cs)
+            
+            // n = data.length, // total number of nodes
+            // m = cs.length; // number of distinct clusters
+
+            // clusters = new Array(m);
+            // nodes = [];
+
+            // for (var i = 0; i<n; i++){
+            //     nodes.push(create_nodes(data,i));
+            // }
+            // console.log(nodes)
+
+            // var svg = wordClusters
                 // .attr("width", width)
                 // .attr("height", height);
 
 
-            var node = svg.selectAll("circle")
-                .data(nodes)
-                .enter().append("g")//.call(force.drag);
+            // var node = svg.selectAll("circle")
+            //     .data(nodes)
+            //     .enter().append("g")//.call(force.drag);
 
-            console.log(node)
+            // console.log(node)
 
-            node.append("circle")
-                .style("fill", function (d) {
-                return color(d.cluster);
-                })
-                .attr("r", function(d){return d.radius})
+            // node.append("circle")
+            //     .style("fill", function (d) {
+            //     return color(d.cluster);
+            //     })
+            //     .attr("r", function(d){return d.radius})
             
-        const simulation = d3.forceSimulation(nodes)
-                .force("x", d3.forceX(width5 / 2).strength(0.01))
-                .force("y", d3.forceY(height5 / 2).strength(0.01))
-                // .force("cluster", forceCluster())
-                // .force("collide", forceCollide());
-        console.log(centroid(nodes))
+            // var force = d3.forceSimulation()
+            //     .nodes(nodes)
+            //     .force('charge', d3.forceManyBody().strength(1))
+            //     // .force('x', d3.forceX().x(function(d) {
+            //     //     return xScale(+d.bias);
+            //     // }))
+            //     // .force("y", d3.forceY(bodyheight5/1.5).strength(0.05))
+            //     .force('collide', d3.forceCollide((d)=>{ 
+            //         return bubbleRadius(+d.perc_freq)}))
+            //     // .alpha(0.5)
+            //     // .alphaTarget(0.5)
+            //     // .alphaDecay(0)
+            //     .alpha(1)
+            //     // .on('tick', function() {
+            //     // .nodes(nodes)
+            //     // .size([width5, height5])
+            //     // .gravity(.02)
+            //     // .charge(0)
+            //     .on("tick", tick)
+
+            // node.append("text")
+            //     .attr("dy", ".3em")
+            //     .style("text-anchor", "middle")
+            //     .text(function(d) { return d.text.substring(0, d.radius / 3); });
+
+        function centroid(nodes) {
+            let x = 0;
+            let y = 0;
+            let z = 0;
+            for (const d of nodes) {
+                let k = d.r ** 2;
+                x += d.x * k;
+                y += d.y * k;
+                z += k;
+            }
+            return {x: x / z, y: y / z};
+            }
+
+        function forceCollide() {
+            const alpha = 0.4; // fixed for greater rigidity!
+            const padding1 = 2; // separation between same-color nodes
+            const padding2 = 6; // separation between different-color nodes
+            let nodes;
+            let maxRadius;
+            
+            function force() {
+                const quadtree = d3.quadtree(nodes, d => d.x, d => d.y);
+                for (const d of nodes) {
+                const r = d.r + maxRadius;
+                const nx1 = d.x - r, ny1 = d.y - r;
+                const nx2 = d.x + r, ny2 = d.y + r;
+                quadtree.visit((q, x1, y1, x2, y2) => {
+                    if (!q.length) do {
+                    if (q.data !== d) {
+                        const r = d.r + q.data.r + (d.data.cluster === q.data.data.cluster ? padding1 : padding2);
+                        let x = d.x - q.data.x, y = d.y - q.data.y, l = Math.hypot(x, y);
+                        if (l < r) {
+                        l = (l - r) / l * alpha;
+                        d.x -= x *= l, d.y -= y *= l;
+                        q.data.x += x, q.data.y += y;
+                        }
+                    }
+                    } while (q = q.next);
+                    return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+                });
+                }
+            }
+            
+            force.initialize = _ => maxRadius = d3.max(nodes = _, d => d.r) + Math.max(padding1, padding2);
+            
+            return force;
+            }
+        
+        function forceCluster() {
+            const strength = 0.2;
+            let nodes;
+            
+            function force(alpha) {
+                const centroids = d3.rollup(nodes, centroid, d => d.data.cluster);
+                const l = alpha * strength;
+                for (const d of nodes) {
+                const {x: cx, y: cy} = centroids.get(d.data.cluster);
+                d.vx -= (d.x - cx) * l;
+                d.vy -= (d.y - cy) * l;
+                }
+            }
+            
+            force.initialize = _ => nodes = _;
+            
+            return force;
+            }
 
         function create_nodes(data,node_counter) {
             var i = cs.indexOf(data[node_counter].cluster),
@@ -508,37 +724,35 @@
             if (!clusters[i] || (r > clusters[i].radius)) clusters[i] = d;
             return d;
             };
-            
-        function forceCluster() {
-            const strength = 0.2;
-            let nodes;
-            
-            function force(alpha) {
-                const centroids = d3.nest(nodes, centroid, d => d.data.cluster);
-                const l = alpha * strength;
-                for (const d of nodes) {
-                const {x: cx, y: cy} = centroids.get(d.data.cluster);
-                d.vx -= (d.x - cx) * l;
-                d.vy -= (d.y - cy) * l;
-                }
-            }
-            
-            force.initialize = _ => nodes = _;
-            
-            return force;
-            }
 
-        function centroid(nodes) {
-            let x = 0;
-            let y = 0;
-            let z = 0;
-            for (const d of nodes) {
-                let k = d.r ** 2;
-                x += d.x * k;
-                y += d.y * k;
-                z += k;
-            }
-            return {x: x / z, y: y / z};
+    
+            // function tick(e) {
+            //     node.each(cluster(10 * 5 * 5))
+            //         // .each(collide(.5))
+            //     .attr("transform", function (d) {
+            //         var k = "translate(" + d.x + "," + d.y + ")";
+            //         return k;
+            //     })
+
+            // }
+
+            // Move d to be adjacent to the cluster node.
+            function clusterOld(alpha) {
+                return function (d) {
+                    var cluster = clusters[d.cluster];
+                    if (cluster === d) return;
+                    var x = d.x - cluster.x,
+                        y = d.y - cluster.y,
+                        l = Math.sqrt(x * x + y * y),
+                        r = d.radius + cluster.radius;
+                    if (l != r) {
+                        l = (l - r) / l * alpha;
+                        d.x -= x *= l;
+                        d.y -= y *= l;
+                        cluster.x += x;
+                        cluster.y += y;
+                    }
+                };
             }
 
         }
