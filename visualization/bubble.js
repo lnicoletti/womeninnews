@@ -47,16 +47,25 @@
 
     console.log(logoData.filter(d=>d.site=='bloomberg.com')[0]["link"])
     Promise.all([
+        d3.csv("../data/processed/headlines_site.csv"),
+        d3.csv("../data/processed/headlines_cl_sent.csv"),
+        d3.csv("../data/processed/sites_freq.csv"),
+        d3.csv("../data/processed/countries_freq.csv"),
         d3.csv("https://gist.githubusercontent.com/lnicoletti/c312a25a680167989141e8315b26c92a/raw/707ead31e5bdbb886ff8f7dc5635d5d0568a0a81/citiesYearDeathsHT_party_n.csv"),
-        d3.csv("../data/processed/headlines_site.csv")
       ])
     // d3.csv("../data/processed/headlines_site.csv")
     // d3.csv("data/citiesYearDeathsHT_party_n.csv")
         .then((datasets) => {
-            data = datasets[0]
-            data2 = datasets[1]
-            console.log(data) 
-            console.log(data2) 
+            headlinesSite = datasets[0]
+            headlines = datasets[1]
+            sitesFreq = datasets[2]
+            countriesFreq = datasets[3]
+            police = datasets[4]
+            console.log(headlinesSite) 
+            console.log(headlines) 
+            console.log(sitesFreq) 
+            console.log(countriesFreq) 
+            console.log(police) 
             type = "most"
             kind = "tot"
             // add logo links
@@ -69,19 +78,94 @@
             //     ...(logoData.find((itmInner) => itmInner.site === data2[i].site))}
             //     );
             // }
-
-            console.log(data2)
             // drawBubbleChart(data, type, 2020, kind)
-            drawBubbleChart2(data2)
+            drawBubbleChart2(headlinesSite)
         })
 
-        function drawBubbleChart2(data2) {
+        function showTooltip5(ttip, text1, text2, text3, coords, data, county, c) {
+            let x = coords[0]-120;
+            let y = coords[1]-200;
+            // party = c.party
+            console.log(c)
+    
+            // remove previous text: 
+            timeline.selectAll("#tooltipText").remove()
+            // console.log(party)
+            // tooltip = d3.select("#tooltipBar")
+            //     .style("display", "block")
+            //     .style("top", y + "px")
+            //     .style("left", x + "px")
+            //     // .html(text2>100? "hthough": "count")
+                // .html(ttip === "tot" ? "<b>" + text1 + "<br/>" + text2 + "</b> deaths by police in " + "<b>" + text3 + "</b>" : 
+                //     "<b>" + text1 + "<br/>" + text2 + "</b> deaths by police per 100,000 individuals in " + "<b>" + text3 + "</b>")
+            timeline
+                .style("display", "block")
+                .style("top", y + "px")
+                .style("left", x + "px")
+                .style("border", "solid 1px #ccc")
+                // .syle("display", "block")
+    
+            // console.log(data)
+            // // remove all previous text
+            d3.select("#timeline").selectAll("#yAxisLabel").remove()
+            // // remove all previous dots
+            d3.select("#timeline").selectAll("circle").remove()
+            // // data = data.history;
+            // console.log(ttip)
+            // data = data.filter(d=>d.county === county)
+            data = data.filter(d=>d.site === text1)
+            console.log(data)
+
+            // find a random headline
+            randHeadline = Math.floor(Math.random() * data.length)
+            console.log(data[randHeadline].headline_no_site)
+            console.log(data[randHeadline].subtitle)
+
+            // console.log(data.length)
+            let ttipMargin = { left: 40, bottom: 110, right: 20, top: 20 }
+    
+            let ttipWidth = width5/7 - ttipMargin.left - ttipMargin.right;
+            let ttipHeight =height5/2.5 - ttipMargin.top - ttipMargin.bottom;
+    
+            timeline.append("text")
+                .attr("id", "tooltipText")
+                .attr("y", ttipHeight/4)
+                .attr("x", 0)
+                .attr("font-weight", "bold")
+                .attr("font-size", "12px")
+                // .attr("fill", party==="red" ? '#DD1F26':'#0076C0')
+                .attr("fill", "rgb(230, 230, 230)")
+                .html("<b>" + '"' + data[randHeadline].headline_no_site + '"')
+                .call(wrap, 300)
+    
+            timeline.append("text")
+                .attr("id", "tooltipText")
+                .attr("y", ttipHeight/1.5)
+                .attr("x", 0)
+                .attr("font-size", "11px")
+                // .attr("font-weight", "bold")
+                .attr("fill", "rgb(196, 195, 195)")
+                .html('"' + data[randHeadline].subtitle + '..."')
+                .call(wrap, 300)
+
+            timeline.append("text")
+                .attr("id", "tooltipText")
+                .attr("y", ttipHeight*1.5)
+                .attr("x", 0)
+                .attr("font-size", "12px")
+                .attr("font-weight", "bold")
+                .attr("fill", "rgb(230, 230, 230)")
+                .html(data[randHeadline].site)
+                .call(wrap, 300)
+        }
+
+        function drawBubbleChart2(data) {
             // popFilter = 50000
             // remove all previous text
             // console.log(data)
             // Store data with the right variable (hthou or tot) for line chart
-            // dataType = data2
-            // ttip = kind
+            // dataType = data
+            ttip = "bias"
             // console.log(ttip)
             let margin5 = {left: 30, bottom: 20, right: 30, top: 110}
     
@@ -89,7 +173,7 @@
             let bodyheight5 = height5 - margin5.top - margin5.bottom;
     
             // filterData = data.filter(d=>+d.population > popFilter)
-            filterData = data2.filter(d=>(+d.monthly_visits !== 0)&(+d.bias !== 0))
+            filterData = data.filter(d=>(+d.monthly_visits !== 0)&(+d.bias !== 0))
             filterData = filterData.filter(d=>(d.site !== "msn.com")&(d.site !== "sports.yahoo.com")&
                                               (d.site !== "finance.yahoo.com")&(d.site !== "news.google.com")&
                                               (d.site !== "news.yahoo.com")&(d.site !== "bbc.com"))
@@ -209,24 +293,24 @@
                 // .attr('cy', function(d) {
                 //     return d.y;
                 // })
-                // .on("mouseenter", (d) => {
-                //     showTooltip5(ttip, d.county, Math.round(d.death_count), d.date, [d3.event.clientX, d3.event.clientY], dataType, d.county, d)
-                // })
-                // .on("mousemove", (d) => {
-                //     showTooltip5(ttip, d.county, Math.round(d.death_count), d.date, [d3.event.clientX, d3.event.clientY], dataType, d.county, d)
-                // })
+                .on("mouseenter", (d) => {
+                    showTooltip5(ttip, d.site, d.country_of_pub, d.monthly_visits, [d3.event.clientX, d3.event.clientY], headlines, d.polarity, d)
+                })
+                .on("mousemove", (d) => {
+                    showTooltip5(ttip, d.site, d.country_of_pub, d.monthly_visits,  [d3.event.clientX, d3.event.clientY], headlines, d.polarity, d)
+                })
                 // // .on("mouseleave", (d) => {
                 // //     d3.select("#tooltipBar").style("display", "none")
                 // // })
-                // .on("mouseleave", (d) => {
-                //     d3.select("#timeline").style("display", "none")
-                // })
+                .on("mouseleave", (d) => {
+                    d3.select("#timeline").style("display", "none")
+                })
                 // // .on("mouseover.colorAll", function() { d3.selectAll(".forceCircles").attr("fill", d=>d.party==="red" ? '#DD1F26':'#0076C0').attr("opacity", "0.5"); })
                 // // .on("mouseleave.colorAll", function() { d3.selectAll(".forceCircles").attr("fill", d=>d.party==="red" ? '#DD1F26':'#0076C0').attr("opacity", "0.8"); })
                 // // .on("mouseover.color", function() { d3.select(this).attr("fill", d=>d.party==="red" ? '#DD1F26':'#0076C0').attr("opacity", "0.8"); })
                 // // .on("mouseleave.color", function() { d3.select(this).attr("fill", d=>d.party==="red" ? '#DD1F26':'#0076C0').attr("opacity", "0.8"); })
-                // .on("mouseover.color", function() { d3.select(this).style("stroke", "black"); })
-                // .on("mouseleave.color", function() { d3.select(this).style("stroke", "white"); })
+                .on("mouseover.color", function() { d3.select(this).style("stroke", "white"); })
+                .on("mouseleave.color", function() { d3.select(this).style("stroke", "#323232"); })
                 
                 // on hover update line chart
                 // .on("mouseover.update", d => {
@@ -327,6 +411,40 @@
                 .style("font-family", "sans-serif")
 
             }
+
+    // function to wrap text
+    function wrap(text, width) {
+        text.each(function () {
+            var text = d3.select(this),
+                words = text.text().split(/\s+/).reverse(),
+                word,
+                line = [],
+                lineNumber = 0,
+                lineHeight = 1.1, // ems
+                x = text.attr("x"),
+                y = text.attr("y"),
+                dy = 0, //parseFloat(text.attr("dy")),
+                tspan = text.text(null)
+                            .append("tspan")
+                            .attr("x", x)
+                            .attr("y", y)
+                            .attr("dy", dy + "em");
+            while (word = words.pop()) {
+                line.push(word);
+                tspan.text(line.join(" "));
+                if (tspan.node().getComputedTextLength() > width) {
+                    line.pop();
+                    tspan.text(line.join(" "));
+                    line = [word];
+                    tspan = text.append("tspan")
+                                .attr("x", x)
+                                .attr("y", y)
+                                .attr("dy", ++lineNumber * lineHeight + dy + "em")
+                                .text(word);
+                }
+            }
+         });
+        }
 
 
         // function drawBubbleChart(data, type, year, kind) {
