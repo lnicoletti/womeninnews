@@ -1,93 +1,98 @@
-// set the dimensions and margins of the graph
-var margin = {top: 20, right: 30, bottom: 40, left: 90},
-width = 460 - margin.left - margin.right,
-height = 700 - margin.top - margin.bottom;
+// Set the margins
+var margin = {top: 60, right: 100, bottom: 20, left: 80},
+  width = 850 - margin.left - margin.right,
+  height = 370 - margin.top - margin.bottom;
 
-var container = d3.select("#chart2")
+// Parse the month variable
+var parseMonth = d3.timeParse("%b");
+var formatMonth = d3.timeFormat("%b");
 
+// Set the ranges
+var x = d3.scaleTime().domain([parseMonth("Jan"),parseMonth("Dec")]).range([0, width]);
+var y = d3.scaleLinear().range([height, 0]);
 
-// append the svg object to the body of the page
-var svg = d3.select(".chart")
-.append("svg")
-.attr("width", width + margin.left + margin.right)
-.attr("height", height + margin.top + margin.bottom)
-.append("g")
-.attr("transform",
-    "translate(" + margin.left + "," + margin.top + ")");
+// Define the line
+var valueLine = d3.line()
+    .x(function(d) { return x(d.frequency); })
+    .y(function(d) { return y(+d.word); })
 
-// Parse the Data
+// Create the svg canvas in the "graph" div
+var svg = d3.select("#chart1")
+        .append("svg")
+        .style("width", width + margin.left + margin.right + "px")
+        .style("height", height + margin.top + margin.bottom + "px")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform","translate(" + margin.left + "," + margin.top + ")")
+        .attr("class", "svg");
+
+// Import the CSV data
 Promise.all([
 d3.csv("https://gist.githubusercontent.com/SahitiSarva/33f33d7b8945eb134219fe95314aba34/raw/ef51e091077f805922dbab570ab0ae444a03c7cf/countries_freq.csv")
     ]).then(function(data) {
-//dummydata = data[0]
-countries_data = data[0]
-//console.log(dummydata)
-//console.log(countries_data)
-//  var data = data[0].data
-// console.log(data)
-//countries_data = countries_data.sort(d3.descending)
-//india_data = countries_data.filter(d=>d.country == 'India')
-top10 = countries_data.filter(function(d,i){ return i<100 })
 
-// usa_data = countries_data.filter(d=>d.country == 'USA')
-// usa_top10 = usa_data.filter(function(d,i){ return i<10 })
+        country_data = data
+        console.log(country_data)
+  
+   // Format the data
+  data.forEach(function(d) {
+      d.word = d.word;
+      d.frequency = +d.frequency;
+      d.country = d.country;
+  });
+  console.log(data)
 
-// uk_data = countries_data.filter(d=>d.country == 'UK')
-// uk_top10 = uk_data.filter(function(d,i){ return i<10 })
+  var nest = d3.nest()
+	  .key(function(d){
+	    return d.country;
+	  })
+      .entries(data)
+      console.log(nest)
 
-// sa_data = countries_data.filter(d=>d.country == 'South Africa')
-// sa_top10 = sa_data.filter(function(d,i){ return i<100 })
-//top100 = countries_data.filter((d=>d.country == 'India') && (d=>+d.frequency>200))
-//india_top100 = india_data.filter(d=>+d.frequency>200)           
+  // Scale the range of the data
+  x.domain(d3.extent(data, function(d) { return d.frequency; }));
+  y.domain([0, d3.max(data, function(d) { return d.word; })]);
+  
+  // Set up the x axis
+  var xaxis = svg.append("g")
+       .attr("transform", "translate(0," + height + ")")
+       .attr("class", "x axis")
+       .call(d3.axisBottom(x)
+          .ticks(d3.timeMonth)
+          .tickSize(0, 0)
+          .tickFormat(d3.timeFormat("%B"))
+          .tickSizeInner(0)
+          .tickPadding(10));
 
-// Add X axis
-var x = d3.scaleLinear()
-.domain([0, d3.max(top10,d=>+d.frequency)])
-.range([ 0, width]);
-svg.append("g")
-.attr("transform", "translate(0," + height + ")")
-.call(d3.axisBottom(x))
-.selectAll("text")
-.attr("transform", "translate(-10,0)rotate(-45)")
-.style("text-anchor", "end");
+  // Add the Y Axis
+   var yaxis = svg.append("g")
+       .attr("class", "y axis")
+       .call(d3.axisLeft(y)
+          .ticks(5)
+          .tickSizeInner(0)
+          .tickPadding(6)
+          .tickSize(0, 0));
 
-// Y axis
-var y = d3.scaleBand()
-.range([ 0, height ])
-.domain(top10.map(function(d) { return d.word; }))
-.padding(.1);
-svg.append("g")
-.call(d3.axisLeft(y))
-
-//Bars
-svg.selectAll("myRect")
-.data(top10)
-.enter()
-.append("rect")
-.attr("x", x(0) )
-.attr("y", function(d) { return y(d.word); })
-.attr("width", function(d) { return x(d.frequency); })
-.attr("height", y.bandwidth() )
-.attr("fill", "#69b3a2")
-
-//nesting
-function read(countries_data){
-    var nested = d3
-    .nest()
-    .key(function(d) {
-        return d.country
-    })
-    .entries(countries_data)
-
-console.log(nested)
-
-}
-
-
-// .attr("x", function(d) { return x(d.Country); })
-// .attr("y", function(d) { return y(d.Value); })
-// .attr("width", x.bandwidth())
-// .attr("height", function(d) { return height - y(d.Value); })
-// .attr("fill", "#69b3a2")
-
+ // yaxis.select(".domain").style("display","none")
+  
+  // Add a label to the y axis
+  svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - 60)
+        .attr("x", 0 - (height / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Monthly Sales")
+        .attr("class", "y axis label");
+  
+  // Draw the line
+  svg.selectAll(".line")
+      .data(data)
+      .enter()
+      .append("path")
+	      .attr("class", "line")
+	      .attr("d", function(d){
+	      	return valueLine(d.frequency)});
+  
 })
