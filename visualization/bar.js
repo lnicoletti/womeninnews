@@ -1,7 +1,7 @@
-// set the dimensions and margins of the graph
-var margin = {top: 20, right: 30, bottom: 40, left: 90},
-width = 460 - margin.left - margin.right,
-height = 700 - margin.top - margin.bottom;
+    // set the dimensions and margins of the graph
+    var margin = {top: 20, right: 30, bottom: 40, left: 90},
+    width = 300 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
 
 // Parse the Data
 Promise.all([
@@ -9,33 +9,23 @@ d3.csv("https://gist.githubusercontent.com/SahitiSarva/33f33d7b8945eb134219fe953
     ]).then(function(data) {
 countries_data = data[0]
 console.log(countries_data)
-draw_chart(countries_data)    
-}
+draw_chart(countries_data, "#chart1", "India", 10)    
+draw_chart(countries_data, "#chart2", "USA", 10)   
+draw_chart(countries_data, "#chart3", "UK", 10)   
+draw_chart(countries_data, "#chart4", "South Africa", 10)  
+ }
     )
-//  var data = data[0].data
-// console.log(data)
-//countries_data = countries_data.sort(d3.descending)
-
-//top100 = countries_data.filter((d=>d.country == 'India') && (d=>+d.frequency>200))
-//india_top100 = india_data.filter(d=>+d.frequency>200)  
 
 // append the svg object to the body of the page
-function draw_chart(countries_data) {
+function draw_chart(countries_data, chart, selected_country, word_count) {
 
-    india_data = countries_data.filter(d=>d.country == 'India')
-    top10 = india_data.filter(function(d,i){ return i<10 })
     
-    usa_data = countries_data.filter(d=>d.country == 'USA')
-    usa_top10 = usa_data.filter(function(d,i){ return i<10 })
-    
-    uk_data = countries_data.filter(d=>d.country == 'UK')
-    uk_top10 = uk_data.filter(function(d,i){ return i<10 })
-    
-    sa_data = countries_data.filter(d=>d.country == 'South Africa')
-    sa_top10 = sa_data.filter(function(d,i){ return i<10 })
+ 
 
+    country_data = countries_data.filter(d=>d.country == selected_country)
+    top10 = country_data.filter(function(d,i){ return i<word_count })
 
-    var svg = d3.select(".chart")
+    var svg = d3.select(chart)
     .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -70,8 +60,16 @@ function draw_chart(countries_data) {
     .attr("x", x(0) )
     .attr("y", function(d) { return y(d.word); })
     .attr("width", function(d) { return x(d.frequency); })
-    .attr("height", y.bandwidth() )
+    .attr("height", 15 )
     .attr("fill", "#69b3a2")
+
+    svg.append("text")
+        .attr("x", (width / 2))             
+        .attr("y", 0 - (margin.top / 2))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px") 
+        .style("text-decoration", "underline")  
+        .text(selected_country);
 
 // .attr("x", function(d) { return x(d.Country); })
 // .attr("y", function(d) { return y(d.Value); })
