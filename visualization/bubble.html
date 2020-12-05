@@ -5,6 +5,19 @@
 </head>
  
 <body> 
+    <h4 style = "text-align: center">How are Women Represented in the News?</h4>
+    <!-- <div id="sliderDiv"></div><input id="slider" type="range" min="2000" max="2020" step="1" value="2000"> -->
+    <div class="subtitle">
+        <p class="description"> For a given year, the chart below shows the death toll of policing in 
+            U.S. cities above 50,000 people. Bubbles represent cities, and are sized by population.
+             Hover over a bubble to see how police violence has evolved over time in a specific city.
+    </div>
+    <div class="buttons">
+        <button id="Gender Bias" type="button" value="bias">Gender Bias</button>
+        <button id="Empowerment" type="button" value="empowerment">Empowerment</button>
+        <button id="Violence" type="button" value="violence">Violence</button>
+        <button id="Polarity" type="button" value="polarity">Polarity</button>
+    </div>
     <div id="chart" class="svg-container" style="text-align: center;">
     <svg id="bubblechart">
         <g class="xAxis" />
@@ -12,6 +25,13 @@
         <g class="body" />
     </svg>
     </div>
+    <div class="buttons">
+        <button id="South Africa" type="button" value="South Africa">South Africa</button>
+        <button id="India" type="button" value="India">India</button>
+        <button id="USA" type="button" value="United States">United States</button>
+        <button id="UK" type="button" value="United Kingdom">United Kingdom</button>
+    </div>
+    <h5>Choose a Country</h5>
     <!-- <svg id="tooltipBar">Tooltip</svg> -->
 </body>
 <script src="https://d3js.org/d3.v5.min.js"></script>

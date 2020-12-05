@@ -22,26 +22,26 @@
 
     // define links to logos
     logoData = [{site:"nytimes.com", link:"https://www.vectorlogo.zone/logos/nytimes/nytimes-icon.svg"},
-                {site:"dailymail.co.uk", link:""},
+                {site:"dailymail.co.uk", link:"https://seeklogo.com/images/D/Daily_Mail-logo-EBD7A83A1F-seeklogo.com.gif"},
                 {site:"cnn.com", link:"https://www.vectorlogo.zone/logos/cnn/cnn-icon.svg"},//https://www.vectorlogo.zone/logos/cnn/cnn-wordmark.svg
                 {site:"bbc.co.uk", link:"https://www.vectorlogo.zone/logos/bbc/bbc-icon.svg"},
-                {site:"telegraph.co.uk", link:""},
+                {site:"telegraph.co.uk", link:"https://upload.wikimedia.org/wikipedia/commons/4/48/The_Telegraph_logo.svg"},
                 {site:"washingtonpost.com", link:"https://www.vectorlogo.zone/logos/washingtonpost/washingtonpost-icon.svg"},
                 {site:"forbes.com", link:"https://www.vectorlogo.zone/logos/forbes/forbes-icon.svg"},
                 {site:"abcnews.go.com", link:"https://www.vectorlogo.zone/logos/abcgo/abcgo-icon.svg"},
                 {site:"foxnews.com", link:"https://www.vectorlogo.zone/logos/fox/fox-icon.svg"},
-                {site:"ksl.com", link:""},
+                {site:"ksl.com", link:"https://logodix.com/logo/2090138.png"},
                 {site:"bloomberg.com", link: "https://www.vectorlogo.zone/logos/bloomberg/bloomberg-icon.svg"},
-                {site:"breitbart.com", link:""},
-                {site:"popsugar.com", link:""},
+                {site:"breitbart.com", link:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Breitbart_News.svg/1280px-Breitbart_News.svg.png"},
+                {site:"popsugar.com", link:"https://all-4-one.com/wp-content/uploads/2015/07/PopSugar-Logo-logo.png"},
                 {site:"nbcnews.com", link:"https://www.vectorlogo.zone/logos/nbc/nbc-icon.svg"},
                 {site:"buzzfeed.com", link:"https://www.vectorlogo.zone/logos/buzzfeed/buzzfeed-icon.svg"},
                 {site:"cnet.com", link:"https://www.vectorlogo.zone/logos/cnet/cnet-icon.svg"},
                 {site:"politico.com", link:"https://www.vectorlogo.zone/logos/politico/politico-icon.svg"},
                 {site:"usatoday.com", link:"https://www.vectorlogo.zone/logos/usatoday/usatoday-icon.svg"},
-                {site:"nydailynews.com", link:""},
+                {site:"nydailynews.com", link:"https://cdn6.myket.ir/icons/large/b0f31373-17ec-46d5-b6ef-66135cc1b242_.png"},
                 {site:"businessinsider.com", link:""},
-                {site:"espn.go.com", link:""},
+                {site:"espn.go.com", link:"https://cdn.worldvectorlogo.com/logos/espn.svg"},
                 {site:"huffingtonpost.com", link:"https://www.vectorlogo.zone/logos/huffingtonpost/huffingtonpost-icon.svg"}
             ]
 
@@ -134,11 +134,11 @@
 
             var logoScale = d3.scaleLinear()
                                 .domain(extentvisits)
-                                .range([20, 100])
+                                .range([18, 100])
 
-            var logoPosScale = d3.scaleLinear()
-                                .domain(extentvisits)
-                                .range([-50, 0])
+            // var logoPosScale = d3.scaleLinear()
+            //                     .domain(extentvisits)
+            //                     .range([-50, 0])
     
             // filterdata['transform'] = filterData.map(d=>logoPosScale(+d.monthly_visits))
             // filterData['test'] = 1
@@ -252,8 +252,14 @@
                     // .attr("transform", d=>+d.monthly_visits<600000000?"translate("+-25+","+-25+")":"translate("+-50+","+-50+")")
                     // .attr("transform", "translate(-25,-25)")
                     .attr("transform", d=>d.site=="bbc.co.uk" ? "translate(-50,-50)"
-                                        : d.site=="nytimes.com" ? "translate(-25,-25)"
-                                        : d.site=="washingtonpost.com" ? "translate(-20,-20)"
+                                        : d.site=="cnn.com" | d.site=="foxnews.com" ? "translate(-30,-30)"
+                                        : d.site=="espn.go.com" ? "translate(-34,-10)"
+                                        : d.site=="nytimes.com" | d.site=="buzzfeed.com" ? "translate(-25,-25)"
+                                        : d.site=="washingtonpost.com" | d.site=="huffingtonpost.com" | d.site== "usatoday.com" ? "translate(-20,-20)"
+                                        : d.site=="dailymail.co.uk" ? "translate(-22,-18)"
+                                        : d.site=="politico.com" | d.site=="abcnews.go.com" | d.site=="nydailynews.com" ? "translate(-12.5,-12.5)"
+                                        : d.site=="telegraph.co.uk" ? "translate(-15,-3)"
+                                        : d.site=="breitbart.com" ? "translate(-14,-10)"
                                         : "translate(-15,-15)")
                     .attr('width', d=>logoScale(+d.monthly_visits))
                     // .attr('width', 50)
