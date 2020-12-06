@@ -3,8 +3,8 @@
 
     let heightCluster =  height5*3
 
-    // padding = 1.5, // separation between same-color nodes
-    // clusterPadding = 6, // separation between different-color nodes
+    padding = 1.5, // separation between same-color nodes
+    clusterPadding = 6, // separation between different-color nodes
     maxRadius = 12;
 
     color = d3.scaleOrdinal()
@@ -117,7 +117,8 @@
             // }
             // drawBubbleChart(data, type, 2020, kind)
             drawBubbleChart(headlinesSite)
-            drawWordClusters(countriesFreq)
+            // draw word clusters on click
+            // d3.selectAll("#wordFreq").on("change", drawWordClusters(countriesFreq))
         })
 
         function showTooltip5(ttip, text1, text2, text3, coords, data, county, c) {
@@ -474,17 +475,18 @@
         
         function tooltipCluster(word, freq, theme, country, coords) {
             console.log(word)
-            d3.select("#tooltipMap")
+            d3.select("#tooltipCluster")
                 .style("display", "block")
                 .style("top", (coords[1]+10) + "px")
                 .style("left", (coords[0]+10) + "px")
                 // .style("top", (d3.mouse(this)[0]+90) + "px")
                 // .style("left", (d3.mouse(this)[1]) + "px")
                 .style('font', '12px sans-serif')
+                .style('background-color', clusterColors(freq))
                 // .style('fill-opacity', 0.5)
                 .attr('stroke', '#ccc')
                 // .text(text)
-                .html("<b>" + word + " (" + theme + ")" + "<br/> </b> used <b>" + freq + "</b> times in " + "<b>" + country + "</b> headlines")
+                .html("<b>" + word + "<br/> </b> used <b>" + freq + "</b> times in " + "<b>" + country + "</b> headlines")
         }
 
         function drawWordClusters(data) {
@@ -493,9 +495,12 @@
             padding = 2            // Space between nodes
             radius = 5
 
-            var clusterColors = d3.scaleOrdinal()
-                .range(d3.schemeTableau10)
-                .domain(data.map(d =>d.cluster))
+            // var clusterColors = d3.scaleOrdinal()
+            //     .range(d3.schemeTableau10.reverse())
+            //     .domain(data.map(d =>d.cluster))
+
+            clusterColors = d3.scaleSequentialQuantile(d3.interpolateLab("lightgrey", "#F52D4F"))
+                        .domain(data.map(d =>+d.frequency))
 
             extentWordFreq = d3.extent(data, d=>+d.perc_freq)
             // console.log(extentWordFreq)
@@ -534,7 +539,18 @@
                 .join("circle")
                 .attr("cx", d => d.x)
                 .attr("cy", d => d.y)
-                .attr("fill", "lightgrey");
+                .attr("fill", "lightgrey")
+                // .attr("fill", d => clusterColors(d.theme))
+                .attr("fill", d => clusterColors(+d.frequency))
+                .on("mouseenter", (d) => {
+                    tooltipCluster(d.text, d.frequency, d.theme, d.country, [d3.event.clientX, d3.event.clientY])
+                })
+                .on("mousemove", (d) => {
+                    tooltipCluster(d.text, d.frequency, d.theme, d.country, [d3.event.clientX, d3.event.clientY])
+                })
+                .on("mouseleave", d => {
+                    d3.select("#tooltipCluster").style("display", "none")
+                });
                 // .attr("fill", d => d.color);
 
             // Ease in the circles.
@@ -679,8 +695,10 @@
                         cluster: i,
                         clusterName: data[node_counter].cluster,
                         radius: bubbleRadius(data[node_counter].perc_freq),
-                        // radius: radius,
+                        country: data[node_counter].country,
+                        theme: data[node_counter].theme,
                         text: data[node_counter].word,
+                        frequency: data[node_counter].frequency,
                         x: groups[data[node_counter].cluster].x + Math.random(),
                         y: groups[data[node_counter].cluster].y + Math.random(),
                         // x: Math.cos(i / m * 2 * Math.PI) * 200 + width5 / 2 + Math.random(),
