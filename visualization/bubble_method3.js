@@ -1,10 +1,10 @@
     let width5 = 1500;
     let height5 = 540;
 
-    let heightCluster =  height5*1.5
+    let heightCluster =  height5*3
 
-    padding = 1.5, // separation between same-color nodes
-    clusterPadding = 6, // separation between different-color nodes
+    // padding = 1.5, // separation between same-color nodes
+    // clusterPadding = 6, // separation between different-color nodes
     maxRadius = 12;
 
     color = d3.scaleOrdinal()
@@ -58,6 +58,29 @@
                 {site:"espn.go.com", link:"https://cdn.worldvectorlogo.com/logos/espn.svg"},
                 {site:"huffingtonpost.com", link:"https://www.vectorlogo.zone/logos/huffingtonpost/huffingtonpost-icon.svg"}
             ]
+
+    groups = {
+            "South Africa, male": { x: width5 - 300, y: height5, color: "#93D1BA"},
+            "South Africa, violence": { x: width5-600, y: height5, color: "#BEE5AA"},
+            "South Africa, female": { x: width5 - 900, y: height5, color: "#79BACE"},
+            "South Africa, empowerment": { x: width5 - 1200, y: height5, color: "lightblue", country: "South Africa"},
+
+            "USA, male": { x: width5- 300, y: height5 - 160, color: "#93D1BA"},
+            "USA, violence": { x: width5- 600, y: height5 - 160, color: "#BEE5AA"},
+            "USA, female": { x: width5- 900, y: height5 - 160, color: "#79BACE"},
+            "USA, empowerment": { x: width5- 1200, y: height5 - 160, color: "lightblue", country: "United States"},
+
+            "UK, male": { x: width5- 300, y: height5 -320, color: "#93D1BA"},
+            "UK, violence": { x: width5- 600, y: height5-320, color: "#BEE5AA"},
+            "UK, female": { x: width5- 900, y: height5-320, color: "#79BACE"},
+            "UK, empowerment": { x: width5- 1200, y: height5-320, color: "lightblue", country: "United Kingdom"},
+
+            "India, male": { x: width5- 300, y: height5-480, color: "#93D1BA", theme: "Male Dominance"},
+            "India, violence": { x: width5- 600, y: height5-480, color: "#BEE5AA", theme: "Violence"},
+            "India, female": { x: width5 - 900, y: height5-480, color: "#79BACE", theme: "Female Bias"},
+            "India, empowerment": { x: width5- 1200, y: height5-480, color: "lightblue", theme: "Empowerment", country: "India"},
+        }
+    
 
     console.log(logoData.filter(d=>d.site=='bloomberg.com')[0]["link"])
     Promise.all([
@@ -300,19 +323,19 @@
                 .style('stroke', "#323232")
                 .attr('r', d=>radius(+d.monthly_visits))
                 // v5
-                // .on("mouseenter", (d) => {
-                //     showTooltip5(ttip, d.site, d.country_of_pub, d.monthly_visits, [d3.event.clientX, d3.event.clientY], headlines, d.polarity, d)
-                // })
-                // .on("mousemove", (d) => {
-                //     showTooltip5(ttip, d.site, d.country_of_pub, d.monthly_visits,  [d3.event.clientX, d3.event.clientY], headlines, d.polarity, d)
-                // })
+                .on("mouseenter", (d) => {
+                    showTooltip5(ttip, d.site, d.country_of_pub, d.monthly_visits, [d3.event.clientX, d3.event.clientY], headlines, d.polarity, d)
+                })
+                .on("mousemove", (d) => {
+                    showTooltip5(ttip, d.site, d.country_of_pub, d.monthly_visits,  [d3.event.clientX, d3.event.clientY], headlines, d.polarity, d)
+                })
                 // v6
-                .on("mouseenter", (event, d) => {
-                    showTooltip5(ttip, d.site, d.country_of_pub, d.monthly_visits, [event.clientX, event.clientY], headlines, d.polarity, d)
-                })
-                .on("mousemove", (event, d) => {
-                    showTooltip5(ttip, d.site, d.country_of_pub, d.monthly_visits,  [event.clientX, event.clientY], headlines, d.polarity, d)
-                })
+                // .on("mouseenter", (event, d) => {
+                //     showTooltip5(ttip, d.site, d.country_of_pub, d.monthly_visits, [event.clientX, event.clientY], headlines, d.polarity, d)
+                // })
+                // .on("mousemove", (event, d) => {
+                //     showTooltip5(ttip, d.site, d.country_of_pub, d.monthly_visits,  [event.clientX, event.clientY], headlines, d.polarity, d)
+                // })
                 .on("mouseleave", (d) => {
                     d3.select("#timeline").style("display", "none")
                 })
@@ -466,6 +489,20 @@
 
         function drawWordClusters(data) {
 
+            cluster_padding = 5;    // Space between nodes in different stages
+            padding = 2            // Space between nodes
+            radius = 5
+
+            var clusterColors = d3.scaleOrdinal()
+                .range(d3.schemeTableau10)
+                .domain(data.map(d =>d.cluster))
+
+            extentWordFreq = d3.extent(data, d=>+d.perc_freq)
+            // console.log(extentWordFreq)
+            var bubbleRadius = d3.scaleSqrt()
+                .domain(extentWordFreq)
+                .range([2, 10])
+
             //unique cluster/group id's
             var cs = [];
             data.forEach(function(d){
@@ -473,98 +510,91 @@
                         cs.push(d.cluster);
                     }
             });
-            // number of nodes and groups
+            console.log(cs)
+            
             n = data.length, // total number of nodes
             m = cs.length; // number of distinct clusters
-            console.log(n, m)
-            // group data for clusters
-            data = ({
-                children: Array.from(
-                d3.group(data,
-                    d => d.cluster
-                  ),
-                  ([, children]) => ({children})
-                )
-              })
 
-            console.log(data)
+            clusters = new Array(m);
+            nodes = [];
 
-            color = d3.scaleOrdinal(d3.range(4), d3.schemeCategory10)
-
-            // define pack to access data hiearchy
-            pack = () => d3.pack()
-                .size([width5, height5])
-                .padding(1)
-            (d3.hierarchy(data)
-                .sum(d => +d.perc_freq))
-
-            // define drag
-            drag = simulation => {
-
-                function dragstarted(event, d) {
-                    if (!event.active) simulation.alphaTarget(0.3).restart();
-                    d.fx = d.x;
-                    d.fy = d.y;
-                }
-                
-                function dragged(event, d) {
-                    d.fx = event.x;
-                    d.fy = event.y;
-                }
-                
-                function dragended(event, d) {
-                    if (!event.active) simulation.alphaTarget(0);
-                    d.fx = null;
-                    d.fy = null;
-                }
-                
-                return d3.drag()
-                    .on("start", dragstarted)
-                    .on("drag", dragged)
-                    .on("end", dragended);
-                }
-
-            const nodes = pack().leaves();
+            for (var i = 0; i<n; i++){
+                nodes.push(create_nodes(data,i));
+            }
             console.log(nodes)
-            const simulation = d3.forceSimulation(nodes)
-                .force("x", d3.forceX(width5 / 3).strength(0.01))
-                .force("y", d3.forceY(height5 / 3).strength(0.02))
-                .force("cluster", forceCluster())
-                .force("collide", forceCollide());
+            // console.log(data)
+            // console.log(groups[data[0].cluster].y + Math.random())
 
-            const svg = wordClusters
+            var svg = wordClusters
 
-            const node = svg.append("g")
+            // Circle for each node.
+            const circle = svg.append("g")
                 .selectAll("circle")
                 .data(nodes)
                 .join("circle")
                 .attr("cx", d => d.x)
                 .attr("cy", d => d.y)
-                .attr("fill", d => color(d.data.country))
-                .on("mouseenter", (d, event) => {
-                    tooltipCluster(d.data.word, d.data.frequency, d.data.theme, d.data.country, [event.clientX, event.clientY])
-                })
-                .on("mousemove", (d, event) => {
-                    tooltipCluster(d.data.word, d.data.frequency, d.data.theme, d.data.country, [event.clientX, event.clientY])
-                })
-                .on("mouseleave", d => {
-                    d3.select("#tooltipCluster").style("display", "none")
-                })
-                // .call(drag(simulation));
+                .attr("fill", "lightgrey");
+                // .attr("fill", d => d.color);
 
-            node.transition()
-                .delay((d, i) => Math.random() * 500)
-                .duration(750)
+            // Ease in the circles.
+            circle
+                .transition()
+                .delay((d, i) => i * 5)
+                .duration(800)
                 .attrTween("r", d => {
-                  const i = d3.interpolate(0, d.r);
-                  return t => d.r = i(t);
+                    const i = d3.interpolate(0, d.radius);
+                    return t => d.radius = i(t);
                 });
-          
+
+            // Group name labels
+            svg.selectAll('.cluster')
+            .data(d3.keys(groups))
+            .join("text")
+            .attr("class", "themesText")
+            .attr("text-anchor", "middle")
+            .attr("x", d => groups[d].x)
+            .attr("y", d => groups[d].y - 50)
+            .text(d => groups[d].theme);
+
+            // Country labels
+            svg.selectAll('.cluster')
+            .data(d3.keys(groups))
+            .join("text")
+            .attr("class", "themesText")
+            .attr("text-anchor", "middle")
+            .attr("x", d => groups[d].x - 150)
+            .attr("y", d => groups[d].y)
+            .text(d => groups[d].country);
+
+            // // Group counts
+            // svg.selectAll('.grpcnt')
+            // .data(d3.keys(groups))
+            // .join("text")
+            // .attr("class", "grpcnt")
+            // .attr("text-anchor", "middle")
+            // .attr("x", d => groups[d].x)
+            // .attr("y", d => groups[d].y - 50)
+            // .text(d => groups[d].cnt);
+
+            // Forces
+            const simulation = d3.forceSimulation(nodes)
+            .force("x", d => d3.forceX(d.x))
+            .force("y", d => d3.forceY(d.y))
+            .force("cluster", forceCluster())
+            .force("collide", forceCollide())
+            .alpha(.09)
+            .alphaDecay(0);
+
+            // Adjust position (and color) of circles.
             simulation.on("tick", () => {
-              node
-                  .attr("cx", d => d.x)
-                  .attr("cy", d => d.y);
+            circle
+                .attr("cx", d => d.x)
+                .attr("cy", d => d.y);
+                // .attr("fill", d => groups[d.group].color);
             });
+
+
           
             // invalidation.then(() => simulation.stop());
           
@@ -640,98 +670,79 @@
             //     .style("text-anchor", "middle")
             //     .text(function(d) { return d.text.substring(0, d.radius / 3); });
 
-        function centroid(nodes) {
-            let x = 0;
-            let y = 0;
-            let z = 0;
-            for (const d of nodes) {
-                let k = d.r ** 2;
-                x += d.x * k;
-                y += d.y * k;
-                z += k;
-            }
-            return {x: x / z, y: y / z};
-            }
-
-        function forceCollide() {
-            const alpha = 0.4; // fixed for greater rigidity!
-            const padding1 = 5; // separation between same-color nodes
-            const padding2 = 50; // separation between different-color nodes
-            let nodes;
-            let maxRadius;
+ 
             
-            function force() {
-                const quadtree = d3.quadtree(nodes, d => d.x, d => d.y);
-                for (const d of nodes) {
-                const r = d.r + maxRadius;
-                const nx1 = d.x - r, ny1 = d.y - r;
-                const nx2 = d.x + r, ny2 = d.y + r;
-                quadtree.visit((q, x1, y1, x2, y2) => {
-                    if (!q.length) do {
-                    if (q.data !== d) {
-                        const r = d.r + q.data.r + (d.data.cluster === q.data.data.cluster ? padding1 : padding2);
-                        let x = d.x - q.data.x, y = d.y - q.data.y, l = Math.hypot(x, y);
-                        if (l < r) {
-                        l = (l - r) / l * alpha;
-                        d.x -= x *= l, d.y -= y *= l;
-                        q.data.x += x, q.data.y += y;
-                        }
-                    }
-                    } while (q = q.next);
-                    return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
-                });
-                }
-            }
-            
-            force.initialize = _ => maxRadius = d3.max(nodes = _, d => d.r) + Math.max(padding1, padding2);
-            
-            return force;
-            }
-        
-        function forceCluster() {
-            const strength = 0.2;
-            let nodes;
-            
-            function force(alpha) {
-                const centroids = d3.rollup(nodes, centroid, d => d.data.cluster);
-                const l = alpha * strength;
-                for (const d of nodes) {
-                const {x: cx, y: cy} = centroids.get(d.data.cluster);
-                d.vx -= (d.x - cx) * l;
-                d.vy -= (d.y - cy) * l;
-                }
-            }
-            
-            force.initialize = _ => nodes = _;
-            
-            return force;
-            }
-
-        function create_nodes(data,node_counter) {
-            var i = cs.indexOf(data[node_counter].cluster),
-                r = Math.sqrt((i + 1) / m * -Math.log(Math.random())) * maxRadius,
-                d = {
-                    cluster: i,
-                    clusterName: data[node_counter].cluster,
-                    radius: bubbleRadius(data[node_counter].perc_freq),
-                    text: data[node_counter].word,
-                    x: Math.cos(i / m * 2 * Math.PI) * 200 + width5 / 2 + Math.random(),
-                    y: Math.sin(i / m * 2 * Math.PI) * 200 + height5 / 2 + Math.random()
-                };
-            if (!clusters[i] || (r > clusters[i].radius)) clusters[i] = d;
-            return d;
+            function create_nodes(data,node_counter) {
+                var i = cs.indexOf(data[node_counter].cluster),
+                    r = Math.sqrt((i + 1) / m * -Math.log(Math.random())) * maxRadius,
+                    d = {
+                        cluster: i,
+                        clusterName: data[node_counter].cluster,
+                        radius: bubbleRadius(data[node_counter].perc_freq),
+                        // radius: radius,
+                        text: data[node_counter].word,
+                        x: groups[data[node_counter].cluster].x + Math.random(),
+                        y: groups[data[node_counter].cluster].y + Math.random(),
+                        // x: Math.cos(i / m * 2 * Math.PI) * 200 + width5 / 2 + Math.random(),
+                        // y: Math.sin(i / m * 2 * Math.PI) * 200 + height5 / 2 + Math.random()
+                    };
+                if (!clusters[i] || (r > clusters[i].radius)) clusters[i] = d;
+                return d;
             };
 
     
-            // function tick(e) {
-            //     node.each(cluster(10 * 5 * 5))
-            //         // .each(collide(.5))
-            //     .attr("transform", function (d) {
-            //         var k = "translate(" + d.x + "," + d.y + ")";
-            //         return k;
-            //     })
-
-            // }
+            // Force to increment nodes to groups.
+            function forceCluster() {
+                const strength = .15;
+                let nodes;
+            
+                function force(alpha) {
+                const l = alpha * strength;
+                for (const d of nodes) {
+                    d.vx -= (d.x - groups[d.clusterName].x) * l;
+                    d.vy -= (d.y - groups[d.clusterName].y) * l;
+                }
+                }
+                force.initialize = _ => nodes = _;
+            
+                return force;
+            }
+            // Force for collision detection.
+            function forceCollide() {
+                const alpha = 0.2; // fixed for greater rigidity!
+                const padding1 = padding; // separation between same-color nodes
+                const padding2 = cluster_padding; // separation between different-color nodes
+                let nodes;
+                let maxRadius;
+            
+                function force() {
+                const quadtree = d3.quadtree(nodes, d => d.x, d => d.y);
+                for (const d of nodes) {
+                    const r = d.radius + maxRadius;
+                    const nx1 = d.x - r, ny1 = d.y - r;
+                    const nx2 = d.x + r, ny2 = d.y + r;
+                    
+                    quadtree.visit((q, x1, y1, x2, y2) => {
+                    if (!q.length) do {
+                        if (q.data !== d) {
+                        const r = d.radius + q.data.radius + (d.clusterName === q.data.clusterName ? padding1 : padding2);
+                        let x = d.x - q.data.x, y = d.y - q.data.y, l = Math.hypot(x, y);
+                        if (l < r) {
+                            l = (l - r) / l * alpha;
+                            d.x -= x *= l, d.y -= y *= l;
+                            q.data.x += x, q.data.y += y;
+                        }
+                        }
+                    } while (q = q.next);
+                    return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+                    });
+                }
+                }
+            
+                force.initialize = _ => maxRadius = d3.max(nodes = _, d => d.r) + Math.max(padding1, padding2);
+            
+                return force;
+            }
 
             // Move d to be adjacent to the cluster node.
             function clusterOld(alpha) {

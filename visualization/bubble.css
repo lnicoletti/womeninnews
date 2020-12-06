@@ -37,8 +37,16 @@ font-weight: bold;
 font-family: Arial, Helvetica, sans-serif;
 font-size: 8px;
 text-anchor: middle;
-fill: white;
+fill: silver;
 }
+
+.themesText {
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    text-anchor: middle;
+    fill: silver;
+    }
 
 /* .forceLogo {
     display: ;
