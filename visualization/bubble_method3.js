@@ -59,50 +59,50 @@
                 {site:"huffingtonpost.com", link:"https://www.vectorlogo.zone/logos/huffingtonpost/huffingtonpost-icon.svg"}
             ]
 
-    groups = {
-            "South Africa, male": { x: width5 - 300, y: height5, color: "#93D1BA"},
-            "South Africa, violence": { x: width5-600, y: height5, color: "#BEE5AA"},
-            "South Africa, female": { x: width5 - 900, y: height5, color: "#79BACE"},
-            "South Africa, empowerment": { x: width5 - 1200, y: height5, color: "lightblue", country: "South Africa"},
+    // groups = {
+    //         "South Africa, male": { x: width5 - 300, y: height5, color: "#93D1BA"},
+    //         "South Africa, violence": { x: width5-600, y: height5, color: "#BEE5AA"},
+    //         "South Africa, female": { x: width5 - 900, y: height5, color: "#79BACE"},
+    //         "South Africa, empowerment": { x: width5 - 1200, y: height5, color: "lightblue", country: "South Africa"},
 
-            "USA, male": { x: width5- 300, y: height5 - 160, color: "#93D1BA"},
-            "USA, violence": { x: width5- 600, y: height5 - 160, color: "#BEE5AA"},
-            "USA, female": { x: width5- 900, y: height5 - 160, color: "#79BACE"},
-            "USA, empowerment": { x: width5- 1200, y: height5 - 160, color: "lightblue", country: "United States"},
+    //         "USA, male": { x: width5- 300, y: height5 - 160, color: "#93D1BA"},
+    //         "USA, violence": { x: width5- 600, y: height5 - 160, color: "#BEE5AA"},
+    //         "USA, female": { x: width5- 900, y: height5 - 160, color: "#79BACE"},
+    //         "USA, empowerment": { x: width5- 1200, y: height5 - 160, color: "lightblue", country: "United States"},
 
-            "UK, male": { x: width5- 300, y: height5 -320, color: "#93D1BA"},
-            "UK, violence": { x: width5- 600, y: height5-320, color: "#BEE5AA"},
-            "UK, female": { x: width5- 900, y: height5-320, color: "#79BACE"},
-            "UK, empowerment": { x: width5- 1200, y: height5-320, color: "lightblue", country: "United Kingdom"},
+    //         "UK, male": { x: width5- 300, y: height5 -320, color: "#93D1BA"},
+    //         "UK, violence": { x: width5- 600, y: height5-320, color: "#BEE5AA"},
+    //         "UK, female": { x: width5- 900, y: height5-320, color: "#79BACE"},
+    //         "UK, empowerment": { x: width5- 1200, y: height5-320, color: "lightblue", country: "United Kingdom"},
 
-            "India, male": { x: width5- 300, y: height5-480, color: "#93D1BA", theme: "Male Dominance"},
-            "India, violence": { x: width5- 600, y: height5-480, color: "#BEE5AA", theme: "Violence"},
-            "India, female": { x: width5 - 900, y: height5-480, color: "#79BACE", theme: "Female Bias"},
-            "India, empowerment": { x: width5- 1200, y: height5-480, color: "lightblue", theme: "Empowerment", country: "India"},
-        }
+    //         "India, male": { x: width5- 300, y: height5-480, color: "#93D1BA", theme: "Male Dominance"},
+    //         "India, violence": { x: width5- 600, y: height5-480, color: "#BEE5AA", theme: "Violence"},
+    //         "India, female": { x: width5 - 900, y: height5-480, color: "#79BACE", theme: "Female Bias"},
+    //         "India, empowerment": { x: width5- 1200, y: height5-480, color: "lightblue", theme: "Empowerment", country: "India"},
+    //     }
     
 
     console.log(logoData.filter(d=>d.site=='bloomberg.com')[0]["link"])
     Promise.all([
         d3.csv("../data/processed/headlines_site.csv"),
-        d3.csv("../data/processed/headlines_cl_sent.csv"),
-        d3.csv("../data/processed/sites_freq.csv"),
         d3.csv("../data/processed/countries_clusters.csv"),
-        d3.csv("https://gist.githubusercontent.com/lnicoletti/c312a25a680167989141e8315b26c92a/raw/707ead31e5bdbb886ff8f7dc5635d5d0568a0a81/citiesYearDeathsHT_party_n.csv"),
+        d3.csv("../data/processed/headlines_cl_sent.csv"),
+        // d3.csv("../data/processed/sites_freq.csv"),
+        // d3.csv("https://gist.githubusercontent.com/lnicoletti/c312a25a680167989141e8315b26c92a/raw/707ead31e5bdbb886ff8f7dc5635d5d0568a0a81/citiesYearDeathsHT_party_n.csv"),
       ])
     // d3.csv("../data/processed/headlines_site.csv")
     // d3.csv("data/citiesYearDeathsHT_party_n.csv")
         .then((datasets) => {
             headlinesSite = datasets[0]
-            headlines = datasets[1]
-            sitesFreq = datasets[2]
-            countriesFreq = datasets[3]
-            police = datasets[4]
+            countriesFreq = datasets[1]
+            headlines = datasets[2]
+            // sitesFreq = datasets[3]
+            // police = datasets[4]
             console.log(headlinesSite) 
-            console.log(headlines) 
-            console.log(sitesFreq) 
             console.log(countriesFreq) 
-            console.log(police) 
+            console.log(headlines) 
+            // console.log(sitesFreq) 
+            // console.log(police) 
             type = "most"
             kind = "tot"
             // add logo links
@@ -490,6 +490,34 @@
         }
 
         function drawWordClusters(data) {
+
+            // console.log(d3.sum(data.filter(d=>(d.cluster === "South Africa, male"), c => +c.frequency)/d3.sum(d=>d.frequency)))
+            // cl = data.filter(d=>(d.cluster === "South Africa, male"))
+            // console.log(d3.sum(data.filter(d=>(d.cluster === "South Africa, male")), d=>+d.frequency)/d3.sum(data, d=>d.frequency))
+
+            groups = {
+                "South Africa, male": { x: width5 - 300, y: height5, color: "#93D1BA", pc_freq: d3.sum(data.filter(d=>(d.cluster === "South Africa, male")), d=>+d.frequency)/d3.sum(data, d=>d.frequency)},
+                "South Africa, violence": { x: width5-600, y: height5, color: "#BEE5AA", pc_freq: d3.sum(data.filter(d=>(d.cluster === "South Africa, violence")), d=>+d.frequency)/d3.sum(data, d=>d.frequency)},
+                "South Africa, female": { x: width5 - 900, y: height5, color: "#79BACE", pc_freq: d3.sum(data.filter(d=>(d.cluster === "South Africa, female")), d=>+d.frequency)/d3.sum(data, d=>d.frequency)},
+                "South Africa, empowerment": { x: width5 - 1200, y: height5, color: "lightblue", country: "South Africa", pc_freq: d3.sum(data.filter(d=>(d.cluster === "South Africa, empowerment")), d=>+d.frequency)/d3.sum(data, d=>d.frequency)},
+    
+                "USA, male": { x: width5- 300, y: height5 - 160, color: "#93D1BA", pc_freq: d3.sum(data.filter(d=>(d.cluster === "USA, male")), d=>+d.frequency)/d3.sum(data, d=>d.frequency)},
+                "USA, violence": { x: width5- 600, y: height5 - 160, color: "#BEE5AA", pc_freq: d3.sum(data.filter(d=>(d.cluster === "USA, violence")), d=>+d.frequency)/d3.sum(data, d=>d.frequency)},
+                "USA, female": { x: width5- 900, y: height5 - 160, color: "#79BACE", pc_freq: d3.sum(data.filter(d=>(d.cluster === "USA, female")), d=>+d.frequency)/d3.sum(data, d=>d.frequency)},
+                "USA, empowerment": { x: width5- 1200, y: height5 - 160, color: "lightblue", country: "United States", pc_freq: d3.sum(data.filter(d=>(d.cluster === "USA, empowerment")), d=>+d.frequency)/d3.sum(data, d=>d.frequency)},
+    
+                "UK, male": { x: width5- 300, y: height5 -320, color: "#93D1BA", pc_freq: d3.sum(data.filter(d=>(d.cluster === "UK, male")), d=>+d.frequency)/d3.sum(data, d=>d.frequency)},
+                "UK, violence": { x: width5- 600, y: height5-320, color: "#BEE5AA", pc_freq: d3.sum(data.filter(d=>(d.cluster === "UK, violence")), d=>+d.frequency)/d3.sum(data, d=>d.frequency)},
+                "UK, female": { x: width5- 900, y: height5-320, color: "#79BACE", pc_freq: d3.sum(data.filter(d=>(d.cluster === "UK, female")), d=>+d.frequency)/d3.sum(data, d=>d.frequency)},
+                "UK, empowerment": { x: width5- 1200, y: height5-320, color: "lightblue", country: "United Kingdom", pc_freq: d3.sum(data.filter(d=>(d.cluster === "UK, empowerment")), d=>+d.frequency)/d3.sum(data, d=>d.frequency)},
+    
+                "India, male": { x: width5- 300, y: height5-480, color: "#93D1BA", theme: "Male Dominance", pc_freq: d3.sum(data.filter(d=>(d.cluster === "India, male")), d=>+d.frequency)/d3.sum(data, d=>d.frequency)},
+                "India, violence": { x: width5- 600, y: height5-480, color: "#BEE5AA", theme: "Violence", pc_freq: d3.sum(data.filter(d=>(d.cluster === "India, violence")), d=>+d.frequency)/d3.sum(data, d=>d.frequency)},
+                "India, female": { x: width5 - 900, y: height5-480, color: "#79BACE", theme: "Female Bias", pc_freq: d3.sum(data.filter(d=>(d.cluster === "India, female")), d=>+d.frequency)/d3.sum(data, d=>d.frequency)},
+                "India, empowerment": { x: width5- 1200, y: height5-480, color: "lightblue", theme: "Empowerment", country: "India", pc_freq: d3.sum(data.filter(d=>(d.cluster === "India, empowerment")), d=>+d.frequency)/d3.sum(data, d=>d.frequency)},
+            }
+
+            console.log(Array(groups).map(d =>+d.pc_freq))
 
             cluster_padding = 5;    // Space between nodes in different stages
             padding = 2            // Space between nodes
