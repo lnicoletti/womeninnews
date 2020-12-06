@@ -319,7 +319,7 @@
                 // .attr("fill", "#03071e")
                 // .attr("fill", d=>+d.polarity > 0.5? 'darkred':'grey')
                 // .attr("fill", d=>colorScale(d.country_of_pub))
-                .attr("fill", "grey")
+                .attr("fill", "lightgrey")
                 .attr("opacity", "0.8")
                 .style('stroke', "#323232")
                 .attr('r', d=>radius(+d.monthly_visits))
@@ -556,7 +556,7 @@
             // Ease in the circles.
             circle
                 .transition()
-                .delay((d, i) => i * 5)
+                // .delay((d, i) => i * 5)
                 .duration(800)
                 .attrTween("r", d => {
                     const i = d3.interpolate(0, d.radius);
@@ -592,6 +592,30 @@
             // .attr("x", d => groups[d].x)
             // .attr("y", d => groups[d].y - 50)
             // .text(d => groups[d].cnt);
+
+            legendData = [{level: "Less Words", radius: 3, y: height5+70, x: width5/2.1, anchor:"end"}, 
+                          {level: "", radius: 5, y: height5+70, x: width5/2.06}, 
+                          {level: "More Words", radius: 10, y: height5+70, x: width5/2, anchor:"start"}]
+
+            legend = svg.append("g")
+                .selectAll("circle")
+                .data(legendData)
+                .join('circle')
+                .attr("cx", d => d.x)
+                .attr("cy", d => d.y)
+                .attr("r", d => d.radius)
+                .attr("fill","lightgrey")
+            
+            textLegend = svg.append("g")
+                .selectAll("text")
+                .data(legendData)
+                .join("text")
+                .text(d=>d.level)
+                .attr("x", d => d.x)
+                .attr("y", d => d.y+20)
+                .attr("class", "themesText")
+                .attr("text-anchor", d=>d.anchor)
+                .attr("fill","lightgrey")
 
             // Forces
             const simulation = d3.forceSimulation(nodes)

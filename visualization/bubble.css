@@ -169,7 +169,7 @@ stroke: #ccc;
 .legend text {
 fill: silver;
 font: 8px sans-serif;
-text-anchor: middle;
+text-anchor: end;
 }
 
 .svg-container {
