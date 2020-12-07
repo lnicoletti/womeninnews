@@ -43,7 +43,7 @@ fill: silver;
 .themesText {
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
+    font-size: 14px;
     text-anchor: middle;
     fill: silver;
     }
@@ -82,6 +82,14 @@ font-weight: bold;
 font-family: Arial, Helvetica, sans-serif;
 }
 
+h1 {
+    /* text-align: left; */
+    font-family: Georgia;
+    /* font-size: x-large; */
+    font-style: bold;
+    color: #ccc
+    }
+
 h4 {
 /* text-align: left; */
 font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
@@ -102,12 +110,12 @@ color: #ccc
 }
 
 .description {
-max-width: 520px;
+max-width: 700;
 text-align: justify;
 text-anchor: middle;
 color: rgb(167, 167, 167);
 font-family: Verdana, Geneva, Tahoma, sans-serif;
-font-size: small;
+font-size: 15px;
 margin-bottom: 0;
 }
 
@@ -182,11 +190,23 @@ margin-right: 2.5%;
 vertical-align: top;
 overflow: hidden;
 }
+
+.svg-container2 {
+    display: inline-block;
+    position: relative;
+    width: 95%;
+    padding-bottom: 50%;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    vertical-align: top;
+    overflow: hidden;
+    }
+
 .svg-content {
 display: inline-block;
 position: absolute;
 text-align: center;
-top: 0;
+top: 50;
 left: 0;
 }
 
@@ -200,3 +220,10 @@ left: 0;
     /* background-color: white; */
     color:#03071e;            
 }
+
+.clusterLegend {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    /* width: 50%; */
+  }

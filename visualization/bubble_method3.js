@@ -319,7 +319,8 @@
                 // .attr("fill", "#03071e")
                 // .attr("fill", d=>+d.polarity > 0.5? 'darkred':'grey')
                 // .attr("fill", d=>colorScale(d.country_of_pub))
-                .attr("fill", "lightgrey")
+                // .attr("fill", "#d9cac9")
+                .attr("fill", "white")
                 .attr("opacity", "0.8")
                 .style('stroke', "#323232")
                 .attr('r', d=>radius(+d.monthly_visits))
@@ -473,7 +474,7 @@
         }
 
         
-        function tooltipCluster(word, freq, theme, country, coords) {
+        function tooltipCluster(word, freq, theme, country, coords, pc_freq) {
             console.log(word)
             d3.select("#tooltipCluster")
                 .style("display", "block")
@@ -481,12 +482,12 @@
                 .style("left", (coords[0]+10) + "px")
                 // .style("top", (d3.mouse(this)[0]+90) + "px")
                 // .style("left", (d3.mouse(this)[1]) + "px")
-                .style('font', '12px sans-serif')
-                .style('background-color', clusterColors(freq))
+                .style('font', '14px sans-serif')
+                .style('background-color', clusterColors(pc_freq))
                 // .style('fill-opacity', 0.5)
                 .attr('stroke', '#ccc')
                 // .text(text)
-                .html("<b>" + word + "<br/> </b> used <b>" + freq + "</b> times in " + "<b>" + country + "</b> headlines")
+                .html("<b>" + word + "<br/> </b> Used <b>" + freq + "</b> times in " + "<b>" + country + "</b> headlines")
         }
 
         function drawWordClusters(data) {
@@ -513,7 +514,7 @@
     
                 "India, male": { x: width5- 300, y: height5-480, color: "#93D1BA", theme: "Male Dominance", pc_freq: d3.sum(data.filter(d=>(d.cluster === "India, male")), d=>+d.frequency)/d3.sum(data, d=>d.frequency)},
                 "India, violence": { x: width5- 600, y: height5-480, color: "#BEE5AA", theme: "Violence", pc_freq: d3.sum(data.filter(d=>(d.cluster === "India, violence")), d=>+d.frequency)/d3.sum(data, d=>d.frequency)},
-                "India, female": { x: width5 - 900, y: height5-480, color: "#79BACE", theme: "Female Bias", pc_freq: d3.sum(data.filter(d=>(d.cluster === "India, female")), d=>+d.frequency)/d3.sum(data, d=>d.frequency)},
+                "India, female": { x: width5 - 900, y: height5-480, color: "#79BACE", theme: "Women Stereotypes", pc_freq: d3.sum(data.filter(d=>(d.cluster === "India, female")), d=>+d.frequency)/d3.sum(data, d=>d.frequency)},
                 "India, empowerment": { x: width5- 1200, y: height5-480, color: "lightblue", theme: "Empowerment", country: "India", pc_freq: d3.sum(data.filter(d=>(d.cluster === "India, empowerment")), d=>+d.frequency)/d3.sum(data, d=>d.frequency)},
             }
 
@@ -534,7 +535,7 @@
             
             // color intensity === the proportion of words from all headlines from a country that fall within a specific theme
             clusterColors = d3.scaleSequential(d3.interpolateLab("lightgrey", "#F52D4F"))
-                        .domain([0.015, 0.15]) 
+                        .domain([0.015, 0.14]) 
 
             extentWordFreq = d3.extent(data, d=>+d.perc_freq)
             // console.log(extentWordFreq)
@@ -574,14 +575,16 @@
                 .attr("cx", d => d.x)
                 .attr("cy", d => d.y)
                 .attr("fill", "lightgrey")
+                .style('stroke', "#323232")
+                .style('stroke-width', "0.1")
                 // .attr("fill", d => clusterColors(d.theme))
                 // .attr("fill", d => clusterColors(+d.frequency))
                 .attr("fill", d => clusterColors(groups[d.clusterName].pc_freq))
                 .on("mouseenter", (d) => {
-                    tooltipCluster(d.text, d.frequency, d.theme, d.country, [d3.event.clientX, d3.event.clientY])
+                    tooltipCluster(d.text, d.frequency, d.theme, d.country, [d3.event.clientX, d3.event.clientY], groups[d.clusterName].pc_freq)
                 })
                 .on("mousemove", (d) => {
-                    tooltipCluster(d.text, d.frequency, d.theme, d.country, [d3.event.clientX, d3.event.clientY])
+                    tooltipCluster(d.text, d.frequency, d.theme, d.country, [d3.event.clientX, d3.event.clientY], groups[d.clusterName].pc_freq)
                 })
                 .on("mouseleave", d => {
                     d3.select("#tooltipCluster").style("display", "none")
@@ -628,11 +631,23 @@
             // .attr("y", d => groups[d].y - 50)
             // .text(d => groups[d].cnt);
 
-            legendData = [{level: "Less Words", radius: 3, y: height5+70, x: width5/2.1, anchor:"end"}, 
+            // legend
+
+            // legend = d3.select("#legendDiv")
+            //             // .append("svg")
+            //             .attr("width", "300")
+            //             .attr("heigh", "300")
+
+            legendData = [{level: "Word is less frequent", radius: 3, y: height5+70, x: width5/2.1, anchor:"end"}, 
                           {level: "", radius: 5, y: height5+70, x: width5/2.06}, 
-                          {level: "More Words", radius: 10, y: height5+70, x: width5/2, anchor:"start"}]
+                          {level: "Word is more frequent", radius: 10, y: height5+70, x: width5/2, anchor:"start"}]
+            // legendData = [{level: "Word is less frequent", radius: 3, y: 20, x: 1000, anchor:"end"}, 
+            //               {level: "", radius: 5, y: height5+70, x: width5/2.06}, 
+            //               {level: "Word is more frequent", radius: 10, y: 20, x: 200, anchor:"start"}]
+            // clusters composed of more bubbles indicate more words used for a specific category
 
             legend = svg.append("g")
+            // legend.append("g")
                 .selectAll("circle")
                 .data(legendData)
                 .join('circle')
@@ -642,14 +657,15 @@
                 .attr("fill","lightgrey")
             
             textLegend = svg.append("g")
+            // textLegend = legend.append("g")
                 .selectAll("text")
                 .data(legendData)
                 .join("text")
                 .text(d=>d.level)
                 .attr("x", d => d.x)
-                .attr("y", d => d.y+20)
+                .attr("y", d => d.y+35)
                 .attr("class", "themesText")
-                .attr("text-anchor", d=>d.anchor)
+                .style("text-anchor", d=>d.anchor)
                 .attr("fill","lightgrey")
 
             // Forces

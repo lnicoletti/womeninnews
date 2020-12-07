@@ -5,19 +5,18 @@
 </head>
  
 <body> 
-    <h4 style = "text-align: center">How are Women Represented in the News?</h4>
+    <h1 style = "text-align: center">How are Women Represented in the News?</h4>
     <!-- <div id="sliderDiv"></div><input id="slider" type="range" min="2000" max="2020" step="1" value="2000"> -->
     <div class="subtitle">
-        <p class="description"> For a given year, the chart below shows the death toll of policing in 
-            U.S. cities above 50,000 people. Bubbles represent cities, and are sized by population.
-             Hover over a bubble to see how police violence has evolved over time in a specific city.
+        <p class="description"> For a given news outlet, the chart below shows the amount of gender bias
+            used in headlines of that outlet. Bubbles represent outlets, and are sized by the size of their audience.
     </div>
-    <div class="buttons">
+    <!-- <div class="buttons">
         <button id="Gender Bias" type="button" value="bias">Gender Bias</button>
         <button id="Empowerment" type="button" value="empowerment">Empowerment</button>
         <button id="Violence" type="button" value="violence">Violence</button>
         <button id="Polarity" type="button" value="polarity">Polarity</button>
-    </div>
+    </div> -->
     <div id="chart" class="svg-container" style="text-align: center;">
     <svg id="bubblechart">
         <g class="xAxis" />
@@ -33,7 +32,22 @@
     </div>
     <!-- <h5></h5> -->
     <!-- <svg id="tooltipBar">Tooltip</svg> -->
-    <div id="clusterChart" class="svg-container" style="text-align: center;">
+    <h1 style = "text-align: center">Across 4 continents, women make the news 
+        <span style="color:#F52D4F">most often</span> when we talk about <b>violence</b> or <b>women stereotypes</b></h4>
+    <div class="subtitle">
+        <p class="description">The chart below shows the words used by news outlets to talk about women in <b>India</b>, <b>South Africa</b>,
+                the <b>United Kingdom</b>, and the <b>United States</b>. The words are split into four categories: Empowerment, Women Stereotypes, 
+                Violence, and Male Dominance. Each bubble represents a word. The size of the bubble indicates the frequency in which a word
+                has been used.<br><br>
+                Groups of words make up clusters. Clusters composed of more bubbles indicate more words used for a specific 
+                category. The color intensity of the clusters reflects the prevalence of each theme in each country's 
+                news, from <b><span style="color:lightgray">least prevalent</span></b> to <b><span style="color:#F52D4F">most prevalent</span></b>.
+                Prevalence is the proportion of a categorical group of words over the total number of words used in analyzed headlines. 
+    </div>
+    <div id="legendDiv" width="200" height="300" style="text-align: center;">
+    <!-- <img src="img/legend.png" alt="legend" class="clusterLegend" height="150"> -->
+    </div>
+    <div id="clusterChart" class="svg-container2" style="text-align: center;">
         <svg id="bubbleClusters">
             <g class="xAxis" />
             <g class="yAxis" />
