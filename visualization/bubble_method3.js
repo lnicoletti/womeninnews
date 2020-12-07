@@ -517,7 +517,9 @@
                 "India, empowerment": { x: width5- 1200, y: height5-480, color: "lightblue", theme: "Empowerment", country: "India", pc_freq: d3.sum(data.filter(d=>(d.cluster === "India, empowerment")), d=>+d.frequency)/d3.sum(data, d=>d.frequency)},
             }
 
-            console.log(Array(groups).map(d =>+d.pc_freq))
+            // console.log(Array(groups).map(d =>+d.pc_freq))
+            console.log(groups['UK, empowerment'].pc_freq)
+
 
             cluster_padding = 5;    // Space between nodes in different stages
             padding = 2            // Space between nodes
@@ -527,8 +529,12 @@
             //     .range(d3.schemeTableau10.reverse())
             //     .domain(data.map(d =>d.cluster))
 
-            clusterColors = d3.scaleSequentialQuantile(d3.interpolateLab("lightgrey", "#F52D4F"))
-                        .domain(data.map(d =>+d.frequency))
+            // clusterColors = d3.scaleSequentialQuantile(d3.interpolateLab("lightgrey", "#F52D4F"))
+            //             .domain(data.map(d =>+d.frequency)) 
+            
+            // color intensity === the proportion of words from all headlines from a country that fall within a specific theme
+            clusterColors = d3.scaleSequential(d3.interpolateLab("lightgrey", "#F52D4F"))
+                        .domain([0.015, 0.15]) 
 
             extentWordFreq = d3.extent(data, d=>+d.perc_freq)
             // console.log(extentWordFreq)
@@ -569,7 +575,8 @@
                 .attr("cy", d => d.y)
                 .attr("fill", "lightgrey")
                 // .attr("fill", d => clusterColors(d.theme))
-                .attr("fill", d => clusterColors(+d.frequency))
+                // .attr("fill", d => clusterColors(+d.frequency))
+                .attr("fill", d => clusterColors(groups[d.clusterName].pc_freq))
                 .on("mouseenter", (d) => {
                     tooltipCluster(d.text, d.frequency, d.theme, d.country, [d3.event.clientX, d3.event.clientY])
                 })
