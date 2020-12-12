@@ -18,7 +18,8 @@ var svg = d3.select("#my_dataviz")
 console.log("before json")
 
 // d3.json("word_connections.json").then(function(data) {
-  d3.json("../data/processed/word_connections_4.json").then(function(data) {
+  // d3.json("../data/processed/word_connections_4.json").then(function(data) {
+d3.json("../data/processed/word_connections_4_themes_filtered.json").then(function(data) {
     console.log(data)
     // console.log(data.nodes.filter(d=>d.frequency>50))
   // Initialize the links
@@ -52,28 +53,21 @@ console.log("before json")
     .selectAll("line")
     .data(data.links)
     .join("line")
-      .style("stroke", "#aaa")
+      // .style("stroke", "#aaa")
       .style("stroke-width", d=>linkWeight(d.weight))
       .style("opacity", d=>linkOpacity(d.weight))
+      .style("stroke", d=>d.theme === "female_bias"?"pink":
+                        d.theme === "male_bias"?"darkblue":
+                        d.theme === "empowerment"?"#ccad34":
+                        d.theme === "violence"?"red":
+                        d.theme === "politics"?"green":
+                        d.theme === "race"?"#964B00":
+                        "#aaa")
 
   // Initialize the nodes
   var node = svg
     .selectAll("circle")
     .data(data.nodes)
-    
-  circle = node.join("circle")
-      .attr("r", d=>bubbleRadius(d.frequency))
-      // .attr("r", 5)
-      .style("fill", "black")
-    .on("mouseover", (d) => {
-        link.style('opacity', function(l) {
-          if (d === l.source) return 1;
-          else                return 0.08;
-        })
-      })
-      .on("mouseout", (d) => {
-          link.style("opacity", d=>linkOpacity(d.weight))
-        });
   
   // label each node
   // add a label to each node
@@ -82,7 +76,14 @@ console.log("before json")
     .data(data.nodes.filter( d => (d.frequency >= 300) ))
     .join("text")
     .text(d=>d.id)
-    .style("fill", "black")
+    // .style("fill", "black")
+    .style("fill", d=>d.theme === "female_bias"?"pink":
+                        d.theme === "male_bias"?"darkblue":
+                        d.theme === "empowerment"?"#ccad34":
+                        d.theme === "violence"?"red":
+                        d.theme === "politics"?"green":
+                        d.theme === "race"?"#964B00":
+                        "#9b9b9b")
     // .attr("font-size", 10);
     .attr("font-size", d=>fontScale(d.frequency))
     .attr("font-weight", "900")
@@ -92,6 +93,39 @@ console.log("before json")
     //     return d.colour;
     // });
 
+    circle = node.join("circle")
+      .attr("r", d=>bubbleRadius(d.frequency))
+      // .attr("r", 5)
+      .style("fill", d=>d.theme === "female_bias"?"pink":
+                        d.theme === "male_bias"?"darkblue":
+                        d.theme === "empowerment"?"#ccad34":
+                        d.theme === "violence"?"red":
+                        d.theme === "politics"?"green":
+                        d.theme === "race"?"#964B00":
+                        "#9b9b9b")
+    .on("mouseover.link", (d) => {
+        link.style('opacity', function(l) {
+          if (d === l.source) return 1;
+          else                return 0.08;
+        })
+      })
+      // .on("mouseover.text", (d) => {
+      //   text.style('opacity', function(l) {
+      //     if (d === l.source) return 1;
+      //     else                return 0.08;
+      //   })
+      // })
+      // .on("mouseover.text", (d) => {
+      //   text.style('opacity', 0.08)
+      //   d3.select(this).style("opacity", 1);
+      //   })
+      .on("mouseout.link", (d) => {
+          link.style("opacity", d=>linkOpacity(d.weight))
+        })
+      // .on("mouseout.text", (d) => {
+      //     text.style("opacity", 1)
+      //   });
+
   // Let's list the force we wanna apply on the network
   var simulation = d3.forceSimulation(data.nodes)                 // Force algorithm is applied to data.nodes
       .force("link", d3.forceLink()                               // This force provides links between nodes
@@ -99,7 +133,10 @@ console.log("before json")
             .links(data.links)                                    // and this the list of links
       )
       .force("charge", d3.forceManyBody().strength(-400))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
-      .force("center", d3.forceCenter(width / 2, height / 2)) 
+       // word_connections_4_themes_filtered
+      .force("center", d3.forceCenter(width / 1.7, height / 1.3)) 
+      // word_connections_4_themes
+      // .force("center", d3.forceCenter(width / 2, height / 2)) 
           // This force attracts nodes to the center of the svg area
       .on("end", ticked);
 
@@ -115,9 +152,11 @@ console.log("before json")
     circle
          .attr("cx", function (d) { return d.x; })
          .attr("cy", function(d) { return d.y; });
+    // link.attr("d", positionLink);
+    // circle.attr("transform", positionNode)
     text
-         .attr("x", function (d) { return d.x+28; })
-         .attr("y", function(d) { return d.y-10; })
+         .attr("x", function (d) { return d.x+20; })
+         .attr("y", function(d) { return d.y; })
     
   }
 
@@ -125,22 +164,31 @@ console.log("before json")
 
 });
 
+// function positionLink(d) {
+//   return "M" + d[0].x + "," + d[0].y
+//        + "S" + d[1].x + "," + d[1].y
+//        + " " + d[2].x + "," + d[2].y;
+// }
+
+// function positionNode(d) {
+//   return "translate(" + d.x + "," + d.y + ")";
+// }
 // links are drawn as curved paths between nodes
-function positionLink(d) {
-  var offset = 30;
+// function positionLink(d) {
+//   var offset = 30;
 
-  var midpoint_x = (d.source.x + d.target.x) / 2;
-  var midpoint_y = (d.source.y + d.target.y) / 2;
+//   var midpoint_x = (d.source.x + d.target.x) / 2;
+//   var midpoint_y = (d.source.y + d.target.y) / 2;
 
-  var dx = (d.target.x - d.source.x);
-  var dy = (d.target.y - d.source.y);
+//   var dx = (d.target.x - d.source.x);
+//   var dy = (d.target.y - d.source.y);
 
-  var normalise = Math.sqrt((dx * dx) + (dy * dy));
+//   var normalise = Math.sqrt((dx * dx) + (dy * dy));
 
-  var offSetX = midpoint_x + offset*(dy/normalise);
-  var offSetY = midpoint_y - offset*(dx/normalise);
+//   var offSetX = midpoint_x + offset*(dy/normalise);
+//   var offSetY = midpoint_y - offset*(dx/normalise);
 
-  return "M" + d.source.x + "," + d.source.y +
-      "S" + offSetX + "," + offSetY +
-      " " + d.target.x + "," + d.target.y;
-}
+//   return "M" + d.source.x + "," + d.source.y +
+//       "S" + offSetX + "," + offSetY +
+//       " " + d.target.x + "," + d.target.y;
+// }
