@@ -1,7 +1,11 @@
 // set the dimensions and margins of the graph
 var margin = {top: 10, right: 30, bottom: 30, left: 40},
-  width = 2500 - margin.left - margin.right,
-  height = 2500 - margin.top - margin.bottom;
+// big network
+  // width = 2500 - margin.left - margin.right,
+  // height = 2500 - margin.top - margin.bottom;
+// country networks
+width = 1200 - margin.left - margin.right,
+height = 1200 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
 var svg = d3.select("#my_dataviz")
@@ -19,31 +23,48 @@ console.log("before json")
 
 // d3.json("word_connections.json").then(function(data) {
   // d3.json("../data/processed/word_connections_4.json").then(function(data) {
-d3.json("../data/processed/word_connections_4_themes_filtered.json").then(function(data) {
+// d3.json("../data/processed/word_connections_4_themes_filtered.json").then(function(data) {
+  d3.json("../data/processed/word_connections_IN.json").then(function(data) {
+    const links = data.links.map(d => Object.create(d))
+    const nodes = data.nodes.map(d => Object.create(d))
+
     console.log(data)
     // console.log(data.nodes.filter(d=>d.frequency>50))
   // Initialize the links
 
   // scales
-  extentWordFreq = d3.extent(data.nodes, d=>d.frequency)
+  extentWordFreq = d3.extent(nodes, d=>d.perc_freq)
             console.log(extentWordFreq)
   var bubbleRadius = d3.scaleSqrt()
                 .domain(extentWordFreq)
-                .range([1, 25])
+                // big net
+                // .range([1, 25])
+                .range([1, 12])
 
-  extentLinkWeight = d3.extent(data.links, d=>d.weight)
+  extentLinkWeight = d3.extent(links, d=>d.weight)
           console.log(extentLinkWeight)
   var linkWeight = d3.scaleLinear()
                 .domain(extentLinkWeight)
-                .range([0.00005, 10])
+                .range([0.00005, 12])
   
   var linkOpacity = d3.scaleLinear()
                 .domain(extentLinkWeight)
                 .range([0.2, 1])
+
+  var nodeOpacity = d3.scaleLinear()
+                .domain(extentWordFreq)
+                .range([0.2, 1])
+
+  var textOpacity = d3.scaleQuantile()
+                .domain(extentWordFreq)
+                .range([0.4, 1])
                 
   var fontScale = d3.scaleLinear()
                 .domain(extentWordFreq)
-                .range([7, 60])
+                // big net
+                // .range([7, 60])
+                .range([5, 25])
+
   
   // var linkWeight = d3.scaleLinear()
   //               .domain(extentLinkWeight)
@@ -51,7 +72,8 @@ d3.json("../data/processed/word_connections_4_themes_filtered.json").then(functi
 
   var link = svg
     .selectAll("line")
-    .data(data.links)
+    // .data(data.links)
+    .data(links)
     .join("line")
       // .style("stroke", "#aaa")
       .style("stroke-width", d=>linkWeight(d.weight))
@@ -67,13 +89,52 @@ d3.json("../data/processed/word_connections_4_themes_filtered.json").then(functi
   // Initialize the nodes
   var node = svg
     .selectAll("circle")
-    .data(data.nodes)
-  
+    // .data(data.nodes)
+    // .data(data.nodes.filter( d => (d.frequency >= 70) ))
+    .data(nodes)
+
+    circle = node.join("circle")
+      .attr("r", d=>bubbleRadius(d.perc_freq))
+      .attr("opacity", d=>nodeOpacity(d.perc_freq))
+      // .attr("r", 5)
+      .style("fill", d=>d.theme === "female_bias"?"pink":
+                        d.theme === "male_bias"?"darkblue":
+                        d.theme === "empowerment"?"#ccad34":
+                        d.theme === "violence"?"red":
+                        d.theme === "politics"?"green":
+                        d.theme === "race"?"#964B00":
+                        "#9b9b9b")
+    // .on("mouseover.link", (d) => {
+    //     link.style('opacity', function(l) {
+    //       if (d === l.source) return 1;
+    //       else                return 0.08;
+    //     })
+    //   })
+    //   // .on("mouseover.text", (d) => {
+    //   //   text.style('opacity', function(l) {
+    //   //     if (d === l.source) return 1;
+    //   //     else                return 0.08;
+    //   //   })
+    //   // })
+    //   // .on("mouseover.text", (d) => {
+    //   //   text.style('opacity', 0.08)
+    //   //   d3.select(this).style("opacity", 1);
+    //   //   })
+    //   .on("mouseout.link", (d) => {
+    //       link.style("opacity", d=>linkOpacity(d.weight))
+    //     })
+      .on('mouseover.fade', fade(0.1))
+  	  .on('mouseout.fade', fade(1));
+      // .on("mouseout.text", (d) => {
+      //     text.style("opacity", 1)
+      //   });
+
   // label each node
   // add a label to each node
   var text = svg
     .selectAll("text")
-    .data(data.nodes.filter( d => (d.frequency >= 300) ))
+    // .data(data.nodes.filter( d => (d.frequency >= 70) ))
+    .data(nodes.filter(d => (d.perc_freq >= 150)))
     .join("text")
     .text(d=>d.id)
     // .style("fill", "black")
@@ -85,56 +146,32 @@ d3.json("../data/processed/word_connections_4_themes_filtered.json").then(functi
                         d.theme === "race"?"#964B00":
                         "#9b9b9b")
     // .attr("font-size", 10);
-    .attr("font-size", d=>fontScale(d.frequency))
+    .attr("font-size", d=>fontScale(d.perc_freq))
     .attr("font-weight", "900")
+    .attr("opacity", d=>textOpacity(d.perc_freq))
     .attr("class", 'nodeText')
+    .on('mouseover.fade', fade(0.05))
+  	.on('mouseout.fade', fade(1));
     // .style("stroke-width", 0.5)
     // .style("fill", function(d) {
     //     return d.colour;
     // });
 
-    circle = node.join("circle")
-      .attr("r", d=>bubbleRadius(d.frequency))
-      // .attr("r", 5)
-      .style("fill", d=>d.theme === "female_bias"?"pink":
-                        d.theme === "male_bias"?"darkblue":
-                        d.theme === "empowerment"?"#ccad34":
-                        d.theme === "violence"?"red":
-                        d.theme === "politics"?"green":
-                        d.theme === "race"?"#964B00":
-                        "#9b9b9b")
-    .on("mouseover.link", (d) => {
-        link.style('opacity', function(l) {
-          if (d === l.source) return 1;
-          else                return 0.08;
-        })
-      })
-      // .on("mouseover.text", (d) => {
-      //   text.style('opacity', function(l) {
-      //     if (d === l.source) return 1;
-      //     else                return 0.08;
-      //   })
-      // })
-      // .on("mouseover.text", (d) => {
-      //   text.style('opacity', 0.08)
-      //   d3.select(this).style("opacity", 1);
-      //   })
-      .on("mouseout.link", (d) => {
-          link.style("opacity", d=>linkOpacity(d.weight))
-        })
-      // .on("mouseout.text", (d) => {
-      //     text.style("opacity", 1)
-      //   });
-
   // Let's list the force we wanna apply on the network
-  var simulation = d3.forceSimulation(data.nodes)                 // Force algorithm is applied to data.nodes
+  // var simulation = d3.forceSimulation(data.nodes)                 // Force algorithm is applied to data.nodes
+      d3.forceSimulation(nodes)
       .force("link", d3.forceLink()                               // This force provides links between nodes
             .id(function(d) { return d.id; })                     // This provide  the id of a node
-            .links(data.links)                                    // and this the list of links
+            // .links(data.links)                                    // and this the list of links
+            .links(links)  
       )
-      .force("charge", d3.forceManyBody().strength(-400))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
-       // word_connections_4_themes_filtered
-      .force("center", d3.forceCenter(width / 1.7, height / 1.3)) 
+
+    .force("charge", d3.forceManyBody().strength(-90))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+      // word_connections_4_themes_filtered
+     .force("center", d3.forceCenter(width / 2, height / 2)) 
+      // .force("charge", d3.forceManyBody().strength(-400))         
+      //  // word_connections_4_themes_filtered
+      // .force("center", d3.forceCenter(width / 1.7, height / 1.3)) 
       // word_connections_4_themes
       // .force("center", d3.forceCenter(width / 2, height / 2)) 
           // This force attracts nodes to the center of the svg area
@@ -144,6 +181,8 @@ d3.json("../data/processed/word_connections_4_themes_filtered.json").then(functi
   function ticked() {
     link
       // .attr("d", positionLink);
+      // .attr("d", linkArc);
+
         .attr("x1", function(d) { return d.source.x; })
         .attr("y1", function(d) { return d.source.y; })
         .attr("x2", function(d) { return d.target.x; })
@@ -155,14 +194,44 @@ d3.json("../data/processed/word_connections_4_themes_filtered.json").then(functi
     // link.attr("d", positionLink);
     // circle.attr("transform", positionNode)
     text
-         .attr("x", function (d) { return d.x+20; })
+         .attr("x", function (d) { return d.x+14; })
          .attr("y", function(d) { return d.y; })
     
   }
 
   console.log("data plotted")
 
+  function fade(opacity) {
+    return d => {
+      circle.style('opacity', function (o) { return isConnected(d, o) ?d=>nodeOpacity(d.perc_freq): opacity });
+      text.style('visibility', function (o) { return isConnected(d, o) ? "visible" : "hidden" });
+      link.style('opacity', o => (o.source === d || o.target === d ? 1 : opacity));
+      if(opacity === 1){
+        circle.style('opacity', d=>nodeOpacity(d.perc_freq))
+        text.style('visibility', 'visible')
+        text.style('opacity', d=>textOpacity(d.perc_freq))
+        link.style('opacity', d=>linkOpacity(d.weight))
+      }
+    };
+  }
+  
+  const linkedByIndex = {};
+  links.forEach(d => {
+    linkedByIndex[`${d.source.index},${d.target.index}`] = 1;
+  });
+  
+  function isConnected(a, b) {
+    return linkedByIndex[`${a.index},${b.index}`] || linkedByIndex[`${b.index},${a.index}`] || a.index === b.index;
+  }
+
 });
+
+// function linkArc(d) {
+//   var dx = d.target.x - d.source.x,
+//       dy = d.target.y - d.source.y,
+//       dr = Math.sqrt(dx * dx + dy * dy);
+//   return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+// }
 
 // function positionLink(d) {
 //   return "M" + d[0].x + "," + d[0].y
