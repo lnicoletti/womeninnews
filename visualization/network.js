@@ -25,6 +25,7 @@ console.log("before json")
   // d3.json("../data/processed/word_connections_4.json").then(function(data) {
 // d3.json("../data/processed/word_connections_4_themes_filtered.json").then(function(data) {
   d3.json("../data/processed/word_connections_UK.json").then(function(data) {
+    // d3.json("../data/processed/word_connections_IN_small.json").then(function(data) {
     const links = data.links.map(d => Object.create(d))
     const nodes = data.nodes.map(d => Object.create(d))
 
