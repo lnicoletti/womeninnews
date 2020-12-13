@@ -24,7 +24,7 @@ console.log("before json")
 // d3.json("word_connections.json").then(function(data) {
   // d3.json("../data/processed/word_connections_4.json").then(function(data) {
 // d3.json("../data/processed/word_connections_4_themes_filtered.json").then(function(data) {
-  d3.json("../data/processed/word_connections_IN.json").then(function(data) {
+  d3.json("../data/processed/word_connections_UK.json").then(function(data) {
     const links = data.links.map(d => Object.create(d))
     const nodes = data.nodes.map(d => Object.create(d))
 
@@ -49,13 +49,13 @@ console.log("before json")
   
   var linkOpacity = d3.scaleLinear()
                 .domain(extentLinkWeight)
-                .range([0.2, 1])
+                .range([0.05, 1])
 
   var nodeOpacity = d3.scaleLinear()
                 .domain(extentWordFreq)
                 .range([0.2, 1])
 
-  var textOpacity = d3.scaleQuantile()
+  var textOpacity = d3.scaleLinear()
                 .domain(extentWordFreq)
                 .range([0.4, 1])
                 
@@ -70,16 +70,40 @@ console.log("before json")
   //               .domain(extentLinkWeight)
   //               .range([0.005, 10])
 
+  // Let's list the force we wanna apply on the network
+  // var simulation = d3.forceSimulation(data.nodes)                 // Force algorithm is applied to data.nodes
+  simulation = d3.forceSimulation(nodes)
+      .force("link", d3.forceLink()                               // This force provides links between nodes
+            .id(function(d) { return d.id; })                     // This provide  the id of a node
+            // .links(data.links)                                    // and this the list of links
+            .links(links)  
+      )
+
+     .force("charge", d3.forceManyBody().strength(-100))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+      // word_connections_4_themes_filtered
+     .force("center", d3.forceCenter(width / 2.1, height / 2)) 
+     .force("x", d3.forceX())
+     .force("y", d3.forceY())
+      // .force("charge", d3.forceManyBody().strength(-400))         
+      //  // word_connections_4_themes_filtered
+      // .force("center", d3.forceCenter(width / 1.7, height / 1.3)) 
+      // word_connections_4_themes
+      // .force("center", d3.forceCenter(width / 2, height / 2)) 
+          // This force attracts nodes to the center of the svg area
+      .on("end", ticked);
+
   var link = svg
     .selectAll("line")
     // .data(data.links)
     .data(links)
-    .join("line")
+    // .join("line")
+    .join("path")
+    .attr("fill", "none")
       // .style("stroke", "#aaa")
       .style("stroke-width", d=>linkWeight(d.weight))
       .style("opacity", d=>linkOpacity(d.weight))
       .style("stroke", d=>d.theme === "female_bias"?"pink":
-                        d.theme === "male_bias"?"darkblue":
+                        d.theme === "male_bias"?"blue":
                         d.theme === "empowerment"?"#ccad34":
                         d.theme === "violence"?"red":
                         d.theme === "politics"?"green":
@@ -90,44 +114,22 @@ console.log("before json")
   var node = svg
     .selectAll("circle")
     // .data(data.nodes)
-    // .data(data.nodes.filter( d => (d.frequency >= 70) ))
-    .data(nodes)
+    .data(nodes.filter( d => (d.perc_freq >= 60) ))
+    // .data(nodes)
 
     circle = node.join("circle")
       .attr("r", d=>bubbleRadius(d.perc_freq))
       .attr("opacity", d=>nodeOpacity(d.perc_freq))
       // .attr("r", 5)
       .style("fill", d=>d.theme === "female_bias"?"pink":
-                        d.theme === "male_bias"?"darkblue":
+                        d.theme === "male_bias"?"blue":
                         d.theme === "empowerment"?"#ccad34":
                         d.theme === "violence"?"red":
                         d.theme === "politics"?"green":
                         d.theme === "race"?"#964B00":
                         "#9b9b9b")
-    // .on("mouseover.link", (d) => {
-    //     link.style('opacity', function(l) {
-    //       if (d === l.source) return 1;
-    //       else                return 0.08;
-    //     })
-    //   })
-    //   // .on("mouseover.text", (d) => {
-    //   //   text.style('opacity', function(l) {
-    //   //     if (d === l.source) return 1;
-    //   //     else                return 0.08;
-    //   //   })
-    //   // })
-    //   // .on("mouseover.text", (d) => {
-    //   //   text.style('opacity', 0.08)
-    //   //   d3.select(this).style("opacity", 1);
-    //   //   })
-    //   .on("mouseout.link", (d) => {
-    //       link.style("opacity", d=>linkOpacity(d.weight))
-    //     })
       .on('mouseover.fade', fade(0.1))
-  	  .on('mouseout.fade', fade(1));
-      // .on("mouseout.text", (d) => {
-      //     text.style("opacity", 1)
-      //   });
+      .on('mouseout.fade', fade(1));
 
   // label each node
   // add a label to each node
@@ -139,7 +141,7 @@ console.log("before json")
     .text(d=>d.id)
     // .style("fill", "black")
     .style("fill", d=>d.theme === "female_bias"?"pink":
-                        d.theme === "male_bias"?"darkblue":
+                        d.theme === "male_bias"?"blue":
                         d.theme === "empowerment"?"#ccad34":
                         d.theme === "violence"?"red":
                         d.theme === "politics"?"green":
@@ -151,42 +153,21 @@ console.log("before json")
     .attr("opacity", d=>textOpacity(d.perc_freq))
     .attr("class", 'nodeText')
     .on('mouseover.fade', fade(0.05))
-  	.on('mouseout.fade', fade(1));
+    .on('mouseout.fade', fade(1));
     // .style("stroke-width", 0.5)
     // .style("fill", function(d) {
     //     return d.colour;
     // });
 
-  // Let's list the force we wanna apply on the network
-  // var simulation = d3.forceSimulation(data.nodes)                 // Force algorithm is applied to data.nodes
-      d3.forceSimulation(nodes)
-      .force("link", d3.forceLink()                               // This force provides links between nodes
-            .id(function(d) { return d.id; })                     // This provide  the id of a node
-            // .links(data.links)                                    // and this the list of links
-            .links(links)  
-      )
-
-    .force("charge", d3.forceManyBody().strength(-90))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
-      // word_connections_4_themes_filtered
-     .force("center", d3.forceCenter(width / 2, height / 2)) 
-      // .force("charge", d3.forceManyBody().strength(-400))         
-      //  // word_connections_4_themes_filtered
-      // .force("center", d3.forceCenter(width / 1.7, height / 1.3)) 
-      // word_connections_4_themes
-      // .force("center", d3.forceCenter(width / 2, height / 2)) 
-          // This force attracts nodes to the center of the svg area
-      .on("end", ticked);
-
   // This function is run at each iteration of the force algorithm, updating the nodes position.
   function ticked() {
     link
       // .attr("d", positionLink);
-      // .attr("d", linkArc);
-
-        .attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
+      .attr("d", linkArc);
+        // .attr("x1", function(d) { return d.source.x; })
+        // .attr("y1", function(d) { return d.source.y; })
+        // .attr("x2", function(d) { return d.target.x; })
+        // .attr("y2", function(d) { return d.target.y; });
 
     circle
          .attr("cx", function (d) { return d.x; })
@@ -226,6 +207,39 @@ console.log("before json")
 
 });
 
+function linkArc(d) {
+  const r = Math.hypot(d.target.x - d.source.x, d.target.y - d.source.y);
+  return `
+    M${d.source.x},${d.source.y}
+    A${r},${r} 0 0,1 ${d.target.x},${d.target.y}
+  `;
+}
+
+// drag = simulation => {
+  
+//   function dragstarted(d) {
+//     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+//     d.fx = d.x;
+//     d.fy = d.y;
+//   }
+  
+//   function dragged(d) {
+//     d.fx = d3.event.x;
+//     d.fy = d3.event.y;
+//   }
+  
+//   function dragended(d) {
+//     if (!d3.event.active) simulation.alphaTarget(0);
+//     d.fx = null;
+//     d.fy = null;
+//   }
+  
+//   return d3.drag()
+//       .on("start", dragstarted)
+//       .on("drag", dragged)
+//       .on("end", dragended);
+// }
+
 // function linkArc(d) {
 //   var dx = d.target.x - d.source.x,
 //       dy = d.target.y - d.source.y,
@@ -243,8 +257,8 @@ console.log("before json")
 //   return "translate(" + d.x + "," + d.y + ")";
 // }
 // links are drawn as curved paths between nodes
-// function positionLink(d) {
-//   var offset = 30;
+// function linkArc(d) {
+//   var offset = 100;
 
 //   var midpoint_x = (d.source.x + d.target.x) / 2;
 //   var midpoint_y = (d.source.y + d.target.y) / 2;
