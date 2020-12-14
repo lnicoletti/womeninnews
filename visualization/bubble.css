@@ -232,8 +232,24 @@ left: 0;
     display: grid;
     grid-template-columns: 27vw 65vw; 
     grid-template-rows: 60vh 60vh 60vh 60vh;
-    grid-column-gap: 5vw;
-    grid-row-gap: 40vh;
+    column-gap: 0vw;
+    row-gap: 40vh;
     align-items: center;
     margin-top:30vh;
+    margin-left:4vw;
+    margin-right:4vw;
     }
+
+.barLegend {
+    margin-top:20px;
+    padding-bottom:10px
+}
+
+.barLegendText {
+    font-size: 12px;
+    font-family: sans-serif;
+    fill:silver;
+    text-anchor: start;
+    text-align:center;
+    opacity:0.65
+}

@@ -17,19 +17,42 @@ console.log("before json")
     SA_data = data[4]
     console.log(SA_data)
     console.log(countries_data)
+    drawBarLegend()
     drawNetwork(UK_data, "div#my_network")
-    drawBars(countries_data, "#chart1", "UK", 10, "United Kingdom")  
+    drawBars(countries_data, "#chart1", "UK", 20, "United Kingdom")  
     drawNetwork(USA_data, "div#my_network2")  
-    drawBars(countries_data, "#chart2", "USA", 10, "United States")   
+    drawBars(countries_data, "#chart2", "USA", 20, "United States")   
     drawNetwork(IN_data, "div#my_network3") 
-    drawBars(countries_data, "div#chart3", "India", 10, "India")   
+    drawBars(countries_data, "div#chart3", "India", 20, "India")   
     drawNetwork(SA_data, "div#my_network4") 
-    drawBars(countries_data, "#chart4", "South Africa", 10, "South Africa")  
+    drawBars(countries_data, "#chart4", "South Africa", 20, "South Africa")  
      }
         )
 
   // d3.json("../data/processed/word_connections_UK.json").then(data=>drawNetwork(data))
   
+function drawBarLegend() {
+  svg = d3.select("#barLegend")
+
+  legendLine = svg.append("g")
+    .selectAll("line")
+      .data([{x1:0, x2:185, y1:28, y2:28}, {x1:0, x2:0, y1:28, y2:20}, {x1:185, x2:185, y1:28, y2:20}])
+      .join("line")
+      .attr("x1", d=>d.x1 )
+      .attr("x2", d=> d.x2)
+      .attr("y1", d=>d.y1 )
+      .attr("y2", d=>d.y2)
+      .attr("stroke", "red")
+      .attr("stroke-width", "1px")
+ 
+      svg.append("text")
+          .text("number of headlines containing this word")
+          .attr("x", 0)
+          .attr("y", 45)
+          // .style("text-anchor", "middle")
+          .attr("class", "barLegendText")
+          .call(wrap, 170)
+}
   function drawNetwork(data, network) {
     // set the dimensions and margins of the graph
     var margin = {top: 10, right: 30, bottom: 30, left: 30},
@@ -142,9 +165,9 @@ console.log("before json")
     // .data(nodes)
 
     circle = node.join("circle")
-      .attr("r", d=>bubbleRadius(d.perc_freq))
+      // .attr("r", d=>bubbleRadius(d.perc_freq))
+      .attr("r", 0)
       .attr("opacity", d=>nodeOpacity(d.perc_freq))
-      // .attr("r", 5)
       .style("fill", d=>d.theme === "female_bias"?"pink":
                         d.theme === "male_bias"?"blue":
                         d.theme === "empowerment"?"#ccad34":
@@ -233,6 +256,7 @@ function drawBars(countries_data, chart, selected_country, word_count, country_n
   margin = {top: 69, right: 90, bottom: 5, left: 90},
   width = width/1.5,
   height = height;
+  barpad = 20
 
   country_data = countries_data.filter(d=>d.country == selected_country)
   top10 = country_data.filter(function(d,i){ return i<word_count })
@@ -270,7 +294,7 @@ function drawBars(countries_data, chart, selected_country, word_count, country_n
           .attr("class", "yAxis")
           .selectAll("text")
               .attr("font-size", "15")
-              .attr("transform", "translate(0, -10)")
+              .attr("transform", "translate(0, -2)")
               .attr("fill", "silver")
               .attr("font-family", "arial")
               .attr("font-weight", "bold")
@@ -282,7 +306,7 @@ function drawBars(countries_data, chart, selected_country, word_count, country_n
     .attr("x", x(20) )
     .attr("y", function(d) { return y(d.word); })
     .attr("width", function(d) { return x(+d.frequency); })
-    .attr("height", 30 )
+    .attr("height", barpad )
     .attr("fill", d=>d.theme === "female_bias"?"pink":
                       d.theme === "male_bias"?"blue":
                       d.theme === "empowerment"?"#ccad34":
@@ -378,3 +402,36 @@ function linkArc(d) {
 //       "S" + offSetX + "," + offSetY +
 //       " " + d.target.x + "," + d.target.y;
 // }
+
+function wrap(text, width) {
+  text.each(function () {
+      var text = d3.select(this),
+          words = text.text().split(/\s+/).reverse(),
+          word,
+          line = [],
+          lineNumber = 0,
+          lineHeight = 1.1, // ems
+          x = text.attr("x"),
+          y = text.attr("y"),
+          dy = 0, //parseFloat(text.attr("dy")),
+          tspan = text.text(null)
+                      .append("tspan")
+                      .attr("x", x)
+                      .attr("y", y)
+                      .attr("dy", dy + "em");
+      while (word = words.pop()) {
+          line.push(word);
+          tspan.text(line.join(" "));
+          if (tspan.node().getComputedTextLength() > width) {
+              line.pop();
+              tspan.text(line.join(" "));
+              line = [word];
+              tspan = text.append("tspan")
+                          .attr("x", x)
+                          .attr("y", y)
+                          .attr("dy", ++lineNumber * lineHeight + dy + "em")
+                          .text(word);
+          }
+      }
+   });
+  }

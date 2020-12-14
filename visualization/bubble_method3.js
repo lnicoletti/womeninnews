@@ -475,8 +475,8 @@
         // .attr("y2",400)
         // .attr("color", 'white')
 
-        console.log(xScale(wp))
-        console.log(wp)
+        // console.log(xScale(wp))
+        // console.log(wp)
         barchart.append("text")
                 .attr("id", "xAxisLabel")
                 // .attr("transform", "rotate(-90)")

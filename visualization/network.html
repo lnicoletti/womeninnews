@@ -3,12 +3,27 @@
     <link rel="stylesheet" href="bubble.css">
 </head>
   <body>
-    <h1 style = "text-align: center">Language matters: the words we chose to sensationalize women</h1>
+    <h1 style = "text-align: center">Language matters: the words we choose to sensationalize women</h1>
       <div class="subtitle">
-        <p class="description">The chart below shows the words used by news outlets to talk about women in <b>India</b>, <b>South Africa</b>,
-                the <b>United Kingdom</b>, and the <b>United States</b>. The words are split into four categories: Empowerment, Women Stereotypes, 
-                Violence, and Male Dominance.</p>
+        <p class="description">The charts below show the words used by news outlets to talk about women in <b>India</b>, <b>South Africa</b>,
+                the <b>United Kingdom</b>, and the <b>United States</b>. On the left side, the most frequent words for each country are shown. The length of each bar indicates the number of headlines
+                that were found to contain a specific word.</p>
       </div>
+    <div class="barLegend" style="text-align: center; align-items:center">
+    <svg width="185" height="65" style="text-align: center;" id="barLegend">
+      <rect width="185" height="15" style="fill:#aaa;stroke:none" />
+    </svg>
+    </div>
+    <div class="subtitle">
+      <p class="description">On the right side, the associations between words across headlines is visualized in the form of a network. A word association is an instance
+        of two words in the same sentence. In the networks, each node represents a word and each link represents a connection between two words.
+        The thickness of each link represents the number of times any two words are found together in the same headline. Nodes and their associated text are sized by 
+        frequency of occurrence.</br></br>
+        In both the bar charts and the networks, bars, nodes, words and links are colored according to 6 categories: <b><span style="color:#ccad34">Empowerment</span></b>, 
+        <b><span style="color:pink">Women Stereotypes</span></b>, <b><span style="color:red">Violence</b></span>, <b><span style="color:blue">Male Dominance</b></span>,
+        <b><span style="color:#964B00">Race</b></span>, and <b><span style="color:green">Politics</b></span>.</br></br>
+        Hover over a bar or a word to explore the word associations of a specific word!</p>
+    </div>
     <div class="netbars">
       <div id="chart1" class="svg-container3" style="text-align: center;"> </div>
       <div id="my_network" class="svg-container3" style="text-align: center;"></div>
