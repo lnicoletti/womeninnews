@@ -117,6 +117,38 @@
             // }
             // drawBubbleChart(data, type, 2020, kind)
             drawBubbleChart(headlinesSite)
+
+            var fired = 0;
+            $(window).scroll(function(){
+                // This is then function used to detect if the element is scrolled into view
+                function elementScrolled(elem)
+                {
+                  var docViewTop = $(window).scrollTop();
+                  var docViewBottom = docViewTop + $(window).height();
+                  var elemTop = $(elem).offset().top;
+                  return ((elemTop <= docViewBottom) && (elemTop >= docViewTop));
+                }
+              
+                // This is where we use the function to detect if ".box2" is scrolled into view, and when it is add the class ".animated" to the <p> child element
+                if(elementScrolled('div#clusterChart')&&(fired == 0)) {
+                // Your function here
+                drawWordClusters(countriesFreq)
+                fired = 1;
+              
+                }
+                // var fired = 0;
+                // jQuery(this).scroll(function(){
+                //     if(fired == 0){
+                //         // alert("fired");
+                //         drawWordClusters(countriesFreq)
+                //         fired = 1;
+                //     }
+                
+
+              });
+
+            // wordClusters.onscroll=drawWordClusters(countriesFreq)//.on('scroll', drawWordClusters(countriesFreq))
+            
             // draw word clusters on click
             // d3.selectAll("#wordFreq").on("change", drawWordClusters(countriesFreq))
         })
@@ -322,7 +354,7 @@
                 // .attr("fill", "#d9cac9")
                 .attr("fill", "white")
                 .attr("opacity", "0.8")
-                .style('stroke', "#323232")
+                .style('stroke', "#161616")
                 .attr('r', d=>radius(+d.monthly_visits))
                 // v5
                 .on("mouseenter", (d) => {
@@ -472,7 +504,6 @@
                 .style("font-family", "sans-serif")
 
         }
-
         
         function tooltipCluster(word, freq, theme, country, coords, pc_freq) {
             console.log(word)
@@ -675,7 +706,7 @@
             .force("cluster", forceCluster())
             .force("collide", forceCollide())
             .alpha(.09)
-            .alphaDecay(0);
+            .alphaDecay(0.2);
 
             // Adjust position (and color) of circles.
             simulation.on("tick", () => {
@@ -684,85 +715,10 @@
                 .attr("cy", d => d.y);
                 // .attr("fill", d => groups[d.group].color);
             });
-
-
           
             // invalidation.then(() => simulation.stop());
-          
-            // var clusterColors = d3.scaleOrdinal()
-            //     .range(d3.schemeTableau10)
-            //     .domain(data.map(d =>d.cluster))
-
-            // extentWordFreq = d3.extent(data, d=>+d.perc_freq)
-            // // console.log(extentWordFreq)
-            // var bubbleRadius = d3.scaleSqrt()
-            //     .domain(extentWordFreq)
-            //     .range([3, 60])
-
-            // //unique cluster/group id's
-            // var cs = [];
-            // data.forEach(function(d){
-            //         if(!cs.includes(d.cluster)) {
-            //             cs.push(d.cluster);
-            //         }
-            // });
-            // console.log(cs)
-            
-            // n = data.length, // total number of nodes
-            // m = cs.length; // number of distinct clusters
-
-            // clusters = new Array(m);
-            // nodes = [];
-
-            // for (var i = 0; i<n; i++){
-            //     nodes.push(create_nodes(data,i));
-            // }
-            // console.log(nodes)
-
-            // var svg = wordClusters
-                // .attr("width", width)
-                // .attr("height", height);
-
-
-            // var node = svg.selectAll("circle")
-            //     .data(nodes)
-            //     .enter().append("g")//.call(force.drag);
-
-            // console.log(node)
-
-            // node.append("circle")
-            //     .style("fill", function (d) {
-            //     return color(d.cluster);
-            //     })
-            //     .attr("r", function(d){return d.radius})
-            
-            // var force = d3.forceSimulation()
-            //     .nodes(nodes)
-            //     .force('charge', d3.forceManyBody().strength(1))
-            //     // .force('x', d3.forceX().x(function(d) {
-            //     //     return xScale(+d.bias);
-            //     // }))
-            //     // .force("y", d3.forceY(bodyheight5/1.5).strength(0.05))
-            //     .force('collide', d3.forceCollide((d)=>{ 
-            //         return bubbleRadius(+d.perc_freq)}))
-            //     // .alpha(0.5)
-            //     // .alphaTarget(0.5)
-            //     // .alphaDecay(0)
-            //     .alpha(1)
-            //     // .on('tick', function() {
-            //     // .nodes(nodes)
-            //     // .size([width5, height5])
-            //     // .gravity(.02)
-            //     // .charge(0)
-            //     .on("tick", tick)
-
-            // node.append("text")
-            //     .attr("dy", ".3em")
-            //     .style("text-anchor", "middle")
-            //     .text(function(d) { return d.text.substring(0, d.radius / 3); });
 
  
-            
             function create_nodes(data,node_counter) {
                 var i = cs.indexOf(data[node_counter].cluster),
                     r = Math.sqrt((i + 1) / m * -Math.log(Math.random())) * maxRadius,
@@ -786,7 +742,7 @@
     
             // Force to increment nodes to groups.
             function forceCluster() {
-                const strength = .15;
+                const strength = .01;
                 let nodes;
             
                 function force(alpha) {
