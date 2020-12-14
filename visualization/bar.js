@@ -19,9 +19,6 @@ draw_chart(countries_data, "#chart4", "South Africa", 10)
 // append the svg object to the body of the page
 function draw_chart(countries_data, chart, selected_country, word_count) {
 
-    
- 
-
     country_data = countries_data.filter(d=>d.country == selected_country)
     top10 = country_data.filter(function(d,i){ return i<word_count })
 

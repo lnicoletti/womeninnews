@@ -1,25 +1,3 @@
-// set the dimensions and margins of the graph
-var margin = {top: 10, right: 30, bottom: 30, left: 40},
-// big network
-  // width = 2500 - margin.left - margin.right,
-  // height = 2500 - margin.top - margin.bottom;
-width5 = 1500;
-// country networks
-width = width5/2 - margin.left - margin.right,
-height = 600 - margin.top - margin.bottom;
-
-// append the svg object to the body of the page
-var svg = d3.select("#my_dataviz")
-.append("svg")
-    .attr("preserveAspectRatio", "xMinYMin meet")
-    .attr("viewBox", "0 0 "+ width +"," + height+"")
-    .classed("svg-content", true);
-//   .attr("width", width + margin.left + margin.right)
-//   .attr("height", height + margin.top + margin.bottom)
-// .append("g")
-//   .attr("transform",
-//         "translate(" + margin.left + "," + margin.top + ")");
-
 console.log("before json")
 
 // d3.json("word_connections.json").then(function(data) {
@@ -37,19 +15,39 @@ console.log("before json")
     USA_data = data[2]
     IN_data = data[3]
     SA_data = data[4]
+    console.log(SA_data)
     console.log(countries_data)
-    console.log(UK_data)
-    drawNetwork(UK_data)
-    // draw_chart(countries_data, "#chart1", "India", 10)    
-    // draw_chart(countries_data, "#chart2", "USA", 10)   
-    // draw_chart(countries_data, "#chart3", "UK", 10)   
-    // draw_chart(countries_data, "#chart4", "South Africa", 10)  
+    drawNetwork(UK_data, "div#my_network")
+    drawBars(countries_data, "#chart1", "UK", 10, "United Kingdom")  
+    drawNetwork(USA_data, "div#my_network2")  
+    drawBars(countries_data, "#chart2", "USA", 10, "United States")   
+    drawNetwork(IN_data, "div#my_network3") 
+    drawBars(countries_data, "div#chart3", "India", 10, "India")   
+    drawNetwork(SA_data, "div#my_network4") 
+    drawBars(countries_data, "#chart4", "South Africa", 10, "South Africa")  
      }
         )
 
   // d3.json("../data/processed/word_connections_UK.json").then(data=>drawNetwork(data))
   
-  function drawNetwork(data) {
+  function drawNetwork(data, network) {
+    // set the dimensions and margins of the graph
+    var margin = {top: 10, right: 30, bottom: 30, left: 30},
+    // big network
+      // width = 2500 - margin.left - margin.right,
+      // height = 2500 - margin.top - margin.bottom;
+    width5 = 1500;
+    // country networks
+    width = width5/2 - margin.left - margin.right,
+    height = 700 - margin.top - margin.bottom;
+
+    // append the svg object to the body of the page
+    // d3.select(network).selectAll("circle").remove()
+    var svg = d3.select(network)
+    .append("svg")
+    .attr("preserveAspectRatio", "xMinYMin meet")
+    .attr("viewBox", "0 0 "+ width +"," + height+"")
+    // .classed("svg-content", true);
     // d3.json("../data/processed/word_connections_IN_small.json").then(function(data) {
     const links = data.links.map(d => Object.create(d))
     const nodes = data.nodes.map(d => Object.create(d))
@@ -89,7 +87,7 @@ console.log("before json")
                 .domain(extentWordFreq)
                 // big net
                 // .range([7, 60])
-                .range([1, 12])
+                .range([1, 20])
 
   
   // var linkWeight = d3.scaleLinear()
@@ -105,7 +103,7 @@ console.log("before json")
             .links(links)  
       )
 
-     .force("charge", d3.forceManyBody().strength(-15))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+     .force("charge", d3.forceManyBody().strength(-30))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
       // word_connections_4_themes_filtered
      .force("center", d3.forceCenter(width / 2, height / 2)) 
      .force("x", d3.forceX())
@@ -206,32 +204,111 @@ console.log("before json")
     
   }
 
-  console.log("data plotted")
-
-  function fade(opacity) {
-    return d => {
-      circle.style('opacity', function (o) { return isConnected(d, o) ?d=>nodeOpacity(d.perc_freq): opacity });
-      text.style('visibility', function (o) { return isConnected(d, o) ? "visible" : "hidden" });
-      link.style('opacity', o => (o.source === d || o.target === d ? 1 : opacity));
-      if(opacity === 1){
-        circle.style('opacity', d=>nodeOpacity(d.perc_freq))
-        text.style('visibility', 'visible')
-        text.style('opacity', d=>textOpacity(d.perc_freq))
-        link.style('opacity', d=>linkOpacity(d.weight))
-      }
-    };
-  }
-  
-  const linkedByIndex = {};
-  links.forEach(d => {
-    linkedByIndex[`${d.source.index},${d.target.index}`] = 1;
-  });
-  
-  function isConnected(a, b) {
-    return linkedByIndex[`${a.index},${b.index}`] || linkedByIndex[`${b.index},${a.index}`] || a.index === b.index;
-  }
+    function fade(opacity) {
+      return d => {
+        circle.style('opacity', function (o) { return isConnected(d, o) ?d=>nodeOpacity(d.perc_freq): opacity });
+        text.style('visibility', function (o) { return isConnected(d, o) ? "visible" : "hidden" });
+        link.style('opacity', o => (o.source === d || o.target === d ? 1 : opacity));
+        if(opacity === 1){
+          circle.style('opacity', d=>nodeOpacity(d.perc_freq))
+          text.style('visibility', 'visible')
+          text.style('opacity', d=>textOpacity(d.perc_freq))
+          link.style('opacity', d=>linkOpacity(d.weight))
+        }
+      };
+    }
+    
+    const linkedByIndex = {};
+    links.forEach(d => {
+      linkedByIndex[`${d.source.index},${d.target.index}`] = 1;
+    });
+    
+    function isConnected(a, b) {
+      return linkedByIndex[`${a.index},${b.index}`] || linkedByIndex[`${b.index},${a.index}`] || a.index === b.index;
+    }
 
 };
+
+function drawBars(countries_data, chart, selected_country, word_count, country_name) {
+  margin = {top: 69, right: 90, bottom: 5, left: 90},
+  width = width/1.5,
+  height = height;
+
+  country_data = countries_data.filter(d=>d.country == selected_country)
+  top10 = country_data.filter(function(d,i){ return i<word_count })
+  
+  var svg = d3.select(chart)
+  .append("svg")
+    .attr("preserveAspectRatio", "xMinYMin meet")
+    .attr("viewBox", "0 0 "+ width +"," + height+"")
+    // .classed("svg-content", true)
+    .append("g")
+    .attr("transform",
+      "translate(" + margin.left + "," + margin.top + ")");
+  
+  // Add X axis
+  var x = d3.scaleLinear()
+    .domain([0, d3.max(top10,d=>+d.frequency)])
+    .range([ 0, width-margin.left-margin.right]);
+  
+  // svg.append("g")
+  //   .attr("transform", "translate(0," + height/1.2 + ")")
+  //   .call(d3.axisBottom(x))
+  //   .selectAll("text")
+  //   .attr("transform", "translate(-10,0)rotate(-45)")
+  //   .style("text-anchor", "end")
+  //   .attr("color", "silver")
+  
+  // Y axis
+  var y = d3.scaleBand()
+  .range([ 0, height/1.2])
+  .domain(top10.map(function(d) { return d.word; }))
+  .padding(.1);
+  
+  svg.append("g")
+  .call(d3.axisLeft(y).tickSize(0))
+          .attr("class", "yAxis")
+          .selectAll("text")
+              .attr("font-size", "15")
+              .attr("transform", "translate(0, -10)")
+              .attr("fill", "silver")
+              .attr("font-family", "arial")
+              .attr("font-weight", "bold")
+  
+  //Bars
+  svg.selectAll("myRect")
+    .data(top10)
+    .join("rect")
+    .attr("x", x(20) )
+    .attr("y", function(d) { return y(d.word); })
+    .attr("width", function(d) { return x(+d.frequency); })
+    .attr("height", 30 )
+    .attr("fill", d=>d.theme === "female_bias"?"pink":
+                      d.theme === "male_bias"?"blue":
+                      d.theme === "empowerment"?"#ccad34":
+                      d.theme === "violence"?"red":
+                      d.theme === "politics"?"green":
+                      d.theme === "race"?"#964B00":
+                      "#aaa")
+
+  svg.append("text")
+      .attr("x", (width / 2-margin.right))             
+      .attr("y", 0 - (margin.top / 2))
+      .attr("text-anchor", "middle")  
+      .attr("font-size", "20")
+      .attr("fill", "silver")
+      .attr("font-family", "arial")
+      .attr("font-weight", "bold")
+      // .style("text-decoration", "underline")  
+      .text(country_name);
+
+// .attr("x", function(d) { return x(d.Country); })
+// .attr("y", function(d) { return y(d.Value); })
+// .attr("width", x.bandwidth())
+// .attr("height", function(d) { return height - y(d.Value); })
+// .attr("fill", "#69b3a2")
+
+}
 
 function linkArc(d) {
   const r = Math.hypot(d.target.x - d.source.x, d.target.y - d.source.y);

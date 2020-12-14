@@ -227,3 +227,13 @@ left: 0;
     margin-right: auto;
     /* width: 50%; */
   }
+
+.netbars {
+    display: grid;
+    grid-template-columns: 27vw 65vw; 
+    grid-template-rows: 60vh 60vh 60vh 60vh;
+    grid-column-gap: 5vw;
+    grid-row-gap: 40vh;
+    align-items: center;
+    margin-top:30vh;
+    }

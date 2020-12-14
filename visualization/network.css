@@ -2,7 +2,15 @@ body {
     background-color: #161616;
 }
 
-.nodeText {
+/* .nodeText {
     font-family: Arial, Helvetica, sans-serif;
     text-anchor: left;
+    } */
+
+.netbars {
+    display: grid;
+    grid-template-columns: 27vw 65vw; 
+    grid-template-rows: 80vh 80vh 80vh 80vh;
+    grid-column-gap: 5vw;
+    align-items: center;
     }
