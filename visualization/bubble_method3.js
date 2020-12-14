@@ -86,7 +86,12 @@
     Promise.all([
         d3.csv("../data/processed/headlines_site.csv"),
         d3.csv("../data/processed/countries_clusters.csv"),
-        d3.csv("../data/processed/headlines_cl_sent.csv"),
+        d3.csv("../data/processed/headlines_cl_sent_pol.csv"),
+        d3.csv("../data/processed/countries_freq.csv"),
+        d3.json("../data/processed/word_connections_UK.json"),
+        d3.json("../data/processed/word_connections_USA.json"),
+        d3.json("../data/processed/word_connections_IN.json"),
+        d3.json("../data/processed/word_connections_SA.json"),
         // d3.csv("../data/processed/sites_freq.csv"),
         // d3.csv("https://gist.githubusercontent.com/lnicoletti/c312a25a680167989141e8315b26c92a/raw/707ead31e5bdbb886ff8f7dc5635d5d0568a0a81/citiesYearDeathsHT_party_n.csv"),
       ])
@@ -94,29 +99,20 @@
     // d3.csv("data/citiesYearDeathsHT_party_n.csv")
         .then((datasets) => {
             headlinesSite = datasets[0]
-            countriesFreq = datasets[1]
+            countriesCls = datasets[1]
             headlines = datasets[2]
-            // sitesFreq = datasets[3]
-            // police = datasets[4]
+            countries_data = datasets[3]
+            UK_data = datasets[4]
+            USA_data = datasets[5]
+            IN_data = datasets[6]
+            SA_data = datasets[7]
+            console.log(SA_data)
+            console.log(countries_data)
             console.log(headlinesSite) 
-            console.log(countriesFreq) 
+            console.log(countriesCls) 
             console.log(headlines) 
-            // console.log(sitesFreq) 
-            // console.log(police) 
-            type = "most"
-            kind = "tot"
-            // add logo links
-            // dataLogos = data2.map((item, i) => Object.assign({}, item, logoData[i]));
-            // let dataLogos = [];
-
-            // for(let i=0; i<data2.length; i++) {
-            //     dataLogos.push({
-            //     ...data2[i], 
-            //     ...(logoData.find((itmInner) => itmInner.site === data2[i].site))}
-            //     );
-            // }
-            // drawBubbleChart(data, type, 2020, kind)
             drawBubbleChart(headlinesSite)
+            drawBarLegend()
 
             var fired = 0;
             $(window).scroll(function(){
@@ -132,25 +128,21 @@
                 // This is where we use the function to detect if ".box2" is scrolled into view, and when it is add the class ".animated" to the <p> child element
                 if(elementScrolled('div#clusterChart')&&(fired == 0)) {
                 // Your function here
-                drawWordClusters(countriesFreq)
+                drawWordClusters(countriesCls)
+                drawNetwork(UK_data, "div#my_network")
+                drawBars(countries_data, "#chart1", "UK", 20, "United Kingdom")  
+                drawNetwork(USA_data, "div#my_network2")  
+                drawBars(countries_data, "#chart2", "USA", 20, "United States")   
+                drawNetwork(IN_data, "div#my_network3") 
+                drawBars(countries_data, "div#chart3", "India", 20, "India")   
+                drawNetwork(SA_data, "div#my_network4") 
+                drawBars(countries_data, "#chart4", "South Africa", 20, "South Africa")
                 fired = 1;
               
-                }
-                // var fired = 0;
-                // jQuery(this).scroll(function(){
-                //     if(fired == 0){
-                //         // alert("fired");
-                //         drawWordClusters(countriesFreq)
-                //         fired = 1;
-                //     }
-                
+                }   
 
               });
 
-            // wordClusters.onscroll=drawWordClusters(countriesFreq)//.on('scroll', drawWordClusters(countriesFreq))
-            
-            // draw word clusters on click
-            // d3.selectAll("#wordFreq").on("change", drawWordClusters(countriesFreq))
         })
 
         function showTooltip5(ttip, text1, text2, text3, coords, data, county, c) {
@@ -158,7 +150,7 @@
             let y = coords[1]-200;
             // party = c.party
             console.log(c)
-    
+            console.log(data)
             // remove previous text: 
             timeline.selectAll("#tooltipText").remove()
             // console.log(party)
@@ -171,6 +163,7 @@
                 //     "<b>" + text1 + "<br/>" + text2 + "</b> deaths by police per 100,000 individuals in " + "<b>" + text3 + "</b>")
             timeline
                 .style("display", "block")
+                .style("visibility", "visible")
                 .style("top", y + "px")
                 .style("left", x + "px")
                 .style("border", "solid 1px #ccc")
@@ -187,8 +180,13 @@
             // // data = data.history;
             // console.log(ttip)
             // data = data.filter(d=>d.county === county)
-            data = data.filter(d=>d.site === text1)
-            // data = d3.filter(data, d=>d.site === text1)
+            // data = c.bias>0.8?data.filter(d=>(d.site === text1)&(d.bias > 0.8)):
+            //       (c.bias>0.5)&(c.bias<0.8)?data.filter(d=>(d.site === text1)&(d.bias > 0.5)&(d.bias < 0.8)):
+            //        data.filter(d=>(d.site === text1)&(d.bias < 0.5))
+            data = c.bias>0.5?data.filter(d=>(d.site === text1)&(d.bias > 0.5)):
+                     data.filter(d=>(d.site === text1)&(d.bias < 0.5))
+
+            // data = d3.filter(data, d=>d.site === text1) 
             console.log(data)
 
             // find a random headline
@@ -235,11 +233,7 @@
         }
 
         function drawBubbleChart(data) {
-            // popFilter = 50000
-            // remove all previous text
-            // console.log(data)
-            // Store data with the right variable (hthou or tot) for line chart
-            // dataType = data
+            
             ttip = "bias"
             // console.log(ttip)
             let margin5 = {left: 30, bottom: 20, right: 30, top: 110}
@@ -259,22 +253,26 @@
                     .range([margin5.left+margin5.right, bodywidth5])
                     .domain([0, d3.max(filterData, d => +d.bias)])
 
-            var colorScale = d3.scaleOrdinal()
-                    .range(d3.schemeTableau10)
-                    .domain(filterData.map(d =>d.country_of_pub))
+            // var colorScale = d3.scaleOrdinal()
+            //         .range(d3.schemeTableau10)
+            //         .domain(filterData.map(d =>d.country_of_pub))
+
+            // var colorScale = d3.scaleQuantile()
+            //     .domain([0, d3.max(filterData, d => +d.polarity)]) // pass the whole dataset to a scaleQuantile’s domain
+            //     .range(d3.schemeReds[9])
             
-            console.log(colorScale("UK"))
+            // console.log(colorScale("UK"))
             // draw X-axis
-            barchart.append("g")
-                .call(d3.axisBottom(xScale))
-                .attr("transform", "translate("+0+", "+bodyheight5+")")
-                // .call(d3.axisTop(xScale).tickSize(300).ticks(7))
-                // .attr("transform", "translate(0, "+bodyheight5+")")
-                .attr("class", "yAxis")
-                .selectAll("text")
-                    .attr("font-size", "10px")
-                    .attr("fill", "silver")
-                    .attr("font-family", "arial")
+            // barchart.append("g")
+            //     .call(d3.axisBottom(xScale))
+            //     .attr("transform", "translate("+0+", "+bodyheight5+")")
+            //     // .call(d3.axisTop(xScale).tickSize(300).ticks(7))
+            //     // .attr("transform", "translate(0, "+bodyheight5+")")
+            //     .attr("class", "yAxis")
+            //     .selectAll("text")
+            //         .attr("font-size", "10px")
+            //         .attr("fill", "silver")
+            //         .attr("font-family", "arial")
                     // .attr("z-index", "-1")
     
             // var xScale = d3.scaleLog()
@@ -353,6 +351,7 @@
                 // .attr("fill", d=>colorScale(d.country_of_pub))
                 // .attr("fill", "#d9cac9")
                 .attr("fill", "white")
+                // .attr("fill", d=>colorScale(+d.polarity))
                 .attr("opacity", "0.8")
                 .style('stroke', "#161616")
                 .attr('r', d=>radius(+d.monthly_visits))
@@ -486,7 +485,7 @@
                 .attr("font-size", "17px")
                 .style("text-anchor", "start")
                 .style("fill", "silver")
-                .text("← No Gender Bias")
+                .text("← Less Gendered Language")
                 .style("font-weight", "bold")  
                 .style("font-family", "sans-serif")
     
@@ -499,9 +498,42 @@
                 .attr("font-size", "17px")
                 .style("text-anchor", "end")
                 .style("fill", "silver")
-                .text("Extreme Gender Bias →")
+                .text("More Gendered Language →")
                 .style("font-weight", "bold")  
                 .style("font-family", "sans-serif")
+
+                // 10M Monthly Viewers
+                legendData = [{level: "", radius: radius(10000000), y: bodyheight5+70, x: bodywidth5/2.2, anchor:"end", xtext: bodywidth5/2.235, ytext: bodyheight5+53}, 
+                {level: "", radius: radius(100000000), y: bodyheight5+70, x: bodywidth5/2.1}, 
+                {level: "1B Monthly Viewers", radius: radius(1000000000), y: bodyheight5+70, x: bodywidth5/1.9, anchor:"middle", xtext: bodywidth5/1.9, ytext: bodyheight5+41}]
+                // legendData = [{level: "Word is less frequent", radius: 3, y: 20, x: 1000, anchor:"end"}, 
+                //               {level: "", radius: 5, y: height5+70, x: width5/2.06}, 
+                //               {level: "Word is more frequent", radius: 10, y: 20, x: 200, anchor:"start"}]
+                // clusters composed of more bubbles indicate more words used for a specific category
+
+                legend = barchart.append("g")
+                // legend.append("g")
+                    .selectAll("circle")
+                    .data(legendData)
+                    .join('circle')
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y)
+                    .attr("r", d => d.radius)
+                    .attr("fill","none")
+                    .attr("stroke","lightgrey")
+                
+                textLegend = barchart.append("g")
+                // textLegend = legend.append("g")
+                    .selectAll("text")
+                    .data(legendData)
+                    .join("text")
+                    .text(d=>d.level)
+                    .attr("x", d => d.xtext)
+                    .attr("y", d => d.ytext)
+                    .attr("class", "themesText")
+                    .style("text-anchor", d=>d.anchor)
+                    .attr("fill","lightgrey")
+                    .call(wrap, 10)
 
         }
         
@@ -812,6 +844,316 @@
                 };
             }
 
+        }
+        function drawBarLegend() {
+            svg = d3.select("#barLegend")
+          
+            legendLine = svg.append("g")
+              .selectAll("line")
+                .data([{x1:0, x2:185, y1:28, y2:28}, {x1:0, x2:0, y1:28, y2:20}, {x1:185, x2:185, y1:28, y2:20}])
+                .join("line")
+                .attr("x1", d=>d.x1 )
+                .attr("x2", d=> d.x2)
+                .attr("y1", d=>d.y1 )
+                .attr("y2", d=>d.y2)
+                .attr("stroke", "red")
+                .attr("stroke-width", "1px")
+           
+                svg.append("text")
+                    .text("number of headlines containing this word")
+                    .attr("x", 0)
+                    .attr("y", 45)
+                    // .style("text-anchor", "middle")
+                    .attr("class", "barLegendText")
+                    .call(wrap, 170)
+        }
+        function drawNetwork(data, network) {
+            // set the dimensions and margins of the graph
+            var margin = {top: 10, right: 30, bottom: 30, left: 30},
+            // big network
+            // width = 2500 - margin.left - margin.right,
+            // height = 2500 - margin.top - margin.bottom;
+            width5 = 1500;
+            // country networks
+            width = width5/2 - margin.left - margin.right,
+            height = 700 - margin.top - margin.bottom;
+        
+            // append the svg object to the body of the page
+            // d3.select(network).selectAll("circle").remove()
+            var svg = d3.select(network)
+            .append("svg")
+            .attr("preserveAspectRatio", "xMinYMin meet")
+            .attr("viewBox", "0 0 "+ width +"," + height+"")
+            // .classed("svg-content", true);
+            // d3.json("../data/processed/word_connections_IN_small.json").then(function(data) {
+            const links = data.links.map(d => Object.create(d))
+            const nodes = data.nodes.map(d => Object.create(d))
+        
+            console.log(data)
+            // console.log(data.nodes.filter(d=>d.frequency>50))
+        // Initialize the links
+        
+        // scales
+        extentWordFreq = d3.extent(nodes, d=>d.perc_freq)
+                    console.log(extentWordFreq)
+        var bubbleRadius = d3.scaleSqrt()
+                        .domain(extentWordFreq)
+                        // big net
+                        // .range([1, 25])
+                        .range([0.1, 4])
+        
+        extentLinkWeight = d3.extent(links, d=>d.weight)
+                console.log(extentLinkWeight)
+        var linkWeight = d3.scaleLinear()
+                        .domain(extentLinkWeight)
+                        .range([0.00005, 4])
+        
+        var linkOpacity = d3.scaleLinear()
+                        .domain(extentLinkWeight)
+                        .range([0.05, 1])
+        
+        var nodeOpacity = d3.scaleLinear()
+                        .domain(extentWordFreq)
+                        .range([0.2, 1])
+        
+        var textOpacity = d3.scaleLinear()
+                        .domain(extentWordFreq)
+                        .range([0.4, 1])
+                        
+        var fontScale = d3.scaleLinear()
+                        .domain(extentWordFreq)
+                        // big net
+                        // .range([7, 60])
+                        .range([1, 20])
+        
+        
+        // var linkWeight = d3.scaleLinear()
+        //               .domain(extentLinkWeight)
+        //               .range([0.005, 10])
+        
+        // Let's list the force we wanna apply on the network
+        // var simulation = d3.forceSimulation(data.nodes)                 // Force algorithm is applied to data.nodes
+        simulation = d3.forceSimulation(nodes)
+            .force("link", d3.forceLink()                               // This force provides links between nodes
+                    .id(function(d) { return d.id; })                     // This provide  the id of a node
+                    // .links(data.links)                                    // and this the list of links
+                    .links(links)  
+            )
+        
+            .force("charge", d3.forceManyBody().strength(-30))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+            // word_connections_4_themes_filtered
+            .force("center", d3.forceCenter(width / 2, height / 2)) 
+            .force("x", d3.forceX())
+            .force("y", d3.forceY())
+            // .force("charge", d3.forceManyBody().strength(-400))         
+            //  // word_connections_4_themes_filtered
+            // .force("center", d3.forceCenter(width / 1.7, height / 1.3)) 
+            // word_connections_4_themes
+            // .force("center", d3.forceCenter(width / 2, height / 2)) 
+                // This force attracts nodes to the center of the svg area
+            .on("end", ticked);
+        
+        var link = svg
+            .selectAll("line")
+            // .data(data.links)
+            .data(links)
+            // .join("line")
+            .join("path")
+            .attr("fill", "none")
+            // .style("stroke", "#aaa")
+            .style("stroke-width", d=>linkWeight(d.weight))
+            .style("opacity", d=>linkOpacity(d.weight))
+            .style("stroke", d=>d.theme === "female_bias"?"pink":
+                                d.theme === "male_bias"?"blue":
+                                d.theme === "empowerment"?"#ccad34":
+                                d.theme === "violence"?"red":
+                                d.theme === "politics"?"green":
+                                d.theme === "race"?"#964B00":
+                                "#aaa")
+        
+        // Initialize the nodes
+        var node = svg
+            .selectAll("circle")
+            // .data(data.nodes)
+            .data(nodes.filter( d => (d.perc_freq >= 60) ))
+            // .data(nodes)
+        
+            circle = node.join("circle")
+            // .attr("r", d=>bubbleRadius(d.perc_freq))
+            .attr("r", 0)
+            .attr("opacity", d=>nodeOpacity(d.perc_freq))
+            .style("fill", d=>d.theme === "female_bias"?"pink":
+                                d.theme === "male_bias"?"blue":
+                                d.theme === "empowerment"?"#ccad34":
+                                d.theme === "violence"?"red":
+                                d.theme === "politics"?"green":
+                                d.theme === "race"?"#964B00":
+                                "#9b9b9b")
+            .on('mouseover.fade', fade(0.1))
+            .on('mouseout.fade', fade(1));
+        
+        // label each node
+        // add a label to each node
+        var text = svg
+            .selectAll("text")
+            // .data(data.nodes.filter( d => (d.frequency >= 70) ))
+            .data(nodes.filter(d => (d.perc_freq >= 150)))
+            .join("text")
+            .text(d=>d.id)
+            // .style("fill", "black")
+            .style("fill", d=>d.theme === "female_bias"?"pink":
+                                d.theme === "male_bias"?"blue":
+                                d.theme === "empowerment"?"#ccad34":
+                                d.theme === "violence"?"red":
+                                d.theme === "politics"?"green":
+                                d.theme === "race"?"#964B00":
+                                "#9b9b9b")
+            // .attr("font-size", 10);
+            .attr("font-size", d=>fontScale(d.perc_freq))
+            .attr("font-weight", "900")
+            .attr("opacity", d=>textOpacity(d.perc_freq))
+            .attr("class", 'nodeText')
+            .on('mouseover.fade', fade(0.05))
+            .on('mouseout.fade', fade(1));
+            // .style("stroke-width", 0.5)
+            // .style("fill", function(d) {
+            //     return d.colour;
+            // });
+        
+        // This function is run at each iteration of the force algorithm, updating the nodes position.
+        function ticked() {
+            link
+            // .attr("d", positionLink);
+            .attr("d", linkArc);
+                // .attr("x1", function(d) { return d.source.x; })
+                // .attr("y1", function(d) { return d.source.y; })
+                // .attr("x2", function(d) { return d.target.x; })
+                // .attr("y2", function(d) { return d.target.y; });
+        
+            circle
+                .attr("cx", function (d) { return d.x; })
+                .attr("cy", function(d) { return d.y; });
+            // link.attr("d", positionLink);
+            // circle.attr("transform", positionNode)
+            text
+                .attr("x", function (d) { return d.x+5; })
+                .attr("y", function(d) { return d.y; })
+            
+        }
+        
+            function fade(opacity) {
+            return d => {
+                circle.style('opacity', function (o) { return isConnected(d, o) ?d=>nodeOpacity(d.perc_freq): opacity });
+                text.style('visibility', function (o) { return isConnected(d, o) ? "visible" : "hidden" });
+                link.style('opacity', o => (o.source === d || o.target === d ? 1 : opacity));
+                if(opacity === 1){
+                circle.style('opacity', d=>nodeOpacity(d.perc_freq))
+                text.style('visibility', 'visible')
+                text.style('opacity', d=>textOpacity(d.perc_freq))
+                link.style('opacity', d=>linkOpacity(d.weight))
+                }
+            };
+            }
+            
+            const linkedByIndex = {};
+            links.forEach(d => {
+            linkedByIndex[`${d.source.index},${d.target.index}`] = 1;
+            });
+            
+            function isConnected(a, b) {
+            return linkedByIndex[`${a.index},${b.index}`] || linkedByIndex[`${b.index},${a.index}`] || a.index === b.index;
+            }
+        
+        };
+          
+        function drawBars(countries_data, chart, selected_country, word_count, country_name) {
+        margin = {top: 69, right: 90, bottom: 5, left: 90},
+        width = width/1.5,
+        height = height;
+        barpad = 20
+        
+        country_data = countries_data.filter(d=>d.country == selected_country)
+        top10 = country_data.filter(function(d,i){ return i<word_count })
+        
+        var svg = d3.select(chart)
+        .append("svg")
+            .attr("preserveAspectRatio", "xMinYMin meet")
+            .attr("viewBox", "0 0 "+ width +"," + height+"")
+            // .classed("svg-content", true)
+            .append("g")
+            .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
+        
+        // Add X axis
+        var x = d3.scaleLinear()
+            .domain([0, d3.max(top10,d=>+d.frequency)])
+            .range([ 0, width-margin.left-margin.right]);
+        
+        // svg.append("g")
+        //   .attr("transform", "translate(0," + height/1.2 + ")")
+        //   .call(d3.axisBottom(x))
+        //   .selectAll("text")
+        //   .attr("transform", "translate(-10,0)rotate(-45)")
+        //   .style("text-anchor", "end")
+        //   .attr("color", "silver")
+        
+        // Y axis
+        var y = d3.scaleBand()
+        .range([ 0, height/1.2])
+        .domain(top10.map(function(d) { return d.word; }))
+        .padding(.1);
+        
+        svg.append("g")
+        .call(d3.axisLeft(y).tickSize(0))
+                .attr("class", "yAxis")
+                .selectAll("text")
+                    .attr("font-size", "15")
+                    .attr("transform", "translate(0, -2)")
+                    .attr("fill", "silver")
+                    .attr("font-family", "arial")
+                    .attr("font-weight", "bold")
+        
+        //Bars
+        svg.selectAll("myRect")
+            .data(top10)
+            .join("rect")
+            .attr("x", x(20) )
+            .attr("y", function(d) { return y(d.word); })
+            .attr("width", function(d) { return x(+d.frequency); })
+            .attr("height", barpad )
+            .attr("fill", d=>d.theme === "female"?"pink":
+                            d.theme === "male"?"blue":
+                            d.theme === "empowerment"?"#ccad34":
+                            d.theme === "violence"?"red":
+                            d.theme === "politics"?"green":
+                            d.theme === "race"?"#964B00":
+                            "#aaa")
+        
+        svg.append("text")
+            .attr("x", (width / 2-margin.right))             
+            .attr("y", 0 - (margin.top / 2))
+            .attr("text-anchor", "middle")  
+            .attr("font-size", "20")
+            .attr("fill", "silver")
+            .attr("font-family", "arial")
+            .attr("font-weight", "bold")
+            // .style("text-decoration", "underline")  
+            .text(country_name);
+        
+        // .attr("x", function(d) { return x(d.Country); })
+        // .attr("y", function(d) { return y(d.Value); })
+        // .attr("width", x.bandwidth())
+        // .attr("height", function(d) { return height - y(d.Value); })
+        // .attr("fill", "#69b3a2")
+        
+        }
+        
+        function linkArc(d) {
+        const r = Math.hypot(d.target.x - d.source.x, d.target.y - d.source.y);
+        return `
+            M${d.source.x},${d.source.y}
+            A${r},${r} 0 0,1 ${d.target.x},${d.target.y}
+        `;
         }
     // function to wrap text
     function wrap(text, width) {
