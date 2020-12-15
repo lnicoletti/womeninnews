@@ -222,6 +222,19 @@ left: 0;
     color:#03071e;            
 }
 
+#tooltipInfo {
+    border: solid 1px #ccc;
+    /* visibility:hidden; */
+    padding: 10px;
+    /* change the tooltip so that its position can be moved around */
+    position: fixed;
+    /* hide it for when theres no hovering */
+    display: block;
+    color:silver; 
+    /* background-color: white; */
+    background-color: #161616;           
+}
+
 .clusterLegend {
     display: block;
     margin-left: auto;

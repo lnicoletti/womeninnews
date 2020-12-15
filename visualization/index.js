@@ -485,7 +485,7 @@
                 .attr("font-size", "17px")
                 .style("text-anchor", "start")
                 .style("fill", "silver")
-                .text("← Less Gendered Language")
+                .text("← Less Biased Language")
                 .style("font-weight", "bold")  
                 .style("font-family", "sans-serif")
     
@@ -498,14 +498,15 @@
                 .attr("font-size", "17px")
                 .style("text-anchor", "end")
                 .style("fill", "silver")
-                .text("More Gendered Language →")
+                .text("More Biased Language →")
                 .style("font-weight", "bold")  
                 .style("font-family", "sans-serif")
 
                 // 10M Monthly Viewers
-                legendData = [{level: "", radius: radius(10000000), y: bodyheight5+70, x: bodywidth5/2.2, anchor:"end", xtext: bodywidth5/2.235, ytext: bodyheight5+53}, 
-                {level: "", radius: radius(100000000), y: bodyheight5+70, x: bodywidth5/2.1}, 
-                {level: "1B Monthly Viewers", radius: radius(1000000000), y: bodyheight5+70, x: bodywidth5/1.9, anchor:"middle", xtext: bodywidth5/1.9, ytext: bodyheight5+41}]
+                legendData = [{level: "", radius: radius(10000000), y: bodyheight5+70, x: bodywidth5/2.2, anchor:"end", xtext: bodywidth5/2.235, ytext: bodyheight5+53,id: ""}, 
+                {level: "", radius: radius(100000000), y: bodyheight5+70, x: bodywidth5/2.1,id: ""}, 
+                {level: "1B Monthly Viewers", radius: radius(1000000000), y: bodyheight5+70, x: bodywidth5/1.9, anchor:"middle", xtext: bodywidth5/1.9, ytext: bodyheight5+41,id: ""}]
+                // {level: "?", radius: radius(30000000), y: bodyheight5*1.08+11, x: bodywidth5/1.18, anchor:"middle", xtext: bodywidth5/1.18, ytext: bodyheight5*1.08+16,id: "info"}]
                 // legendData = [{level: "Word is less frequent", radius: 3, y: 20, x: 1000, anchor:"end"}, 
                 //               {level: "", radius: 5, y: height5+70, x: width5/2.06}, 
                 //               {level: "Word is more frequent", radius: 10, y: 20, x: 200, anchor:"start"}]
@@ -519,8 +520,13 @@
                     .attr("cx", d => d.x)
                     .attr("cy", d => d.y)
                     .attr("r", d => d.radius)
-                    .attr("fill","none")
+                    .attr("fill","#161616")
                     .attr("stroke","lightgrey")
+                    
+                
+                // legend.on("mouseover.info", console.log("check"))
+
+                    // .on("mouseover", tooltipInfo(bodyheight5*1.2, bodywidth5+100, "visible"))
                 
                 textLegend = barchart.append("g")
                 // textLegend = legend.append("g")
@@ -533,7 +539,8 @@
                     .attr("class", "themesText")
                     .style("text-anchor", d=>d.anchor)
                     .attr("fill","lightgrey")
-                    .call(wrap, 10)
+                    .attr("id", "info") 
+                    .call(wrap, 10)          
 
         }
         
@@ -552,6 +559,39 @@
                 // .text(text)
                 .html("<b>" + word + "<br/> </b> Used <b>" + freq + "</b> times in " + "<b>" + country + "</b> headlines")
         }
+
+        // function tooltipInfo(width, height, visibility) {
+        //     // info = d3.select("#tooltipInfo")
+        //     //     .style("display", "block")
+        //     //     .style("visibility", "visible")
+        //     //     .style("top", width + "px")
+        //     //     .style("left", height + "px")
+        //     //     .style("border", "solid 1px #ccc")
+            
+        //     // info
+        //     //     .attr("y", height/4)
+        //     //     .attr("x", 0)
+        //     //     .attr("font-weight", "bold")
+        //     //     .attr("font-size", "12px")
+        //     //     // .attr("fill", party==="red" ? '#DD1F26':'#0076C0')
+        //     //     .attr("fill", "rgb(230, 230, 230)")
+        //     //     .call(wrap, 300)
+        //     //     // .text(text)
+        //     //     .html("For each headline, we measure bias by tracking the combined occurrence of gendered language and social stereotypes usually associated with women. Gendered language includes gendered pronouns (i.e. she, her, mrs, mis etc.) and gendered nouns (i.e. girl, spokeswoman, girlfriend etc.). Examples of words that we categorize as social stereotypes are <b> slut </b>, <b>emotional<b>, <b>sensitive</b>, or <b>married</b> among many others. By counting these co-occurrences we are able to assign a gender bias score to each headline. For example: '<b>Woman</b> claims most <b>females</b> tolerate <b>sex</b> to keep their <b>relationships</b>' would get a bias score of 4.<br><br> Finally, by all headlines scores by news outlet we rank each outlet from most biased to least biased.")
+        //     d3.select("#tooltipInfo")
+        //         .style("display", "block")
+        //         .style("top", width + "px")
+        //         .style("left", height + "px")
+        //         .style("visibility", "visible")
+        //         // .style("top", (d3.mouse(this)[0]+90) + "px")
+        //         // .style("left", (d3.mouse(this)[1]) + "px")
+        //         .style('font', '14px sans-serif')
+        //         .style('background-color', "#161616")
+        //         // .style('fill-opacity', 0.5)
+        //         .attr('stroke', '#ccc')
+        //         // .text(text)
+        //         .html("For each headline, we measure bias by tracking the combined occurrence of gendered language and social stereotypes usually associated with women. Gendered language includes gendered pronouns (i.e. she, her, mrs, mis etc.) and gendered nouns (i.e. girl, spokeswoman, girlfriend etc.). Examples of words that we categorize as social stereotypes are <b> slut </b>, <b>emotional<b>, <b>sensitive</b>, or <b>married</b> among many others. By counting these co-occurrences we are able to assign a gender bias score to each headline. For example: '<b>Woman</b> claims most <b>females</b> tolerate <b>sex</b> to keep their <b>relationships</b>' would get a bias score of 4.<br><br> Finally, by all headlines scores by news outlet we rank each outlet from most biased to least biased.")
+        // }
 
         function drawWordClusters(data) {
 
