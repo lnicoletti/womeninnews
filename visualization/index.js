@@ -1078,7 +1078,7 @@
             text
                 .attr("x", function (d) { return d.x+5; })
                 .attr("y", function(d) { return d.y; })
-            
+                    
         }
         
             function fade(opacity) {

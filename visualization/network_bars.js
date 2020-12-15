@@ -200,7 +200,10 @@ function drawBarLegend() {
     .attr("opacity", d=>textOpacity(d.perc_freq))
     .attr("class", 'nodeText')
     .on('mouseover.fade', fade(0.05))
-    .on('mouseout.fade', fade(1));
+    .on('mouseout.fade', fade(1))
+    // .on('mouseover.test', d=>console.log(d))
+    // .call(d=>textCheck(d));
+
     // .style("stroke-width", 0.5)
     // .style("fill", function(d) {
     //     return d.colour;
@@ -249,6 +252,25 @@ function drawBarLegend() {
     function isConnected(a, b) {
       return linkedByIndex[`${a.index},${b.index}`] || linkedByIndex[`${b.index},${a.index}`] || a.index === b.index;
     }
+
+    // d3.select("#chart1").selectAll("rect").on("mouseover", d => console.log(text._groups[0].filter(c=>c.textContent===d.word)[0].__data__)) //console.log(d.word) textContent === d.word
+    // d3.select("#chart1").selectAll("rect").on("mouseover", d => console.log(text._groups[0].filter(c=>c.textContent===d.word)[0]))
+    // d3.select("#chart1").selectAll("rect").on("mouseover.t", d => console.log(text._groups[0].filter(c=>c.textContent===d.word)[0].call(fade(0.05))))
+    // d3.select("#chart1").selectAll("rect").on("mouseover.t", d => console.log(text.data(nodes.filter(c => (c.id === d.word)))))
+    // d3.select("#chart1").selectAll("rect").on("mouseover.t", d => text.data(nodes.filter(c => (c.id === d.word)).style("fill", "yellow")))
+    // d3.select("#chart1").selectAll("rect").on("mouseover", d => console.log(text.filter(c => c.id === d.word)))
+
+    // d3.select("#chart1").selectAll("rect").on("mouseover.t", d => d3.select(text.filter(c => c.id === d.word).attr("font-size", "50px")))
+    d3.select("#chart1").selectAll("rect").on("mouseover.t", d => d3.select("my_network").selectAll("text").attr("font-size", "50px"))
+
+
+    // d3.select("#chart1").selectAll("rect").on("mouseover.test", d => 
+    // text._groups[0].filter(c=>c.textContent===d.word)[0].class)//call(fade(0.05))
+
+    // function textCheck() {
+    //       d3.select("#chart1").selectAll("rect").on("mouseover.test", d => 
+    //       text._groups[0].filter(c=>c.textContent===d.word)[0].__data__.remove)//call(fade(0.05))
+    //   }
 
 };
 
@@ -314,6 +336,7 @@ function drawBars(countries_data, chart, selected_country, word_count, country_n
                       d.theme === "politics"?"green":
                       d.theme === "race"?"#964B00":
                       "#aaa")
+    // .on("mouseover", d=>console.log("check"))
 
   svg.append("text")
       .attr("x", (width / 2-margin.right))             
