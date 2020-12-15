@@ -146,6 +146,7 @@ function drawBarLegend() {
     // .join("line")
     .join("path")
     .attr("fill", "none")
+    .attr("class", 'netLink')
       // .style("stroke", "#aaa")
       .style("stroke-width", d=>linkWeight(d.weight))
       .style("opacity", d=>linkOpacity(d.weight))
@@ -232,7 +233,10 @@ function drawBarLegend() {
 
     function fade(opacity) {
       return d => {
-        circle.style('opacity', function (o) { return isConnected(d, o) ?d=>nodeOpacity(d.perc_freq): opacity });
+        circle.style('opacity', function (o) { 
+          // console.log(d)
+          // console.log(o)
+          return isConnected(d, o) ?d=>nodeOpacity(d.perc_freq): opacity });
         text.style('visibility', function (o) { return isConnected(d, o) ? "visible" : "hidden" });
         link.style('opacity', o => (o.source === d || o.target === d ? 1 : opacity));
         if(opacity === 1){
@@ -261,8 +265,46 @@ function drawBarLegend() {
     // d3.select("#chart1").selectAll("rect").on("mouseover", d => console.log(text.filter(c => c.id === d.word)))
 
     // d3.select("#chart1").selectAll("rect").on("mouseover.t", d => d3.select(text.filter(c => c.id === d.word).attr("font-size", "50px")))
-    d3.select("#chart1").selectAll("rect").on("mouseover.t", d => d3.select("my_network").selectAll("text").attr("font-size", "50px"))
+    // d3.select("#chart1").selectAll("rect").on("mouseover.t", d => d3.select("#my_network").selectAll("text").attr("font-size", "50px"))
+    // d3.select("#chart1").selectAll("rect").on("mouseover.t", d => console.log(d3.select("#my_network").selectAll('.nodeText')._groups.map(c=>c[0].textContent).attr("font-size", "50px")))
+    
+    // d3.select("#chart1").selectAll("rect").on("mouseover.t", d => 
+    d3.select("#chart1").selectAll("rect").on("mouseover.t", function(d) {
 
+        text = d3.select("#my_network").selectAll('.nodeText')
+        link = d3.select("#my_network").selectAll('.netLink')
+        console.log(d3
+                      .select("#my_network").selectAll('.nodeText')
+                      .filter(function(c) { return this.textContent.match(d.word); })
+                      .style('visibility', function (o) { return isConnected(d, o) ? "visible" : "hidden" })
+                      )
+        // console.log(
+
+        // PICK UP HERE
+
+          // d3
+          // .select("#my_network").selectAll('.nodeText')
+          // .filter(function(c) { return this.textContent.match(d.word); })//._groups[0][0].__data__
+          // // .style('visibility', function (o) { 
+          // //   console.log(d)
+          // //   console.log(o)
+          // //   return isConnected(d, o) ? "visible" : "hidden" })
+          // .call(d=>
+          //   text.style('visibility', function (o) {
+          //   // console.log(d._groups[0][0].__data__)
+          //   // console.log(o)
+          //   console.log(isConnected(d._groups[0][0].__data__, o))
+          //   return isConnected(d._groups[0][0].__data__, o) ? "visible" : "hidden" }))
+          
+          // .call(d=> link.style('opacity', o => (o.source === d || o.target === d ? 1 : 0.05)))
+            
+      })//)
+
+                      
+    d3.select("#chart1").selectAll("rect").on("mouseout.t", d => 
+          text.style('visibility', "visible" ))
+
+        // console.log(d3.select("#my_network").selectAll('.nodeText').filter(function(c) { return this.textContent.match(d.word); }).style('visibility', "visible" )))
 
     // d3.select("#chart1").selectAll("rect").on("mouseover.test", d => 
     // text._groups[0].filter(c=>c.textContent===d.word)[0].class)//call(fade(0.05))
