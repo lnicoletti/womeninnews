@@ -200,7 +200,9 @@ function drawBarLegend() {
     .attr("font-weight", "900")
     .attr("opacity", d=>textOpacity(d.perc_freq))
     .attr("class", 'nodeText')
+    .attr("id", function(d,i) { return "nodeText" + d.id; })
     .on('mouseover.fade', fade(0.05))
+    .on('mouseover.log', d=>console.log(d))
     .on('mouseout.fade', fade(1))
     // .on('mouseover.test', d=>console.log(d))
     // .call(d=>textCheck(d));
@@ -269,18 +271,49 @@ function drawBarLegend() {
     // d3.select("#chart1").selectAll("rect").on("mouseover.t", d => console.log(d3.select("#my_network").selectAll('.nodeText')._groups.map(c=>c[0].textContent).attr("font-size", "50px")))
     
     // d3.select("#chart1").selectAll("rect").on("mouseover.t", d => 
+    // d3.select("#chart1").selectAll("rect").on("mouseover.t", function(d) {
+
+    //     text = d3.select("#my_network").selectAll('.nodeText')
+    //     link = d3.select("#my_network").selectAll('.netLink')
+    //     console.log(d3
+    //                   .select("#my_network").selectAll('.nodeText')
+    //                   .filter(function(c) { return this.textContent.match(d.word); })
+    //                   .style('visibility', function (o) { return isConnected(d, o) ? "visible" : "hidden" })
+    //                   )
     d3.select("#chart1").selectAll("rect").on("mouseover.t", function(d) {
 
-        text = d3.select("#my_network").selectAll('.nodeText')
-        link = d3.select("#my_network").selectAll('.netLink')
-        console.log(d3
-                      .select("#my_network").selectAll('.nodeText')
-                      .filter(function(c) { return this.textContent.match(d.word); })
-                      .style('visibility', function (o) { return isConnected(d, o) ? "visible" : "hidden" })
-                      )
+      text = d3.select("#my_network").selectAll('.nodeText')
+      links_sel = d3.select("#my_network").selectAll('.netLink')
+      // const linkedByIndex = {};
+      // links_sel.forEach(d => {
+      //   linkedByIndex[`${d.source.index},${d.target.index}`] = 1;
+      // });
+
+      console.log(d.word)
+      // console.log(links_sel)
+      console.log(linkedByIndex)
+      // console.log(d3.select("#my_network").selectAll('.nodeText'))
+      console.log(d3
+                    .select("#my_network").selectAll('text#nodeText'+d.word)
+                    // .filter(function(c) { return this.textContent.match(d.word); })
+                    // .style('visibility', function (o) { return isConnected(d, o) ? "visible" : "hidden" })
+                    )
         // console.log(
 
         // PICK UP HERE
+
+        selected = d3.select("#my_network").selectAll('text#nodeText'+d.word)._groups[0][0].__data__
+        console.log(selected)
+        all = d3.select("#my_network").selectAll('.nodeText')
+        console.log(all)
+        // all.style('visibility', function (o) { return console.log(o)})
+        all.style('visibility', function (o) { return console.log([`${selected.index},${o.index}`])})
+        // all.style('visibility', function (o) { return console.log(selected, o)})
+
+        console.log(all.filter(function (o) { return console.log(linkedByIndex[`${selected.index},${o.index}`])}))
+
+        // console.log(all.filter(function (o) { return console.log(isConnected(selected, o))}))
+
 
           // d3
           // .select("#my_network").selectAll('.nodeText')
