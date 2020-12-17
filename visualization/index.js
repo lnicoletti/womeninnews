@@ -540,7 +540,144 @@
                     .style("text-anchor", d=>d.anchor)
                     .attr("fill","lightgrey")
                     .attr("id", "info") 
-                    .call(wrap, 10)          
+                    .call(wrap, 10)
+        
+        // Update metric data on click
+        d3.selectAll("button").on("click", function() {
+            // Remove X-Axis
+            d3.select("#bubblechart").selectAll("#xAxisLabel").remove()
+            let metric = d3.select(this).property("value")
+            
+            // console.log(metric)
+            if (metric === "polarity") {
+
+                barchart.append("text")
+                        .attr("id", "xAxisLabel")
+                        // .attr("transform", "rotate(-90)")
+                        .attr("y", bodyheight5*1.08)
+                        .attr("x",margin5.left+margin5.right)
+                        .attr("dy", "1em")
+                        .attr("font-size", "17px")
+                        .style("text-anchor", "start")
+                        .style("fill", "silver")
+                        .text("← Less Polarizing Language")
+                        .style("font-weight", "bold")  
+                        .style("font-family", "sans-serif")
+            
+                barchart.append("text")
+                        .attr("id", "xAxisLabel")
+                        // .attr("transform", "rotate(-90)")
+                        .attr("y", bodyheight5*1.08)
+                        .attr("x",bodywidth5)
+                        .attr("dy", "1em")
+                        .attr("font-size", "17px")
+                        .style("text-anchor", "end")
+                        .style("fill", "silver")
+                        .text("More Polarizing Language →")
+                        .style("font-weight", "bold")  
+                        .style("font-family", "sans-serif")
+                
+                // restart simulation
+                simulation
+                .alpha(1)
+                    // .alphaTarget(0.3)
+                    // .alphaDecay(0.3)
+                    .restart();
+
+                simulation
+                        // .force('charge', d3.forceManyBody().strength(1))
+                        // .force("center", d3.forceCenter(bodywidth5/ 1.38, bodyheight5 / 1.5))
+                        .force('x', d3.forceX().x(function(d) {
+                            return xScale(+d.polarity);
+                        }))
+                        .force("y", d3.forceY(bodyheight5/1.5).strength(0.05))
+                        .force('collide', d3.forceCollide((d)=>{ 
+                            return radius(+d.monthly_visits)}).strength(1))
+                    
+                circles//.merge(newCircles)
+                    .attr('cx', function(d) {
+                        return d.x;
+                    })
+                    .attr('cy', function(d) {
+                        return d.y;
+                    })
+                    .on("mouseenter", (d) => {
+                        showTooltip5(ttip, d.site, d.country_of_pub, d.monthly_visits, [d3.event.clientX, d3.event.clientY], headlines, d.polarity, d)
+                    })
+                    .on("mousemove", (d) => {
+                        showTooltip5(ttip, d.site, d.country_of_pub, d.monthly_visits,  [d3.event.clientX, d3.event.clientY], headlines, d.polarity, d)
+                    })
+                    .on("mouseleave", (d) => {
+                        d3.select("#timeline").style("display", "none")
+                    })
+                    .on("mouseover.color", function() { d3.select(this).style("stroke", "white"); })
+                    .on("mouseleave.color", function() { d3.select(this).style("stroke", "#323232"); })
+
+            } else {
+                barchart.append("text")
+                        .attr("id", "xAxisLabel")
+                        // .attr("transform", "rotate(-90)")
+                        .attr("y", bodyheight5*1.08)
+                        .attr("x",margin5.left+margin5.right)
+                        .attr("dy", "1em")
+                        .attr("font-size", "17px")
+                        .style("text-anchor", "start")
+                        .style("fill", "silver")
+                        .text("← Less Biased Language")
+                        .style("font-weight", "bold")  
+                        .style("font-family", "sans-serif")
+            
+                barchart.append("text")
+                        .attr("id", "xAxisLabel")
+                        // .attr("transform", "rotate(-90)")
+                        .attr("y", bodyheight5*1.08)
+                        .attr("x",bodywidth5)
+                        .attr("dy", "1em")
+                        .attr("font-size", "17px")
+                        .style("text-anchor", "end")
+                        .style("fill", "silver")
+                        .text("More Biased Language →")
+                        .style("font-weight", "bold")  
+                        .style("font-family", "sans-serif")
+                // reheat the simulation:
+                simulation
+                    .alpha(1)
+                    // .alphaTarget(0.3)
+                    // .alphaDecay(0.05)
+                    .restart();
+
+                simulation
+                        // .force('charge', d3.forceManyBody().strength(1))
+                        // .force("center", d3.forceCenter(bodywidth5/ 2, bodyheight5 / 1.5))
+                        .force('x', d3.forceX().x(function(d) {
+                            return xScale(+d.bias);
+                        }))
+                        .force("y", d3.forceY(bodyheight5/1.5).strength(0.05))
+                        .force('collide', d3.forceCollide((d)=>{ 
+                            return radius(+d.monthly_visits)}).strength(1))
+
+                circles//.merge(newCircles)
+                    .attr('cx', function(d) {
+                        return d.x;
+                    })
+                    .attr('cy', function(d) {
+                        return d.y;
+                    })
+                    .on("mouseenter", (d) => {
+                        showTooltip5(ttip, d.site, d.country_of_pub, d.monthly_visits, [d3.event.clientX, d3.event.clientY], headlines, d.polarity, d)
+                    })
+                    .on("mousemove", (d) => {
+                        showTooltip5(ttip, d.site, d.country_of_pub, d.monthly_visits,  [d3.event.clientX, d3.event.clientY], headlines, d.polarity, d)
+                    })
+                    .on("mouseleave", (d) => {
+                        d3.select("#timeline").style("display", "none")
+                    })
+                    .on("mouseover.color", function() { d3.select(this).style("stroke", "white"); })
+                    .on("mouseleave.color", function() { d3.select(this).style("stroke", "#323232"); })
+
+
+                    }
+                })
 
         }
         

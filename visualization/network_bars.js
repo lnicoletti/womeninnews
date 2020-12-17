@@ -249,15 +249,22 @@ function drawBarLegend() {
         }
       };
     }
-    
+
     const linkedByIndex = {};
     links.forEach(d => {
-      linkedByIndex[`${d.source.index},${d.target.index}`] = 1;
+      linkedByIndex[`${d.source.index},${d.target.index}`] = 1; 
     });
     
     function isConnected(a, b) {
+      // console.log(a)
+      // console.log(b)
+      // console.log(linkedByIndex)
       return linkedByIndex[`${a.index},${b.index}`] || linkedByIndex[`${b.index},${a.index}`] || a.index === b.index;
     }
+
+    console.log(links)
+    // console.log(linkedByIndex)
+    barInteract()
 
     // d3.select("#chart1").selectAll("rect").on("mouseover", d => console.log(text._groups[0].filter(c=>c.textContent===d.word)[0].__data__)) //console.log(d.word) textContent === d.word
     // d3.select("#chart1").selectAll("rect").on("mouseover", d => console.log(text._groups[0].filter(c=>c.textContent===d.word)[0]))
@@ -280,7 +287,11 @@ function drawBarLegend() {
     //                   .filter(function(c) { return this.textContent.match(d.word); })
     //                   .style('visibility', function (o) { return isConnected(d, o) ? "visible" : "hidden" })
     //                   )
-    d3.select("#chart1").selectAll("rect").on("mouseover.t", function(d) {
+    
+    function barInteract() {
+      d3.select("#chart1").selectAll("rect").on("mouseover.t", function(d) {
+
+      // console.log(links)
 
       text = d3.select("#my_network").selectAll('.nodeText')
       links_sel = d3.select("#my_network").selectAll('.netLink')
@@ -291,7 +302,7 @@ function drawBarLegend() {
 
       console.log(d.word)
       // console.log(links_sel)
-      console.log(linkedByIndex)
+      // console.log(linkedByIndex)
       // console.log(d3.select("#my_network").selectAll('.nodeText'))
       console.log(d3
                     .select("#my_network").selectAll('text#nodeText'+d.word)
@@ -303,14 +314,25 @@ function drawBarLegend() {
         // PICK UP HERE
 
         selected = d3.select("#my_network").selectAll('text#nodeText'+d.word)._groups[0][0].__data__
-        console.log(selected)
+        // console.log(selected)
         all = d3.select("#my_network").selectAll('.nodeText')
         console.log(all)
         // all.style('visibility', function (o) { return console.log(o)})
-        all.style('visibility', function (o) { return console.log([`${selected.index},${o.index}`])})
+        // all.style('visibility', function (o) { return console.log([`${selected.index},${o.index}`])})
+        all.style('visibility', function (o) { return isConnected(selected, o)? "visible" : "hidden"})
+
+
+
+
+
+
+
+        
+
         // all.style('visibility', function (o) { return console.log(selected, o)})
 
-        console.log(all.filter(function (o) { return console.log(linkedByIndex[`${selected.index},${o.index}`])}))
+        // console.log(all.filter(function (o) { return console.log(linkedByIndex[`${selected.index},${o.index}`])}))
+        // console.log(all.filter(function (o) { return console.log(linkedByIndex["70,71"])}))
 
         // console.log(all.filter(function (o) { return console.log(isConnected(selected, o))}))
 
@@ -332,7 +354,7 @@ function drawBarLegend() {
           // .call(d=> link.style('opacity', o => (o.source === d || o.target === d ? 1 : 0.05)))
             
       })//)
-
+    }
                       
     d3.select("#chart1").selectAll("rect").on("mouseout.t", d => 
           text.style('visibility', "visible" ))
