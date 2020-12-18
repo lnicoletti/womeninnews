@@ -114,34 +114,34 @@
             drawBubbleChart(headlinesSite)
             drawBarLegend()
 
-            var fired = 0;
-            $(window).scroll(function(){
-                // This is then function used to detect if the element is scrolled into view
-                function elementScrolled(elem)
-                {
-                  var docViewTop = $(window).scrollTop();
-                  var docViewBottom = docViewTop + $(window).height();
-                  var elemTop = $(elem).offset().top;
-                  return ((elemTop <= docViewBottom) && (elemTop >= docViewTop));
-                }
+            // var fired = 0;
+            // $(window).scroll(function(){
+            //     // This is then function used to detect if the element is scrolled into view
+            //     function elementScrolled(elem)
+            //     {
+            //       var docViewTop = $(window).scrollTop();
+            //       var docViewBottom = docViewTop + $(window).height();
+            //       var elemTop = $(elem).offset().top;
+            //       return ((elemTop <= docViewBottom) && (elemTop >= docViewTop));
+            //     }
               
-                // This is where we use the function to detect if ".box2" is scrolled into view, and when it is add the class ".animated" to the <p> child element
-                if(elementScrolled('div#clusterChart')&&(fired == 0)) {
-                // Your function here
-                drawWordClusters(countriesCls)
-                drawNetwork(UK_data, "div#my_network")
-                drawBars(countries_data, "#chart1", "UK", 20, "United Kingdom")  
-                drawNetwork(USA_data, "div#my_network2")  
-                drawBars(countries_data, "#chart2", "USA", 20, "United States")   
-                drawNetwork(IN_data, "div#my_network3") 
-                drawBars(countries_data, "div#chart3", "India", 20, "India")   
-                drawNetwork(SA_data, "div#my_network4") 
-                drawBars(countries_data, "#chart4", "South Africa", 20, "South Africa")
-                fired = 1;
+            //     // This is where we use the function to detect if ".box2" is scrolled into view, and when it is add the class ".animated" to the <p> child element
+            //     if(elementScrolled('#clusterChart')&&(fired == 0)) {
+            //     // Your function here
+            //     drawWordClusters(countriesCls)
+            //     drawNetwork(UK_data, "div#my_network")
+            //     drawBars(countries_data, "#chart1", "UK", 20, "United Kingdom")  
+            //     drawNetwork(USA_data, "div#my_network2")  
+            //     drawBars(countries_data, "#chart2", "USA", 20, "United States")   
+            //     drawNetwork(IN_data, "div#my_network3") 
+            //     drawBars(countries_data, "div#chart3", "India", 20, "India")   
+            //     drawNetwork(SA_data, "div#my_network4") 
+            //     drawBars(countries_data, "#chart4", "South Africa", 20, "South Africa")
+            //     fired = 1;
               
-                }   
+            //     }   
 
-              });
+            //   });
 
         })
 
@@ -386,19 +386,13 @@
             newLogos = logos.enter()
                     .append("svg:image")
                     // .attr("class", "forceLogo")
-                    // .attr('x', d => d.cx)
-                    // .attr('y', d => d.cy)
-                    // .attr("transform", "translate("+(d=>logoPosScale(+d.monthly_visits))+","+(d=>logoPosScale(+d.monthly_visits))+")")
-                    // .attr("transform", "translate("+(d=>logoPosScale(+d.monthly_visits))+","+(d=>logoPosScale(+d.monthly_visits))+")")
-                    // .attr("transform", d=>+d.monthly_visits<600000000?"translate("+-25+","+-25+")":"translate("+-50+","+-50+")")
-                    // .attr("transform", "translate(-25,-25)")
                     .attr("transform", d=>d.site=="bbc.co.uk" ? "translate(-50,-50)"
                                         : d.site=="cnn.com" | d.site=="foxnews.com" ? "translate(-30,-30)"
                                         : d.site=="espn.go.com" ? "translate(-34,-10)"
                                         : d.site=="nytimes.com" | d.site=="buzzfeed.com" ? "translate(-25,-25)"
                                         : d.site=="washingtonpost.com" | d.site=="huffingtonpost.com" | d.site== "usatoday.com" ? "translate(-20,-20)"
                                         : d.site=="dailymail.co.uk" ? "translate(-22,-18)"
-                                        : d.site=="politico.com" | d.site=="abcnews.go.com" | d.site=="nydailynews.com" ? "translate(-12.5,-12.5)"
+                                        : d.site=="politico.com" | d.site=="ksl.com" | d.site=="abcnews.go.com" | d.site=="nydailynews.com" ? "translate(-12.5,-12.5)"
                                         : d.site=="telegraph.co.uk" ? "translate(-15,-3)"
                                         : d.site=="breitbart.com" ? "translate(-14,-10)"
                                         : "translate(-15,-15)")
@@ -408,6 +402,15 @@
                     // .attr("xlink:href", d=>d.site === "bbc.co.uk" ? "https://www.vectorlogo.zone/logos/bbc/bbc-icon.svg":'')
                     // .style("fill", d=>+d.monthly_visits>150000000 ? logoData.filter(x=>x.site==d.site)[0]["link"]:'')
                     .attr("xlink:href", d=>+d.monthly_visits>150000000 ? logoData.filter(x=>x.site==d.site)[0]["link"]:'')
+                    .on("mouseenter", (d) => {
+                        showTooltip5(ttip, d.site, d.country_of_pub, d.monthly_visits, [d3.event.clientX, d3.event.clientY], headlines, d.polarity, d)
+                    })
+                    .on("mousemove", (d) => {
+                        showTooltip5(ttip, d.site, d.country_of_pub, d.monthly_visits,  [d3.event.clientX, d3.event.clientY], headlines, d.polarity, d)
+                    })
+                    .on("mouseleave", (d) => {
+                        d3.select("#timeline").style("display", "none")
+                    })
                     // .attr('x', -200)
                     // .attr('y', 0)
 
@@ -505,12 +508,8 @@
                 // 10M Monthly Viewers
                 legendData = [{level: "", radius: radius(10000000), y: bodyheight5+70, x: bodywidth5/2.2, anchor:"end", xtext: bodywidth5/2.235, ytext: bodyheight5+53,id: ""}, 
                 {level: "", radius: radius(100000000), y: bodyheight5+70, x: bodywidth5/2.1,id: ""}, 
-                {level: "1B Monthly Viewers", radius: radius(1000000000), y: bodyheight5+70, x: bodywidth5/1.9, anchor:"middle", xtext: bodywidth5/1.9, ytext: bodyheight5+41,id: ""}]
-                // {level: "?", radius: radius(30000000), y: bodyheight5*1.08+11, x: bodywidth5/1.18, anchor:"middle", xtext: bodywidth5/1.18, ytext: bodyheight5*1.08+16,id: "info"}]
-                // legendData = [{level: "Word is less frequent", radius: 3, y: 20, x: 1000, anchor:"end"}, 
-                //               {level: "", radius: 5, y: height5+70, x: width5/2.06}, 
-                //               {level: "Word is more frequent", radius: 10, y: 20, x: 200, anchor:"start"}]
-                // clusters composed of more bubbles indicate more words used for a specific category
+                {level: "1B Monthly Viewers", radius: radius(1000000000), y: bodyheight5+70, x: bodywidth5/1.9, anchor:"middle", xtext: bodywidth5/1.9, ytext: bodyheight5+41,id: ""},
+                {level: "?", radius: radius(30000000), y: bodyheight5*1.08+11, x: bodywidth5+15, anchor:"middle", xtext: bodywidth5+15, ytext: bodyheight5*1.08+16,id: "info"}]
 
                 legend = barchart.append("g")
                 // legend.append("g")
@@ -522,11 +521,8 @@
                     .attr("r", d => d.radius)
                     .attr("fill","#161616")
                     .attr("stroke","lightgrey")
-                    
-                
-                // legend.on("mouseover.info", console.log("check"))
-
-                    // .on("mouseover", tooltipInfo(bodyheight5*1.2, bodywidth5+100, "visible"))
+                    .on("mouseover", d=>d.id==="info" ? tooltipInfo(d3.event.clientX-150, d3.event.clientY-230):"")
+                    .on("mouseleave", d=>d3.select("#tooltipInfo").style("visibility", "hidden"))
                 
                 textLegend = barchart.append("g")
                 // textLegend = legend.append("g")
@@ -541,6 +537,8 @@
                     .attr("fill","lightgrey")
                     .attr("id", "info") 
                     .call(wrap, 10)
+                    .on("mouseover", d=>d.id==="info" ? tooltipInfo(d3.event.clientX-150, d3.event.clientY-230):"")
+                    .on("mouseleave", d=>d3.select("#tooltipInfo").style("visibility", "hidden"))
         
         // Update metric data on click
         d3.selectAll("button").on("click", function() {
@@ -697,38 +695,42 @@
                 .html("<b>" + word + "<br/> </b> Used <b>" + freq + "</b> times in " + "<b>" + country + "</b> headlines")
         }
 
-        // function tooltipInfo(width, height, visibility) {
-        //     // info = d3.select("#tooltipInfo")
-        //     //     .style("display", "block")
-        //     //     .style("visibility", "visible")
-        //     //     .style("top", width + "px")
-        //     //     .style("left", height + "px")
-        //     //     .style("border", "solid 1px #ccc")
+        function tooltipInfo(width, height) {
+            console.log("working")
+            info = d3.select("#tooltipInfo")
+                .style("display", "block")
+                .style("visibility", "visible")
+                .style("top", height + "px")
+                .style("left", width + "px")
+                .style("border", "solid 1px #ccc")
+                .style('font', '10px sans-serif')
+                .attr('stroke', '#ccc')
+                .html("We measure bias by tracking the combined occurrence of gendered language and social stereotypes usually associated with women. Gendered language includes gendered pronouns (i.e. she, her, mrs, mis etc.) and gendered nouns (i.e. girl, spokeswoman, girlfriend etc.). Examples of words that we categorize as social stereotypes are <b> slut </b>, <b>emotional</b>, <b>sensitive</b>, or <b>married</b> among many others. By counting these co-occurrences we are able to assign a gender bias score to each headline. For example: '<b>Woman</b> claims most <b>females</b> tolerate <b>sex</b> to keep their <b>relationships</b>' would get a bias score of 4.<br><br> Finally, by all headlines scores by news outlet we rank each outlet from most biased to least biased.")
             
-        //     // info
-        //     //     .attr("y", height/4)
-        //     //     .attr("x", 0)
-        //     //     .attr("font-weight", "bold")
-        //     //     .attr("font-size", "12px")
-        //     //     // .attr("fill", party==="red" ? '#DD1F26':'#0076C0')
-        //     //     .attr("fill", "rgb(230, 230, 230)")
-        //     //     .call(wrap, 300)
-        //     //     // .text(text)
-        //     //     .html("For each headline, we measure bias by tracking the combined occurrence of gendered language and social stereotypes usually associated with women. Gendered language includes gendered pronouns (i.e. she, her, mrs, mis etc.) and gendered nouns (i.e. girl, spokeswoman, girlfriend etc.). Examples of words that we categorize as social stereotypes are <b> slut </b>, <b>emotional<b>, <b>sensitive</b>, or <b>married</b> among many others. By counting these co-occurrences we are able to assign a gender bias score to each headline. For example: '<b>Woman</b> claims most <b>females</b> tolerate <b>sex</b> to keep their <b>relationships</b>' would get a bias score of 4.<br><br> Finally, by all headlines scores by news outlet we rank each outlet from most biased to least biased.")
-        //     d3.select("#tooltipInfo")
-        //         .style("display", "block")
-        //         .style("top", width + "px")
-        //         .style("left", height + "px")
-        //         .style("visibility", "visible")
-        //         // .style("top", (d3.mouse(this)[0]+90) + "px")
-        //         // .style("left", (d3.mouse(this)[1]) + "px")
-        //         .style('font', '14px sans-serif')
-        //         .style('background-color', "#161616")
-        //         // .style('fill-opacity', 0.5)
-        //         .attr('stroke', '#ccc')
-        //         // .text(text)
-        //         .html("For each headline, we measure bias by tracking the combined occurrence of gendered language and social stereotypes usually associated with women. Gendered language includes gendered pronouns (i.e. she, her, mrs, mis etc.) and gendered nouns (i.e. girl, spokeswoman, girlfriend etc.). Examples of words that we categorize as social stereotypes are <b> slut </b>, <b>emotional<b>, <b>sensitive</b>, or <b>married</b> among many others. By counting these co-occurrences we are able to assign a gender bias score to each headline. For example: '<b>Woman</b> claims most <b>females</b> tolerate <b>sex</b> to keep their <b>relationships</b>' would get a bias score of 4.<br><br> Finally, by all headlines scores by news outlet we rank each outlet from most biased to least biased.")
-        // }
+            // info
+            //     // .attr("y", height/4)
+            //     // .attr("x", 0)
+            //     // .attr("font-weight", "bold")
+            //     .attr("font-size", "12px")
+            //     // .attr("fill", party==="red" ? '#DD1F26':'#0076C0')
+            //     .attr("fill", "rgb(230, 230, 230)")
+            //     .call(wrap, 300)
+            //     // .text(text)
+            //     .html("For each headline, we measure bias by tracking the combined occurrence of gendered language and social stereotypes usually associated with women. Gendered language includes gendered pronouns (i.e. she, her, mrs, mis etc.) and gendered nouns (i.e. girl, spokeswoman, girlfriend etc.). Examples of words that we categorize as social stereotypes are <b> slut </b>, <b>emotional<b>, <b>sensitive</b>, or <b>married</b> among many others. By counting these co-occurrences we are able to assign a gender bias score to each headline. For example: '<b>Woman</b> claims most <b>females</b> tolerate <b>sex</b> to keep their <b>relationships</b>' would get a bias score of 4.<br><br> Finally, by all headlines scores by news outlet we rank each outlet from most biased to least biased.")
+            // d3.select("#tooltipInfo")
+            //     .style("display", "block")
+            //     .style("top", width + "px")
+            //     .style("left", height + "px")
+            //     .style("visibility", "visible")
+            //     // .style("top", (d3.mouse(this)[0]+90) + "px")
+            //     // .style("left", (d3.mouse(this)[1]) + "px")
+            //     .style('font', '14px sans-serif')
+            //     .style('background-color', "#161616")
+            //     // .style('fill-opacity', 0.5)
+            //     .attr('stroke', '#ccc')
+            //     // .text(text)
+            //     .html("For each headline, we measure bias by tracking the combined occurrence of gendered language and social stereotypes usually associated with women. Gendered language includes gendered pronouns (i.e. she, her, mrs, mis etc.) and gendered nouns (i.e. girl, spokeswoman, girlfriend etc.). Examples of words that we categorize as social stereotypes are <b> slut </b>, <b>emotional<b>, <b>sensitive</b>, or <b>married</b> among many others. By counting these co-occurrences we are able to assign a gender bias score to each headline. For example: '<b>Woman</b> claims most <b>females</b> tolerate <b>sex</b> to keep their <b>relationships</b>' would get a bias score of 4.<br><br> Finally, by all headlines scores by news outlet we rank each outlet from most biased to least biased.")
+        }
 
         function drawWordClusters(data) {
 

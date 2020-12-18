@@ -91,6 +91,19 @@ h1 {
     color: #ccc
     }
 
+.title {
+    font-weight:900;
+    font-size:50px;
+}
+
+h2 {
+    /* text-align: left; */
+    font-family: Georgia;
+    /* font-size: x-large; */
+    font-style: bold;
+    color: #ccc
+    }
+
 h4 {
 /* text-align: left; */
 font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
@@ -140,16 +153,19 @@ display: flex;
 
 button {
 border-color: lightgray;
+background-color: #161616;
+color: #ccc;
+font-weight: bold;
 border-style:solid;
-border-width: 0.5;
+border-width: 1;
 /* color: white; */
 padding: 10px 20px;
 margin-top: 5;
 text-align: center;
 text-decoration: none;
 /* display: inline-block; */
-font-size: 12px;
-font-family: Verdana, Geneva, Tahoma, sans-serif;
+font-size: 20px;
+font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
 #wordFreq {
@@ -158,8 +174,8 @@ font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 button:hover {
-background-color: darkgray;
-color: white;
+background-color: lightgray;
+color: #161616;
 }
 
 button:focus{
