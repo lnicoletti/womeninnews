@@ -178,6 +178,11 @@ background-color: lightgray;
 color: #161616;
 }
 
+button:focus {
+    background-color: lightgray;
+    color: #161616;
+    }
+
 button:focus{
 font-weight: bold;
 }

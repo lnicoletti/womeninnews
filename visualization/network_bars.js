@@ -18,13 +18,13 @@ console.log("before json")
     console.log(SA_data)
     console.log(countries_data)
     drawBarLegend()
-    drawNetwork(UK_data, "div#my_network")
+    drawNetwork(UK_data, "div#my_network", "United Kingdom")
     drawBars(countries_data, "#chart1", "UK", 20, "United Kingdom")  
-    drawNetwork(USA_data, "div#my_network2")  
+    drawNetwork(USA_data, "div#my_network2", "United States")  
     drawBars(countries_data, "#chart2", "USA", 20, "United States")   
-    drawNetwork(IN_data, "div#my_network3") 
+    drawNetwork(IN_data, "div#my_network3", "India") 
     drawBars(countries_data, "div#chart3", "India", 20, "India")   
-    drawNetwork(SA_data, "div#my_network4") 
+    drawNetwork(SA_data, "div#my_network4", "South Africa") 
     drawBars(countries_data, "#chart4", "South Africa", 20, "South Africa")  
      }
         )
@@ -53,7 +53,7 @@ function drawBarLegend() {
           .attr("class", "barLegendText")
           .call(wrap, 170)
 }
-  function drawNetwork(data, network) {
+  function drawNetwork(data, network, country) {
     // set the dimensions and margins of the graph
     var margin = {top: 10, right: 30, bottom: 30, left: 30},
     // big network
@@ -202,7 +202,11 @@ function drawBarLegend() {
     .attr("class", 'nodeText')
     .attr("id", function(d,i) { return "nodeText" + d.id; })
     .on('mouseover.fade', fade(0.05))
-    .on('mouseover.log', d=>console.log(d))
+    // .on('mouseover.log', d=>console.log(d))
+    .on('mouseover.bar', d=>barInteract(d))
+    .on('mouseout.bar', function(d) {
+    d3.select("#chart1").selectAll(".barLabs").remove()
+    d3.select("#chart1").selectAll('rect').attr("opacity", "1")})
     .on('mouseout.fade', fade(1))
     // .on('mouseover.test', d=>console.log(d))
     // .call(d=>textCheck(d));
@@ -264,7 +268,7 @@ function drawBarLegend() {
 
     console.log(links)
     // console.log(linkedByIndex)
-    barInteract()
+    // barInteract()
 
     // d3.select("#chart1").selectAll("rect").on("mouseover", d => console.log(text._groups[0].filter(c=>c.textContent===d.word)[0].__data__)) //console.log(d.word) textContent === d.word
     // d3.select("#chart1").selectAll("rect").on("mouseover", d => console.log(text._groups[0].filter(c=>c.textContent===d.word)[0]))
@@ -287,8 +291,76 @@ function drawBarLegend() {
     //                   .filter(function(c) { return this.textContent.match(d.word); })
     //                   .style('visibility', function (o) { return isConnected(d, o) ? "visible" : "hidden" })
     //                   )
+
+    // Get the size of an object
+    Object.size = function(obj) {
+        var size = 0, key;
+        for (key in obj) {
+            if (obj.hasOwnProperty(key)) size++;
+        }
+        return size;
+    };
+
+  
+    function barInteract(d) {
+      console.log(d.id)
+      word = d.id
+
+      // numLinks = Object.size(linkedByIndex)
+      // console.log(Object.size(linkedByIndex))
+      // console.log(nodes.length)
+
+      // var numNeighbors = 0
+
+      // var i;
+      // for (i = 0; i < nodes.length; i++) {
+      //     console.log(isConnected(d.index, i) === True ? numNeighbors += 1: numNeighbors += 0)
+      //   // text += cars[i] + "<br>";
+      // }
+
+      // console.log(d.id + "has" + numNeighbors + "neighbors")
+      
+      // d3.select("#chart1").selectAll("rect").on("mouseover.t", function(d) {
+
+
+      // text = d3.select("#my_network").selectAll('.nodeText')
+      // links_sel = d3.select("#my_network").selectAll('.netLink')
+
+      // 1) change opacity of other nodes
+      d3.select("#chart1").selectAll('rect').attr("opacity", "0.3")
+      d3.select("#chart1").select('rect#bar'+d.id).attr("opacity", "1")
+      
+      // 2) show information about node
+      x = parseInt(d3.select("#chart1").select('rect#bar'+d.id).attr("width"))+120
+      y = parseInt(d3.select("#chart1").select('rect#bar'+d.id).attr("y")) + 86
+      fill = d3.select("#chart1").select('rect#bar'+d.id).attr("fill")
+
+      console.log(x, y)
+
+      d3
+        // .select("#chart1")//.select('rect#bar'+d.id)
+        .select("#wordBars")//.select('rect#bar'+d.id)
+        // .selectAll("text")//.append("g")
+        .append("text")
+        .attr("text-anchor", "right")
+        .attr("x", x)
+        .attr("y", y)
+        // .attr("x", function(d) { return x(+d.value) + 5; })
+        // .attr("y", function(d) { return y(d.category)+20; })
+        // .text(function(d) {return (d.word)})
+        .text(d.id + ": appears " + d.frequency + " times in " + country + " headlines")
+        .attr("font-size", "15")
+        .attr("fill", fill)
+        .attr("font-family", "arial")
+        .attr("font-weight", "bold")
+        .attr("class", "barLabs")
+        .call(wrap, 60)
+        // .text(function(d) { return x(+d.value);})
+        // .style('fill',  "red")
+
+    }
     
-    function barInteract() {
+    function barInteract2() {
       d3.select("#chart1").selectAll("rect").on("mouseover.t", function(d) {
 
       // console.log(links)
@@ -356,8 +428,8 @@ function drawBarLegend() {
       })//)
     }
                       
-    d3.select("#chart1").selectAll("rect").on("mouseout.t", d => 
-          text.style('visibility', "visible" ))
+    // d3.select("#chart1").selectAll("rect").on("mouseout.t", d => 
+    //       text.style('visibility', "visible" ))
 
         // console.log(d3.select("#my_network").selectAll('.nodeText').filter(function(c) { return this.textContent.match(d.word); }).style('visibility', "visible" )))
 
@@ -383,6 +455,7 @@ function drawBars(countries_data, chart, selected_country, word_count, country_n
   var svg = d3.select(chart)
   .append("svg")
     .attr("preserveAspectRatio", "xMinYMin meet")
+    .attr("id", "wordBars")
     .attr("viewBox", "0 0 "+ width +"," + height+"")
     // .classed("svg-content", true)
     .append("g")
@@ -424,6 +497,7 @@ function drawBars(countries_data, chart, selected_country, word_count, country_n
     .join("rect")
     .attr("x", x(20) )
     .attr("y", function(d) { return y(d.word); })
+    .attr("id", function(d,i) { return "bar" + d.word; })
     .attr("width", function(d) { return x(+d.frequency); })
     .attr("height", barpad )
     .attr("fill", d=>d.theme === "female_bias"?"pink":

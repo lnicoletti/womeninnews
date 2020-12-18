@@ -114,34 +114,34 @@
             drawBubbleChart(headlinesSite)
             drawBarLegend()
 
-            // var fired = 0;
-            // $(window).scroll(function(){
-            //     // This is then function used to detect if the element is scrolled into view
-            //     function elementScrolled(elem)
-            //     {
-            //       var docViewTop = $(window).scrollTop();
-            //       var docViewBottom = docViewTop + $(window).height();
-            //       var elemTop = $(elem).offset().top;
-            //       return ((elemTop <= docViewBottom) && (elemTop >= docViewTop));
-            //     }
+            var fired = 0;
+            $(window).scroll(function(){
+                // This is then function used to detect if the element is scrolled into view
+                function elementScrolled(elem)
+                {
+                  var docViewTop = $(window).scrollTop();
+                  var docViewBottom = docViewTop + $(window).height();
+                  var elemTop = $(elem).offset().top;
+                  return ((elemTop <= docViewBottom) && (elemTop >= docViewTop));
+                }
               
-            //     // This is where we use the function to detect if ".box2" is scrolled into view, and when it is add the class ".animated" to the <p> child element
-            //     if(elementScrolled('#clusterChart')&&(fired == 0)) {
-            //     // Your function here
-            //     drawWordClusters(countriesCls)
-            //     drawNetwork(UK_data, "div#my_network")
-            //     drawBars(countries_data, "#chart1", "UK", 20, "United Kingdom")  
-            //     drawNetwork(USA_data, "div#my_network2")  
-            //     drawBars(countries_data, "#chart2", "USA", 20, "United States")   
-            //     drawNetwork(IN_data, "div#my_network3") 
-            //     drawBars(countries_data, "div#chart3", "India", 20, "India")   
-            //     drawNetwork(SA_data, "div#my_network4") 
-            //     drawBars(countries_data, "#chart4", "South Africa", 20, "South Africa")
-            //     fired = 1;
+                // This is where we use the function to detect if ".box2" is scrolled into view, and when it is add the class ".animated" to the <p> child element
+                if(elementScrolled('#clusterChart')&&(fired == 0)) {
+                // Your function here
+                drawWordClusters(countriesCls)
+                drawNetwork(UK_data, "div#my_network", "United Kingdom")
+                drawBars(countries_data, "#chart1", "UK", 20, "United Kingdom")  
+                drawNetwork(USA_data, "div#my_network2", "United States")  
+                drawBars(countries_data, "#chart2", "USA", 20, "United States")   
+                drawNetwork(IN_data, "div#my_network3", "India") 
+                drawBars(countries_data, "div#chart3", "India", 20, "India")   
+                drawNetwork(SA_data, "div#my_network4", "South Africa") 
+                drawBars(countries_data, "#chart4", "South Africa", 20, "South Africa")
+                fired = 1;
               
-            //     }   
+                }   
 
-            //   });
+              });
 
         })
 
@@ -1046,7 +1046,7 @@
                     .attr("class", "barLegendText")
                     .call(wrap, 170)
         }
-        function drawNetwork(data, network) {
+        function drawNetwork(data, network, country) {
             // set the dimensions and margins of the graph
             var margin = {top: 10, right: 30, bottom: 30, left: 30},
             // big network
@@ -1193,11 +1193,12 @@
             .attr("opacity", d=>textOpacity(d.perc_freq))
             .attr("class", 'nodeText')
             .on('mouseover.fade', fade(0.05))
-            .on('mouseout.fade', fade(1));
-            // .style("stroke-width", 0.5)
-            // .style("fill", function(d) {
-            //     return d.colour;
-            // });
+            // .on('mouseover.log', d=>console.log(d))
+            .on('mouseover.bar', d=>barInteract(d))
+            .on('mouseout.bar', function(d) {
+            d3.select("#chart1").selectAll(".barLabs").remove()
+            d3.select("#chart1").selectAll('rect').attr("opacity", "1")})
+            .on('mouseout.fade', fade(1))
         
         // This function is run at each iteration of the force algorithm, updating the nodes position.
         function ticked() {
@@ -1242,6 +1243,64 @@
             function isConnected(a, b) {
             return linkedByIndex[`${a.index},${b.index}`] || linkedByIndex[`${b.index},${a.index}`] || a.index === b.index;
             }
+
+            function barInteract(d) {
+                console.log(d.id)
+                word = d.id
+          
+                // numLinks = Object.size(linkedByIndex)
+                // console.log(Object.size(linkedByIndex))
+                // console.log(nodes.length)
+          
+                // var numNeighbors = 0
+          
+                // var i;
+                // for (i = 0; i < nodes.length; i++) {
+                //     console.log(isConnected(d.index, i) === True ? numNeighbors += 1: numNeighbors += 0)
+                //   // text += cars[i] + "<br>";
+                // }
+          
+                // console.log(d.id + "has" + numNeighbors + "neighbors")
+                
+                // d3.select("#chart1").selectAll("rect").on("mouseover.t", function(d) {
+          
+          
+                // text = d3.select("#my_network").selectAll('.nodeText')
+                // links_sel = d3.select("#my_network").selectAll('.netLink')
+          
+                // 1) change opacity of other nodes
+                d3.select("#chart1").selectAll('rect').attr("opacity", "0.3")
+                d3.select("#chart1").select('rect#bar'+d.id).attr("opacity", "1")
+                
+                // 2) show information about node
+                x = parseInt(d3.select("#chart1").select('rect#bar'+d.id).attr("width"))+120
+                y = parseInt(d3.select("#chart1").select('rect#bar'+d.id).attr("y")) + 86
+                fill = d3.select("#chart1").select('rect#bar'+d.id).attr("fill")
+          
+                console.log(x, y)
+          
+                d3
+                  // .select("#chart1")//.select('rect#bar'+d.id)
+                  .select("#wordBars")//.select('rect#bar'+d.id)
+                  // .selectAll("text")//.append("g")
+                  .append("text")
+                  .attr("text-anchor", "right")
+                  .attr("x", x)
+                  .attr("y", y)
+                  // .attr("x", function(d) { return x(+d.value) + 5; })
+                  // .attr("y", function(d) { return y(d.category)+20; })
+                  // .text(function(d) {return (d.word)})
+                  .text(d.id + ": appears " + d.frequency + " times in " + country + " headlines")
+                  .attr("font-size", "15")
+                  .attr("fill", fill)
+                  .attr("font-family", "arial")
+                  .attr("font-weight", "bold")
+                  .attr("class", "barLabs")
+                  .call(wrap, 60)
+                  // .text(function(d) { return x(+d.value);})
+                  // .style('fill',  "red")
+          
+            }
         
         };
           
@@ -1257,6 +1316,7 @@
         var svg = d3.select(chart)
         .append("svg")
             .attr("preserveAspectRatio", "xMinYMin meet")
+            .attr("id", "wordBars")
             .attr("viewBox", "0 0 "+ width +"," + height+"")
             // .classed("svg-content", true)
             .append("g")
@@ -1298,6 +1358,7 @@
             .join("rect")
             .attr("x", x(20) )
             .attr("y", function(d) { return y(d.word); })
+            .attr("id", function(d,i) { return "bar" + d.word; })
             .attr("width", function(d) { return x(+d.frequency); })
             .attr("height", barpad )
             .attr("fill", d=>d.theme === "female"?"pink":
