@@ -129,14 +129,14 @@
                 if(elementScrolled('#clusterChart')&&(fired == 0)) {
                 // Your function here
                 drawWordClusters(countriesCls)
-                drawNetwork(UK_data, "div#my_network", "United Kingdom")
-                drawBars(countries_data, "#chart1", "UK", 20, "United Kingdom")  
-                drawNetwork(USA_data, "div#my_network2", "United States")  
-                drawBars(countries_data, "#chart2", "USA", 20, "United States")   
-                drawNetwork(IN_data, "div#my_network3", "India") 
-                drawBars(countries_data, "div#chart3", "India", 20, "India")   
-                drawNetwork(SA_data, "div#my_network4", "South Africa") 
-                drawBars(countries_data, "#chart4", "South Africa", 20, "South Africa")
+                drawNetwork(UK_data, "div#my_network", "United Kingdom", "#chart1", "chart1")
+                drawBars(countries_data, "#chart1", "UK", 20, "United Kingdom", "chart1")  
+                drawNetwork(USA_data, "div#my_network2", "United States", "#chart2", "chart2")  
+                drawBars(countries_data, "#chart2", "USA", 20, "United States", "chart2")   
+                drawNetwork(IN_data, "div#my_network3", "India", "#chart3", "chart3") 
+                drawBars(countries_data, "div#chart3", "India", 20, "India", "chart3")   
+                drawNetwork(SA_data, "div#my_network4", "South Africa", "#chart4", "chart4") 
+                drawBars(countries_data, "#chart4", "South Africa", 20, "South Africa", "chart4")
                 fired = 1;
               
                 }   
@@ -1046,7 +1046,7 @@
                     .attr("class", "barLegendText")
                     .call(wrap, 170)
         }
-        function drawNetwork(data, network, country) {
+        function drawNetwork(data, network, country, bars, svgID) {
             // set the dimensions and margins of the graph
             var margin = {top: 10, right: 30, bottom: 30, left: 30},
             // big network
@@ -1196,8 +1196,8 @@
             // .on('mouseover.log', d=>console.log(d))
             .on('mouseover.bar', d=>barInteract(d))
             .on('mouseout.bar', function(d) {
-            d3.select("#chart1").selectAll(".barLabs").remove()
-            d3.select("#chart1").selectAll('rect').attr("opacity", "1")})
+            d3.select(bars).selectAll(".barLabs").remove()
+            d3.select(bars).selectAll('rect').attr("opacity", "1")})
             .on('mouseout.fade', fade(1))
         
         // This function is run at each iteration of the force algorithm, updating the nodes position.
@@ -1248,40 +1248,20 @@
                 console.log(d.id)
                 word = d.id
           
-                // numLinks = Object.size(linkedByIndex)
-                // console.log(Object.size(linkedByIndex))
-                // console.log(nodes.length)
-          
-                // var numNeighbors = 0
-          
-                // var i;
-                // for (i = 0; i < nodes.length; i++) {
-                //     console.log(isConnected(d.index, i) === True ? numNeighbors += 1: numNeighbors += 0)
-                //   // text += cars[i] + "<br>";
-                // }
-          
-                // console.log(d.id + "has" + numNeighbors + "neighbors")
-                
-                // d3.select("#chart1").selectAll("rect").on("mouseover.t", function(d) {
-          
-          
-                // text = d3.select("#my_network").selectAll('.nodeText')
-                // links_sel = d3.select("#my_network").selectAll('.netLink')
-          
                 // 1) change opacity of other nodes
-                d3.select("#chart1").selectAll('rect').attr("opacity", "0.3")
-                d3.select("#chart1").select('rect#bar'+d.id).attr("opacity", "1")
+                d3.select(bars).selectAll('rect').attr("opacity", "0.3")
+                d3.select(bars).select('rect#bar'+d.id).attr("opacity", "1")
                 
                 // 2) show information about node
-                x = parseInt(d3.select("#chart1").select('rect#bar'+d.id).attr("width"))+120
-                y = parseInt(d3.select("#chart1").select('rect#bar'+d.id).attr("y")) + 86
-                fill = d3.select("#chart1").select('rect#bar'+d.id).attr("fill")
+                x = parseInt(d3.select(bars).select('rect#bar'+d.id).attr("width"))+120
+                y = parseInt(d3.select(bars).select('rect#bar'+d.id).attr("y")) + 86
+                fill = d3.select(bars).select('rect#bar'+d.id).attr("fill")
           
                 console.log(x, y)
           
                 d3
                   // .select("#chart1")//.select('rect#bar'+d.id)
-                  .select("#wordBars")//.select('rect#bar'+d.id)
+                  .select("#"+svgID+"wordBars")//.select('rect#bar'+d.id)
                   // .selectAll("text")//.append("g")
                   .append("text")
                   .attr("text-anchor", "right")
@@ -1304,7 +1284,7 @@
         
         };
           
-        function drawBars(countries_data, chart, selected_country, word_count, country_name) {
+    function drawBars(countries_data, chart, selected_country, word_count, country_name, svgID) {
         margin = {top: 69, right: 90, bottom: 5, left: 90},
         width = width/1.5,
         height = height;
@@ -1316,7 +1296,7 @@
         var svg = d3.select(chart)
         .append("svg")
             .attr("preserveAspectRatio", "xMinYMin meet")
-            .attr("id", "wordBars")
+            .attr("id", svgID + "wordBars")
             .attr("viewBox", "0 0 "+ width +"," + height+"")
             // .classed("svg-content", true)
             .append("g")
