@@ -92,9 +92,42 @@ h1 {
     }
 
 .title {
+    margin-top: 80px;
+    margin-bottom: 50px;
     font-weight:900;
     font-size:50px;
 }
+
+.subTitle {
+    font-weight:500;
+    font-size:25px;
+    opacity: 0.9;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.link {
+    color: #ccc
+}
+
+.credits {
+    font-weight:500;
+    font-size:14;
+    opacity: 0.8;
+    margin-bottom: 50px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #ccc
+}
+
+.sectionHeader {
+    /* text-align: left; */
+    font-family: Arial, Helvetica, sans-serif;
+    /* font-size: x-large; */
+    font-style: bold;
+    color: #ccc;
+    max-width: 900;
+    text-anchor: middle;
+    justify-content: center;
+    }
 
 h2 {
     /* text-align: left; */
@@ -128,8 +161,9 @@ max-width: 700;
 text-align: justify;
 text-anchor: middle;
 color: rgb(167, 167, 167);
-font-family: Verdana, Geneva, Tahoma, sans-serif;
-font-size: 15px;
+/* font-family: Verdana, Geneva, Tahoma, sans-serif; */
+font-family: Georgia, 'Times New Roman', Times, serif;
+font-size: 18px;
 margin-bottom: 0;
 }
 
@@ -138,6 +172,12 @@ margin-top: 0;
 margin-bottom: 10;
 display: flex;
 justify-content: center;
+}
+
+.header {
+justify-content: center;
+display: flex;
+text-anchor: middle;
 }
 
 .dropOptions {

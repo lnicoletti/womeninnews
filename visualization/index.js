@@ -1143,7 +1143,7 @@
             .style("stroke-width", d=>linkWeight(d.weight))
             .style("opacity", d=>linkOpacity(d.weight))
             .style("stroke", d=>d.theme === "female_bias"?"pink":
-                                d.theme === "male_bias"?"blue":
+                                d.theme === "male_bias"?"turquoise":
                                 d.theme === "empowerment"?"#ccad34":
                                 d.theme === "violence"?"red":
                                 d.theme === "politics"?"green":
@@ -1162,7 +1162,7 @@
             .attr("r", 0)
             .attr("opacity", d=>nodeOpacity(d.perc_freq))
             .style("fill", d=>d.theme === "female_bias"?"pink":
-                                d.theme === "male_bias"?"blue":
+                                d.theme === "male_bias"?"turquoise":
                                 d.theme === "empowerment"?"#ccad34":
                                 d.theme === "violence"?"red":
                                 d.theme === "politics"?"green":
@@ -1181,7 +1181,7 @@
             .text(d=>d.id)
             // .style("fill", "black")
             .style("fill", d=>d.theme === "female_bias"?"pink":
-                                d.theme === "male_bias"?"blue":
+                                d.theme === "male_bias"?"turquoise":
                                 d.theme === "empowerment"?"#ccad34":
                                 d.theme === "violence"?"red":
                                 d.theme === "politics"?"green":
@@ -1288,7 +1288,8 @@
         margin = {top: 69, right: 90, bottom: 5, left: 90},
         width = width/1.5,
         height = height;
-        barpad = 20
+        barpad = word_count===20 ? 20: word_count===50 ? 7:20
+        font_size = word_count===20 ? "15px": word_count===50 ? "12px":"15px"
         
         country_data = countries_data.filter(d=>d.country == selected_country)
         top10 = country_data.filter(function(d,i){ return i<word_count })
@@ -1326,7 +1327,7 @@
         .call(d3.axisLeft(y).tickSize(0))
                 .attr("class", "yAxis")
                 .selectAll("text")
-                    .attr("font-size", "15")
+                    .attr("font-size", font_size)
                     .attr("transform", "translate(0, -2)")
                     .attr("fill", "silver")
                     .attr("font-family", "arial")
@@ -1342,7 +1343,7 @@
             .attr("width", function(d) { return x(+d.frequency); })
             .attr("height", barpad )
             .attr("fill", d=>d.theme === "female"?"pink":
-                            d.theme === "male"?"blue":
+                            d.theme === "male"?"turquoise":
                             d.theme === "empowerment"?"#ccad34":
                             d.theme === "violence"?"red":
                             d.theme === "politics"?"green":
