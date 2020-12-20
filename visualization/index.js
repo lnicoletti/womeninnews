@@ -113,7 +113,7 @@
             console.log(headlines) 
             drawBubbleChart(headlinesSite)
             drawBarLegend()
-
+            // chooseBarNum()
             var fired = 0;
             $(window).scroll(function(){
                 // This is then function used to detect if the element is scrolled into view
@@ -521,7 +521,7 @@
                     .attr("r", d => d.radius)
                     .attr("fill","#161616")
                     .attr("stroke","lightgrey")
-                    .on("mouseover", d=>d.id==="info" ? tooltipInfo(d3.event.clientX-150, d3.event.clientY-230):"")
+                    .on("mouseover", d=>d.id==="info" ? tooltipInfo(d3.event.clientX-150, d3.event.clientY-420):"")
                     .on("mouseleave", d=>d3.select("#tooltipInfo").style("visibility", "hidden"))
                 
                 textLegend = barchart.append("g")
@@ -537,7 +537,7 @@
                     .attr("fill","lightgrey")
                     .attr("id", "info") 
                     .call(wrap, 10)
-                    .on("mouseover", d=>d.id==="info" ? tooltipInfo(d3.event.clientX-150, d3.event.clientY-230):"")
+                    .on("mouseover", d=>d.id==="info" ? tooltipInfo(d3.event.clientX-150, d3.event.clientY-420):"")
                     .on("mouseleave", d=>d3.select("#tooltipInfo").style("visibility", "hidden"))
         
         // Update metric data on click
@@ -705,7 +705,8 @@
                 .style("border", "solid 1px #ccc")
                 .style('font', '10px sans-serif')
                 .attr('stroke', '#ccc')
-                .html("We measure bias by tracking the combined occurrence of gendered language and social stereotypes usually associated with women. Gendered language includes gendered pronouns (i.e. she, her, mrs, mis etc.) and gendered nouns (i.e. girl, spokeswoman, girlfriend etc.). Examples of words that we categorize as social stereotypes are <b> slut </b>, <b>emotional</b>, <b>sensitive</b>, or <b>married</b> among many others. By counting these co-occurrences we are able to assign a gender bias score to each headline. For example: '<b>Woman</b> claims most <b>females</b> tolerate <b>sex</b> to keep their <b>relationships</b>' would get a bias score of 4.<br><br> Finally, by all headlines scores by news outlet we rank each outlet from most biased to least biased.")
+                .html("We measure <b> gender bias </b> by tracking the combined occurrence of gendered language and social stereotypes usually associated with women. We do this in two steps: <br> <br> 1) We check if a headline contains gendered language (i.e. 'spokeswoman', 'chairwoman', 'she', 'her', 'bride', 'daughter', 'daughters', 'female', 'fiancee', 'girl', 'girlfriend' etc.) <br> <br> 2) If it contains gendered language, we then count the number of words that are considered to be social stereotypes about women (i.e. 'weak', 'modest', 'virgin', 'slut', 'whore', 'sexy', 'feminine', 'sensitive', 'emotional', 'gentle', 'soft', 'pretty', 'bitch', 'sexual' etc.).<br><br> Finally, we normalize this count for all headlines within each outlet as a score between 0 and 1, and we aggregate (i.e. average) this score for each outlet. <br><br> We measure <b>polarity</b> by performing sentiment analysis on each headline using the Vader python package, where each headline gets a sentiment score from -1 to 1 (from more negative to more positive). Because we are interested in polarity, we take the absolute value of each headline's score.")
+                // .html("We measure bias by tracking the combined occurrence of gendered language and social stereotypes usually associated with women. Gendered language includes gendered pronouns (i.e. she, her, mrs, mis etc.) and gendered nouns (i.e. girl, spokeswoman, girlfriend etc.). Examples of words that we categorize as social stereotypes are <b> slut </b>, <b>emotional</b>, <b>sensitive</b>, or <b>married</b> among many others. By counting these co-occurrences we are able to assign a gender bias score to each headline. For example: '<b>Woman</b> claims most <b>females</b> tolerate <b>sex</b> to keep their <b>relationships</b>' would get a bias score of 4.<br><br> Finally, by all headlines scores by news outlet we rank each outlet from most biased to least biased.")
             
             // info
             //     // .attr("y", height/4)
