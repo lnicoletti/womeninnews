@@ -12,3 +12,7 @@ What are the most commonly used words to talk about women in headlines across di
 What kind of words are used in conjunction with each other around the topic of women?
 
 While news consumption can influence our perceptions, news headlines allow a piece to turn from an article to a story. Headlines are designed to be catchy, sensational and with the advent of 24/7 news cycles, anxiety inducing. They make an imprint on our minds. In this piece, we used data from more than 50,000 headlines from the news outlets of 4 different countries to illustrate how women are represented in news headlines around the world.
+
+PLEASE FIND THE FINAL APPLICATION IN THE "final_app" FOLDER. PLEASE IGNORE THE "visualization" FOLDER, WHICH IS JUST INTERMEDIARY CODE THAT WAS USED PRIOR TO PUTTING IT TOGETHER INTO THE FINAL APP. INSIDE THE "final_app" FOLDER, THE "index.html" FILE SHOULD BE LAUNCHED ON LIVE SERVER WITH VSCODE TO VIEW THE FINAL APPLICATION. PLEASE BE PATIENT AS SOME OF THE VISUALIZATIONS TAKE SOME TIME TO RENDER.
+
+THANK YOU
