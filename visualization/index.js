@@ -1,8 +1,10 @@
+    // constants for charts
     let width5 = 1500;
     let height5 = 540;
 
     let heightCluster =  height5*3
 
+    // constants for clusterchart
     padding = 1.5, // separation between same-color nodes
     clusterPadding = 6, // separation between different-color nodes
     maxRadius = 12;
@@ -19,7 +21,6 @@
                     .attr("preserveAspectRatio", "xMinYMin meet")
                     .attr("viewBox", "0 0 "+ width5 +"," + heightCluster+"")
                     .classed("svg-content", true);
-    // let barchart = d3.select("#barchart")
 
     let timeline = d3.select("#timeline")
 
@@ -58,29 +59,6 @@
                 {site:"espn.go.com", link:"https://cdn.worldvectorlogo.com/logos/espn.svg"},
                 {site:"huffingtonpost.com", link:"https://www.vectorlogo.zone/logos/huffingtonpost/huffingtonpost-icon.svg"}
             ]
-
-    // groups = {
-    //         "South Africa, male": { x: width5 - 300, y: height5, color: "#93D1BA"},
-    //         "South Africa, violence": { x: width5-600, y: height5, color: "#BEE5AA"},
-    //         "South Africa, female": { x: width5 - 900, y: height5, color: "#79BACE"},
-    //         "South Africa, empowerment": { x: width5 - 1200, y: height5, color: "lightblue", country: "South Africa"},
-
-    //         "USA, male": { x: width5- 300, y: height5 - 160, color: "#93D1BA"},
-    //         "USA, violence": { x: width5- 600, y: height5 - 160, color: "#BEE5AA"},
-    //         "USA, female": { x: width5- 900, y: height5 - 160, color: "#79BACE"},
-    //         "USA, empowerment": { x: width5- 1200, y: height5 - 160, color: "lightblue", country: "United States"},
-
-    //         "UK, male": { x: width5- 300, y: height5 -320, color: "#93D1BA"},
-    //         "UK, violence": { x: width5- 600, y: height5-320, color: "#BEE5AA"},
-    //         "UK, female": { x: width5- 900, y: height5-320, color: "#79BACE"},
-    //         "UK, empowerment": { x: width5- 1200, y: height5-320, color: "lightblue", country: "United Kingdom"},
-
-    //         "India, male": { x: width5- 300, y: height5-480, color: "#93D1BA", theme: "Male Dominance"},
-    //         "India, violence": { x: width5- 600, y: height5-480, color: "#BEE5AA", theme: "Violence"},
-    //         "India, female": { x: width5 - 900, y: height5-480, color: "#79BACE", theme: "Female Bias"},
-    //         "India, empowerment": { x: width5- 1200, y: height5-480, color: "lightblue", theme: "Empowerment", country: "India"},
-    //     }
-    
 
     console.log(logoData.filter(d=>d.site=='bloomberg.com')[0]["link"])
     Promise.all([

@@ -1,0 +1,332 @@
+body {
+    background-color: #161616;
+}
+#tooltipText {
+    /* border: solid 1px #ccc;
+    top: 10px;
+    left: 0px;
+    padding: 5px; */
+    /* font-size: 12px; */
+    font-family: Arial, Helvetica, sans-serif;
+    /* position: fixed; */
+    display: block;
+    /* background-color: none; */
+    /* fill:rgb(196, 195, 195);            */
+    /* color:#ccc;            */
+}
+
+#tooltipHeadline {
+    /* border: solid 1px #ccc; */
+    top: 10px;
+    left: 0px;
+    padding: 5px;
+    position:fixed;
+    visibility: hidden;
+    /* opacity:0; */
+    /* hide it for when theres no hovering */
+    /* display:none; */
+    background-color: #161616;
+}
+
+
+#tooltipHeadline path {
+    fill: none
+}
+
+.forceText {
+font-weight: bold;
+font-family: Arial, Helvetica, sans-serif;
+font-size: 8px;
+text-anchor: middle;
+fill: silver;
+}
+
+.themesText {
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    text-anchor: middle;
+    fill: silver;
+    }
+
+/* .forceLogo {
+    display: ;
+    margin-left: auto;
+    margin-right: auto;
+    width: 5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    } */
+
+/* .xAxis text, .yAxis text{
+fill: silver;
+font-size: 10px;
+font-family: Arial, Helvetica, sans-serif;
+} */
+
+.xAxis line, .yAxis line{
+stroke: silver;
+}
+
+.xAxis text {
+font-family: Arial, Helvetica, sans-serif;
+}
+
+.xAxis path, .yAxis path {
+  display: none;
+}
+
+.axisLabel {
+font-weight: bold;
+font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+    /* text-align: left; */
+    font-family: Georgia;
+    /* font-size: x-large; */
+    font-style: bold;
+    color: #ccc
+    }
+
+.title {
+    margin-top: 80px;
+    margin-bottom: 50px;
+    font-weight:900;
+    font-size:50px;
+}
+
+.subTitle {
+    font-weight:500;
+    font-size:25px;
+    opacity: 0.9;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.link {
+    color: #ccc
+}
+
+.credits {
+    font-weight:500;
+    font-size:14;
+    opacity: 0.8;
+    margin-bottom: 50px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #ccc
+}
+
+.sectionHeader {
+    /* text-align: left; */
+    font-family: Arial, Helvetica, sans-serif;
+    /* font-size: x-large; */
+    font-style: bold;
+    color: #ccc;
+    max-width: 900;
+    text-anchor: middle;
+    justify-content: center;
+    }
+
+h2 {
+    /* text-align: left; */
+    font-family: Georgia;
+    /* font-size: x-large; */
+    font-style: bold;
+    color: #ccc
+    }
+
+h4 {
+/* text-align: left; */
+font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+font-size: x-large;
+font-style: bold;
+color: #ccc
+}
+
+h5 {
+/* text-align: left; */
+font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+font-size:medium;
+/* font-style:oblique; */
+font-weight: 600;
+text-align: center;
+margin-bottom: 0;
+color: #ccc
+}
+
+.description {
+max-width: 700;
+text-align: justify;
+text-anchor: middle;
+color: rgb(167, 167, 167);
+/* font-family: Verdana, Geneva, Tahoma, sans-serif; */
+font-family: Georgia, 'Times New Roman', Times, serif;
+font-size: 18px;
+margin-bottom: 0;
+}
+
+.subtitle {
+margin-top: 0;
+margin-bottom: 10;
+display: flex;
+justify-content: center;
+}
+
+.header {
+justify-content: center;
+display: flex;
+text-anchor: middle;
+}
+
+.dropOptions {
+font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+font-size: x-large;
+font-weight: bold;
+}
+
+.buttons {
+justify-content: center;
+display: flex;
+}
+
+button {
+border-color: lightgray;
+background-color: #161616;
+color: #ccc;
+font-weight: bold;
+border-style:solid;
+border-width: 1;
+/* color: white; */
+padding: 10px 20px;
+margin-top: 5;
+text-align: center;
+text-decoration: none;
+/* display: inline-block; */
+font-size: 20px;
+font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+#wordFreq {
+    margin-top: 0;
+    margin-bottom: 100
+}
+
+button:hover {
+background-color: lightgray;
+color: #161616;
+}
+
+button:focus {
+    background-color: lightgray;
+    color: #161616;
+    }
+
+button:focus{
+font-weight: bold;
+}
+
+.search {
+text-align: center;
+}
+
+.legend circle {
+fill: none;
+stroke: #ccc;
+}
+
+.legend text {
+fill: silver;
+font: 8px sans-serif;
+text-anchor: end;
+}
+
+.svg-container {
+display: inline-block;
+position: relative;
+width: 95%;
+padding-bottom: 40%;
+margin-left: 2.5%;
+margin-right: 2.5%;
+vertical-align: top;
+overflow: hidden;
+}
+
+.svg-container2 {
+    display: inline-block;
+    position: relative;
+    width: 95%;
+    padding-bottom: 50%;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    vertical-align: top;
+    overflow: hidden;
+    }
+
+.svg-content {
+display: inline-block;
+position: absolute;
+text-align: center;
+top: 50;
+left: 0;
+}
+
+#tooltipCluster {
+    border: solid 1px #ccc;
+    padding: 10px;
+    /* change the tooltip so that its position can be moved around */
+    position: fixed;
+    /* hide it for when theres no hovering */
+    display: block;
+    /* background-color: white; */
+    color:#03071e;            
+}
+
+#tooltipInfo {
+    border: solid 1px #ccc;
+    /* visibility:hidden; */
+    padding: 10px;
+    max-width: 180px;
+    text-align: justify;
+    /* change the tooltip so that its position can be moved around */
+    position: fixed;
+    /* hide it for when theres no hovering */
+    display: block;
+    color:silver; 
+    /* background-color: white; */
+    background-color: #161616;           
+}
+
+.clusterLegend {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    /* width: 50%; */
+  }
+
+.netbars {
+    display: grid;
+    grid-template-columns: 27vw 65vw; 
+    grid-template-rows: 60vh 60vh 60vh 60vh;
+    column-gap: 0vw;
+    row-gap: 40vh;
+    align-items: center;
+    margin-top:30vh;
+    margin-left:4vw;
+    margin-right:4vw;
+    }
+
+.barLegend {
+    margin-top:20px;
+    padding-bottom:10px
+}
+
+.barLegendText {
+    font-size: 12px;
+    font-family: sans-serif;
+    fill:silver;
+    text-anchor: start;
+    text-align:center;
+    opacity:0.65
+}

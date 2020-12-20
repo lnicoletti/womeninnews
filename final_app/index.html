@@ -1,0 +1,136 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="styles.css">
+</head>
+ 
+<body> 
+    <h1 style = "text-align: center" class="Title">When Women Make Headlines</h1>
+    </div>
+    <div class="header">
+    <h1 style = "text-align: center" class="subTitle" >A visual essay about the representation of women in the news</h1>
+    </div>
+    <p style = "text-align: center" class="credits">By 
+        <b><a href="https://www.leonardonicoletti.com" target="_blank" class="link">Leonardo Nicoletti</a></b> 
+        and <b><a href="https://twitter.com/sahitisarva" target="_blank" class="link">Sahiti Sarva</a></b></h1>
+    <div class="subtitle">
+        <p class="description"> 
+            As observed in a lot of competitive and high paying fields, there is proven lack of representation of both women and racial 
+            minorities in newsrooms. This unbalance is reflected in the news articles that we read every day, where women are often 
+            described in ways that reinforce social stereotypes and deepen gender biases. Extensive reporting on this issue in different 
+            forms - open editorials, journal papers and academic articles - has pushed people to think about the exacerbating effect that 
+            news outlets is having on gender misrepresentation (reference). Still, many questions remain unanswered: <br> <br>
+
+            <i>What is the extent of  gender bias and polarity across influential news outlets?</i> <br> <br>
+            <i>How prevalent are specific topics around the topic of women across different countries?</i> <br> <br>
+            <i>What are the most commonly used words to talk about women in headlines across different countries?</i> <br> <br>
+            <i>What  kind  of  words  are  used  in  conjunction  with  each  other around the topic of women?</i> <br> <br>
+               
+            It is these grounds that inform this study. The idea that we are what we consume is the ground from which we rise. <br><br>
+
+            While news consumption can influence our perceptions, news headlines allow a piece to turn from an article to a story. Headlines 
+            are designed to be catchy, sensational and with the advent of 24/7 news cycles, anxiety inducing. They make an imprint on our minds.
+            In this piece, we used data from more than 50,000 headlines from the news outlets of 4 different countries to illustrate how 
+            women are represented in news headlines around the world. <br><br></p>
+    </div>
+    <div class="header">
+    <h1 style = "text-align: center" class="sectionHeader">Innocent outlets? The influence of news platforms in reinforcing gender biases</h1>
+    </div>
+    <div class="subtitle">
+        <p class="description"> 
+            News articles have the potential to define perceptions and shape the general public opinion around 
+            different topics. At a time when women need allies more than ever before, news outlets can be a powerful partner in fostering 
+            an unbiased public opinion about women. In practice, however, they are not.  <br><br>
+
+            For a given news outlet, the chart below shows the amount of gender bias and polarity
+            used in headlines of that outlet. Bubbles represent outlets, and are sized by the size of their audience. <br><br>
+            
+            For each headline we measure <b>polarity</b> by using sentiment analysis, a machine learning technique that is used to detect 
+            emotional affect in text. In this analysis we chose to consider the emotional <b>strength</b> of each headline as a proxy for
+            polarity (irrespective of whether the emotion is positive or negative). By aggregating the polarity scores of an outlet's headlines
+            we can rank each outlet on the basis of their average polarity. <br><br>
+
+            For each headline we measure <b>bias</b> by tracking the combined occurrence of gendered language and social stereotypes 
+            usually associated with women. Gendered language includes gendered pronouns (i.e. she, her, mrs, mis etc.) and 
+            gendered nouns (i.e. girl, spokeswoman, girlfriend etc.). Examples of words that we categorize as social stereotypes 
+            are <b> slut </b>, <b>emotional</b>, <b>sensitive</b>, or <b>married</b>, among many others. By counting these co-occurrences 
+            we are able to assign a gender bias score to each headline. For example, a recent headline by the <i>Daily Mail</i> reads:<br><br>
+             '<b>Woman</b> reveals <b>she</b>'s thinking about dumping <b>her</b> boyfriend because of his close <b>female</b> friend'<br><br> 
+            This headline would get a bias score of 4. Finally, by aggregating all headline scores by news outlet we rank each outlet from most biased to least biased.
+    </div>
+    <div class="buttons">
+        <h2 style = "text-align: center">Which news outlets are more <button id="Gender Bias" type="button" value="bias">biased</button>
+        or <button id="Polarity" type="button" value="polarity">polarizing</button> when talking about <b>women</b>?</h2>
+    </div>
+    <div id="chart" class="svg-container" style="text-align: center;">
+    <svg id="bubblechart">
+        <g class="xAxis" />
+        <g class="yAxis" />
+        <g class="body" />
+    </svg>
+    </div>
+    <div class="header">
+    <h1 style = "text-align: center" class="sectionHeader">Across 4 continents, women make the news 
+        <span style="color:#F52D4F">most often</span> when we talk about <b>violence</b> or <b>women stereotypes</b></h1>
+    </div>
+    <div class="subtitle">
+        <p class="description">The chart below shows the words used by news outlets to talk about women in <b>India</b>, <b>South Africa</b>,
+                the <b>United Kingdom</b>, and the <b>United States</b>. The words are split into four categories: <b>Empowerment</b>, <b>Women Stereotypes</b>, 
+                <b>Violence</b>, and <b>Male Dominance</b>. Each bubble represents a word. The size of the bubble indicates the frequency in which a word
+                has been used.<br><br>
+                Groups of words make up clusters. Clusters composed of more bubbles indicate more words used for a specific 
+                category. The color intensity of the clusters reflects the prevalence of each theme in each country's 
+                news, from <b><span style="color:lightgray">least prevalent</span></b> to <b><span style="color:#F52D4F">most prevalent</span></b>.
+                Prevalence is the proportion of a categorical group of words over the total number of words used in analyzed headlines. 
+    </div>
+    <div id="legendDiv" width="200" height="300" style="text-align: center;">
+    </div>
+    <div id="clusterChart" class="svg-container2" style="text-align: center;">
+        <svg id="bubbleClusters">
+            <g class="xAxis" />
+            <g class="yAxis" />
+            <g class="body" />
+        </svg>
+    </div>
+    <svg id="tooltipHeadline"></svg>
+    <div id="tooltipCluster"></div>
+    <div id="tooltipInfo"></div>
+    <div class="header">
+    <h1 style = "text-align: center" class="sectionHeader">Language matters: the words we choose to sensationalize women</h1>
+    </div>
+      <div class="subtitle">
+        <p class="description">The charts below show the words used by news outlets to talk about women in <b>India</b>, <b>South Africa</b>,
+                the <b>United Kingdom</b>, and the <b>United States</b>. On the left side, the most frequent words for each country are shown. The length of each bar indicates the number of headlines
+                that were found to contain a specific word.</p>
+      </div>
+    <div class="barLegend" style="text-align: center; align-items:center">
+    <svg width="185" height="65" style="text-align: center;" id="barLegend">
+      <rect width="185" height="15" style="fill:#aaa;stroke:none" />
+    </svg>
+    </div>
+    <div class="subtitle">
+      <p class="description">On the right side, the associations between words across headlines is visualized in the form of a network. A word association is an instance
+        of two words in the same sentence. In the networks, each node represents a word and each link represents a connection between two words.
+        The thickness of each link represents the number of times any two words are found together in the same headline. Nodes and their associated text are sized by 
+        frequency of occurrence.</br></br>
+        In both the bar charts and the networks, bars, nodes, words and links are colored according to 6 categories: <b><span style="color:#ccad34">Empowerment</span></b>, 
+        <b><span style="color:pink">Women Stereotypes</span></b>, <b><span style="color:red">Violence</b></span>, <b><span style="color:turquoise">Male Dominance</b></span>,
+        <b><span style="color:#964B00">Race</b></span>, and <b><span style="color:green">Politics</b></span>.</br></br>
+        Hover over a word in the network to explore the word associations of a specific word!</p>
+    </div>
+    <div class="netbars">
+      <div id="chart1" class="svg-container3" style="text-align: center;"> </div>
+      <div id="my_network" class="svg-container3" style="text-align: center;"></div>
+      <div id="chart2" class="svg-container3" style="text-align: center;"> </div>
+      <div id="my_network2" class="svg-container3" style="text-align: center;"></div>
+      <div id="chart3" class="svg-container3" style="text-align: center;"> </div>
+      <div id="my_network3" class="svg-container3" style="text-align: center;"></div>
+      <div id="chart4" class="svg-container3" style="text-align: center;"> </div>
+      <div id="my_network4" class="svg-container3" style="text-align: center;"></div>
+    </div>
+</body>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="index.js"></script>
+
+</html>
