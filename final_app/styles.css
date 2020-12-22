@@ -1,6 +1,18 @@
 body {
     background-color: #161616;
 }
+.padded-dropcap {
+    padding-left: 10px;
+    padding-right: 10px;
+    float: left;
+    position: relative;
+    top: -0.15em;
+    margin-bottom: -0.5em;
+    margin-left: -6px;
+    margin-right: 2px;
+    font-size: 100px;
+  }
+  
 #tooltipText {
     /* border: solid 1px #ccc;
     top: 10px;
