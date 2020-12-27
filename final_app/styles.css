@@ -143,9 +143,9 @@ h1 {
     /* font-size: x-large; */
     font-style: bold;
     color: #ccc;
-    max-width: 900;
+    max-width: 700;
     text-anchor: middle;
-    justify-content: center;
+    justify-content:left;
     }
 
 h2 {
@@ -176,7 +176,7 @@ color: #ccc
 }
 
 .description {
-max-width: 700;
+max-width: 45vw;
 text-align: justify;
 text-anchor: middle;
 color: rgb(167, 167, 167);
