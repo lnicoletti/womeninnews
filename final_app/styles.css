@@ -120,9 +120,11 @@ h1 {
     font-size:25px;
     opacity: 0.9;
     font-family: Arial, Helvetica, sans-serif;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
-.link {
+.creditLink{
     color: #ccc
 }
 
