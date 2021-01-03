@@ -19,13 +19,13 @@ console.log("before json")
     console.log(countries_data)
     drawBarLegend()
     drawNetwork(UK_data, "div#my_network", "United Kingdom")
-    drawBars(countries_data, "#chart1", "UK", 20, "United Kingdom")  
-    drawNetwork(USA_data, "div#my_network2", "United States")  
-    drawBars(countries_data, "#chart2", "USA", 20, "United States")   
-    drawNetwork(IN_data, "div#my_network3", "India") 
-    drawBars(countries_data, "div#chart3", "India", 20, "India")   
-    drawNetwork(SA_data, "div#my_network4", "South Africa") 
-    drawBars(countries_data, "#chart4", "South Africa", 20, "South Africa")  
+    // drawBars(countries_data, "#chart1", "UK", 20, "United Kingdom")  
+    // drawNetwork(USA_data, "div#my_network2", "United States")  
+    // drawBars(countries_data, "#chart2", "USA", 20, "United States")   
+    // drawNetwork(IN_data, "div#my_network3", "India") 
+    // drawBars(countries_data, "div#chart3", "India", 20, "India")   
+    // drawNetwork(SA_data, "div#my_network4", "South Africa") 
+    // drawBars(countries_data, "#chart4", "South Africa", 20, "South Africa")  
      }
         )
 
@@ -53,7 +53,8 @@ function drawBarLegend() {
           .attr("class", "barLegendText")
           .call(wrap, 170)
 }
-  function drawNetwork(data, network, country) {
+function drawNetwork(data, network, country) {
+
     // set the dimensions and margins of the graph
     var margin = {top: 10, right: 30, bottom: 30, left: 30},
     // big network
@@ -71,11 +72,22 @@ function drawBarLegend() {
     .attr("preserveAspectRatio", "xMinYMin meet")
     .attr("viewBox", "0 0 "+ width +"," + height+"")
     // .classed("svg-content", true);
-    // d3.json("../data/processed/word_connections_IN_small.json").then(function(data) {
-    const links = data.links.map(d => Object.create(d))
-    const nodes = data.nodes.map(d => Object.create(d))
+    // const links = data.links.map(d => Object.create(d))
+    // const nodes = data.nodes.map(d => Object.create(d))
 
-    console.log(data)
+    const nodes = data.nodes.map(d => Object.create(d));
+    const index = new Map(nodes.map(d => [d.id, d]));
+    const links = data.links.map(d => Object.assign(Object.create(d), {
+      source: index.get(d.source),
+      target: index.get(d.target)
+    }));
+
+  netClustering.cluster(nodes, links);
+
+    // const dataCluster = netClustering.cluster(nodes, links)
+    // netClustering.cluster(data.nodes, data.links);
+    console.log(nodes)
+    console.log(links)
     // console.log(data.nodes.filter(d=>d.frequency>50))
   // Initialize the links
 
@@ -87,16 +99,20 @@ function drawBarLegend() {
                 // big net
                 // .range([1, 25])
                 .range([0.1, 4])
+  
+  colorScale = d3.scaleOrdinal()
+                  .domain(nodes.map(d=>d.cluster))
+                  .range(["turquoise", "red", "pink", "#ccad34", "green"])
 
   extentLinkWeight = d3.extent(links, d=>d.weight)
           console.log(extentLinkWeight)
   var linkWeight = d3.scaleLinear()
                 .domain(extentLinkWeight)
-                .range([0.00005, 4])
+                .range([0.005, 4])
   
   var linkOpacity = d3.scaleLinear()
                 .domain(extentLinkWeight)
-                .range([0.05, 1])
+                .range([0.1, 1])
 
   var nodeOpacity = d3.scaleLinear()
                 .domain(extentWordFreq)
@@ -112,6 +128,8 @@ function drawBarLegend() {
                 // .range([7, 60])
                 .range([1, 20])
 
+  // draw the bar chart
+  drawBars(nodes, "#chart1", "UK", 20, "United Kingdom")  
   
   // var linkWeight = d3.scaleLinear()
   //               .domain(extentLinkWeight)
@@ -150,13 +168,14 @@ function drawBarLegend() {
       // .style("stroke", "#aaa")
       .style("stroke-width", d=>linkWeight(d.weight))
       .style("opacity", d=>linkOpacity(d.weight))
-      .style("stroke", d=>d.theme === "female_bias"?"pink":
-                        d.theme === "male_bias"?"blue":
-                        d.theme === "empowerment"?"#ccad34":
-                        d.theme === "violence"?"red":
-                        d.theme === "politics"?"green":
-                        d.theme === "race"?"#964B00":
-                        "#aaa")
+      // .style("stroke", d=>d.theme === "female_bias"?"pink":
+      //                   d.theme === "male_bias"?"blue":
+      //                   d.theme === "empowerment"?"#ccad34":
+      //                   d.theme === "violence"?"red":
+      //                   d.theme === "politics"?"green":
+      //                   d.theme === "race"?"#964B00":
+      //                   "#aaa")
+      .style("stroke", d=>colorScale(d.source.cluster))
 
   // Initialize the nodes
   var node = svg
@@ -169,13 +188,18 @@ function drawBarLegend() {
       // .attr("r", d=>bubbleRadius(d.perc_freq))
       .attr("r", 0)
       .attr("opacity", d=>nodeOpacity(d.perc_freq))
-      .style("fill", d=>d.theme === "female_bias"?"pink":
-                        d.theme === "male_bias"?"blue":
-                        d.theme === "empowerment"?"#ccad34":
-                        d.theme === "violence"?"red":
-                        d.theme === "politics"?"green":
-                        d.theme === "race"?"#964B00":
-                        "#9b9b9b")
+      // .style("fill", d=>d.theme === "female_bias"?"pink":
+      //                   d.theme === "male_bias"?"blue":
+      //                   d.theme === "empowerment"?"#ccad34":
+      //                   d.theme === "violence"?"red":
+      //                   d.theme === "politics"?"green":
+      //                   d.theme === "race"?"#964B00":
+      //                   "#9b9b9b")
+      // .style("fill", d=>d.cluster === "1"?"pink":
+      //                   d.cluster === "2"?"turquoise":
+      //                   d.cluster === "3"?"#ccad34":
+      //                   d.cluster === "4"?"red":"grey")
+      .style("fill", d=>colorScale(d.cluster))
       .on('mouseover.fade', fade(0.1))
       .on('mouseout.fade', fade(1));
 
@@ -188,13 +212,18 @@ function drawBarLegend() {
     .join("text")
     .text(d=>d.id)
     // .style("fill", "black")
-    .style("fill", d=>d.theme === "female_bias"?"pink":
-                        d.theme === "male_bias"?"blue":
-                        d.theme === "empowerment"?"#ccad34":
-                        d.theme === "violence"?"red":
-                        d.theme === "politics"?"green":
-                        d.theme === "race"?"#964B00":
-                        "#9b9b9b")
+    // .style("fill", d=>d.theme === "female_bias"?"pink":
+    //                     d.theme === "male_bias"?"blue":
+    //                     d.theme === "empowerment"?"#ccad34":
+    //                     d.theme === "violence"?"red":
+    //                     d.theme === "politics"?"green":
+    //                     d.theme === "race"?"#964B00":
+    //                     "#9b9b9b")
+    // .style("fill", d=>d.cluster === "1"?"pink":
+    //                     d.cluster === "2"?"turquoise":
+    //                     d.cluster === "3"?"#ccad34":
+    //                     d.cluster === "4"?"red":"grey")
+    .style("fill", d=>colorScale(d.cluster))
     // .attr("font-size", 10);
     .attr("font-size", d=>fontScale(d.perc_freq))
     .attr("font-weight", "900")
@@ -333,9 +362,11 @@ function drawBarLegend() {
       // 2) show information about node
       x = parseInt(d3.select("#chart1").select('rect#bar'+d.id).attr("width"))+120
       y = parseInt(d3.select("#chart1").select('rect#bar'+d.id).attr("y")) + 86
-      fill = d3.select("#chart1").select('rect#bar'+d.id).attr("fill")
+      // fill = d3.select("#chart1").select('rect#bar'+d.id).attr("fill")
+      fill = colorScale(d.cluster)
 
       console.log(x, y)
+      console.log(fill)
 
       d3
         // .select("#chart1")//.select('rect#bar'+d.id)
@@ -426,6 +457,7 @@ function drawBarLegend() {
           // .call(d=> link.style('opacity', o => (o.source === d || o.target === d ? 1 : 0.05)))
             
       })//)
+
     }
                       
     // d3.select("#chart1").selectAll("rect").on("mouseout.t", d => 
@@ -441,92 +473,187 @@ function drawBarLegend() {
     //       text._groups[0].filter(c=>c.textContent===d.word)[0].__data__.remove)//call(fade(0.05))
     //   }
 
+    function drawBars(graph_nodes, chart, selected_country, word_count, country_name) {
+      margin = {top: 69, right: 90, bottom: 5, left: 90},
+      width = width/1.5,
+      height = height;
+      barpad = 20
+
+      dataBars = graph_nodes.map(function(d) {return {
+         cluster:d.cluster,
+         id:d.id,
+         frequency:d.frequency,
+         perc_freq:d.perc_freq
+      }})
+
+      console.log(dataBars)
+      // country_data = countries_data.filter(d=>d.country == selected_country)
+      dataBars = dataBars.sort(function(a,b) { return d3.descending(+a.frequency, +b.frequency) })
+      top10 = dataBars.filter(function(d,i){ return i<word_count })
+      console.log(top10)
+
+      var svg = d3.select(chart)
+      .append("svg")
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("id", "wordBars")
+        .attr("viewBox", "0 0 "+ width +"," + height+"")
+        // .classed("svg-content", true)
+        .append("g")
+        .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+      
+      // Add X axis
+      var x = d3.scaleLinear()
+        .domain([0, d3.max(top10,d=>+d.frequency)])
+        .range([ 0, width-margin.left-margin.right]);
+      
+      // svg.append("g")
+      //   .attr("transform", "translate(0," + height/1.2 + ")")
+      //   .call(d3.axisBottom(x))
+      //   .selectAll("text")
+      //   .attr("transform", "translate(-10,0)rotate(-45)")
+      //   .style("text-anchor", "end")
+      //   .attr("color", "silver")
+      
+      // Y axis
+      var y = d3.scaleBand()
+      .range([ 0, height/1.2])
+      .domain(top10.map(function(d) { return d.id; }))
+      .padding(.1);
+      
+      svg.append("g")
+      .call(d3.axisLeft(y).tickSize(0))
+              .attr("class", "yAxis")
+              .selectAll("text")
+                  .attr("font-size", "15")
+                  .attr("transform", "translate(0, -2)")
+                  .attr("fill", "silver")
+                  .attr("font-family", "arial")
+                  .attr("font-weight", "bold")
+      
+      //Bars
+      svg.selectAll("myRect")
+        .data(top10)
+        .join("rect")
+        .attr("x", x(20) )
+        .attr("y", function(d) { return y(d.id); })
+        .attr("id", function(d,i) { return "bar" + d.id; })
+        .attr("width", function(d) { return x(+d.frequency); })
+        .attr("height", barpad )
+        // .attr("fill", d=>d.theme === "female_bias"?"pink":
+        //                   d.theme === "male_bias"?"blue":
+        //                   d.theme === "empowerment"?"#ccad34":
+        //                   d.theme === "violence"?"red":
+        //                   d.theme === "politics"?"green":
+        //                   d.theme === "race"?"#964B00":
+        //                   "#aaa")
+        .style("fill", d=>colorScale(d.cluster))
+        // .on("mouseover", d=>console.log("check"))
+    
+      svg.append("text")
+          .attr("x", (width / 2-margin.right))             
+          .attr("y", 0 - (margin.top / 2))
+          .attr("text-anchor", "middle")  
+          .attr("font-size", "20")
+          .attr("fill", "silver")
+          .attr("font-family", "arial")
+          .attr("font-weight", "bold")
+          // .style("text-decoration", "underline")  
+          .text(country_name);
+    
+    // .attr("x", function(d) { return x(d.Country); })
+    // .attr("y", function(d) { return y(d.Value); })
+    // .attr("width", x.bandwidth())
+    // .attr("height", function(d) { return height - y(d.Value); })
+    // .attr("fill", "#69b3a2")
+    
+    }
 };
 
-function drawBars(countries_data, chart, selected_country, word_count, country_name) {
-  margin = {top: 69, right: 90, bottom: 5, left: 90},
-  width = width/1.5,
-  height = height;
-  barpad = 20
+// function drawBars(countries_data, chart, selected_country, word_count, country_name) {
+//   margin = {top: 69, right: 90, bottom: 5, left: 90},
+//   width = width/1.5,
+//   height = height;
+//   barpad = 20
 
-  country_data = countries_data.filter(d=>d.country == selected_country)
-  top10 = country_data.filter(function(d,i){ return i<word_count })
+//   country_data = countries_data.filter(d=>d.country == selected_country)
+//   top10 = country_data.filter(function(d,i){ return i<word_count })
   
-  var svg = d3.select(chart)
-  .append("svg")
-    .attr("preserveAspectRatio", "xMinYMin meet")
-    .attr("id", "wordBars")
-    .attr("viewBox", "0 0 "+ width +"," + height+"")
-    // .classed("svg-content", true)
-    .append("g")
-    .attr("transform",
-      "translate(" + margin.left + "," + margin.top + ")");
+//   var svg = d3.select(chart)
+//   .append("svg")
+//     .attr("preserveAspectRatio", "xMinYMin meet")
+//     .attr("id", "wordBars")
+//     .attr("viewBox", "0 0 "+ width +"," + height+"")
+//     // .classed("svg-content", true)
+//     .append("g")
+//     .attr("transform",
+//       "translate(" + margin.left + "," + margin.top + ")");
   
-  // Add X axis
-  var x = d3.scaleLinear()
-    .domain([0, d3.max(top10,d=>+d.frequency)])
-    .range([ 0, width-margin.left-margin.right]);
+//   // Add X axis
+//   var x = d3.scaleLinear()
+//     .domain([0, d3.max(top10,d=>+d.frequency)])
+//     .range([ 0, width-margin.left-margin.right]);
   
-  // svg.append("g")
-  //   .attr("transform", "translate(0," + height/1.2 + ")")
-  //   .call(d3.axisBottom(x))
-  //   .selectAll("text")
-  //   .attr("transform", "translate(-10,0)rotate(-45)")
-  //   .style("text-anchor", "end")
-  //   .attr("color", "silver")
+//   // svg.append("g")
+//   //   .attr("transform", "translate(0," + height/1.2 + ")")
+//   //   .call(d3.axisBottom(x))
+//   //   .selectAll("text")
+//   //   .attr("transform", "translate(-10,0)rotate(-45)")
+//   //   .style("text-anchor", "end")
+//   //   .attr("color", "silver")
   
-  // Y axis
-  var y = d3.scaleBand()
-  .range([ 0, height/1.2])
-  .domain(top10.map(function(d) { return d.word; }))
-  .padding(.1);
+//   // Y axis
+//   var y = d3.scaleBand()
+//   .range([ 0, height/1.2])
+//   .domain(top10.map(function(d) { return d.word; }))
+//   .padding(.1);
   
-  svg.append("g")
-  .call(d3.axisLeft(y).tickSize(0))
-          .attr("class", "yAxis")
-          .selectAll("text")
-              .attr("font-size", "15")
-              .attr("transform", "translate(0, -2)")
-              .attr("fill", "silver")
-              .attr("font-family", "arial")
-              .attr("font-weight", "bold")
+//   svg.append("g")
+//   .call(d3.axisLeft(y).tickSize(0))
+//           .attr("class", "yAxis")
+//           .selectAll("text")
+//               .attr("font-size", "15")
+//               .attr("transform", "translate(0, -2)")
+//               .attr("fill", "silver")
+//               .attr("font-family", "arial")
+//               .attr("font-weight", "bold")
   
-  //Bars
-  svg.selectAll("myRect")
-    .data(top10)
-    .join("rect")
-    .attr("x", x(20) )
-    .attr("y", function(d) { return y(d.word); })
-    .attr("id", function(d,i) { return "bar" + d.word; })
-    .attr("width", function(d) { return x(+d.frequency); })
-    .attr("height", barpad )
-    .attr("fill", d=>d.theme === "female_bias"?"pink":
-                      d.theme === "male_bias"?"blue":
-                      d.theme === "empowerment"?"#ccad34":
-                      d.theme === "violence"?"red":
-                      d.theme === "politics"?"green":
-                      d.theme === "race"?"#964B00":
-                      "#aaa")
-    // .on("mouseover", d=>console.log("check"))
+//   //Bars
+//   svg.selectAll("myRect")
+//     .data(top10)
+//     .join("rect")
+//     .attr("x", x(20) )
+//     .attr("y", function(d) { return y(d.word); })
+//     .attr("id", function(d,i) { return "bar" + d.word; })
+//     .attr("width", function(d) { return x(+d.frequency); })
+//     .attr("height", barpad )
+//     .attr("fill", d=>d.theme === "female_bias"?"pink":
+//                       d.theme === "male_bias"?"blue":
+//                       d.theme === "empowerment"?"#ccad34":
+//                       d.theme === "violence"?"red":
+//                       d.theme === "politics"?"green":
+//                       d.theme === "race"?"#964B00":
+//                       "#aaa")
+//     // .on("mouseover", d=>console.log("check"))
 
-  svg.append("text")
-      .attr("x", (width / 2-margin.right))             
-      .attr("y", 0 - (margin.top / 2))
-      .attr("text-anchor", "middle")  
-      .attr("font-size", "20")
-      .attr("fill", "silver")
-      .attr("font-family", "arial")
-      .attr("font-weight", "bold")
-      // .style("text-decoration", "underline")  
-      .text(country_name);
+//   svg.append("text")
+//       .attr("x", (width / 2-margin.right))             
+//       .attr("y", 0 - (margin.top / 2))
+//       .attr("text-anchor", "middle")  
+//       .attr("font-size", "20")
+//       .attr("fill", "silver")
+//       .attr("font-family", "arial")
+//       .attr("font-weight", "bold")
+//       // .style("text-decoration", "underline")  
+//       .text(country_name);
 
-// .attr("x", function(d) { return x(d.Country); })
-// .attr("y", function(d) { return y(d.Value); })
-// .attr("width", x.bandwidth())
-// .attr("height", function(d) { return height - y(d.Value); })
-// .attr("fill", "#69b3a2")
+// // .attr("x", function(d) { return x(d.Country); })
+// // .attr("y", function(d) { return y(d.Value); })
+// // .attr("width", x.bandwidth())
+// // .attr("height", function(d) { return height - y(d.Value); })
+// // .attr("fill", "#69b3a2")
 
-}
+// }
 
 function linkArc(d) {
   const r = Math.hypot(d.target.x - d.source.x, d.target.y - d.source.y);
