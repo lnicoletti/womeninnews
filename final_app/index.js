@@ -52,14 +52,14 @@
 
     // Load data and run functions to render charts
     Promise.all([
-        d3.csv("../data/processed/headlines_site.csv"),
-        d3.csv("../data/processed/countries_clusters.csv"),
-        d3.csv("../data/processed/headlines_cl_sent_pol.csv"),
-        d3.csv("../data/processed/countries_freq.csv"),
-        d3.json("../data/processed/word_connections_UK.json"),
-        d3.json("../data/processed/word_connections_USA.json"),
-        d3.json("../data/processed/word_connections_IN.json"),
-        d3.json("../data/processed/word_connections_SA.json"),
+        d3.csv("../hosted_data/headlines_site.csv"),
+        d3.csv("../hosted_data/countries_clusters.csv"),
+        d3.csv("../hosted_data/headlines_cl_sent_pol.csv"),
+        d3.csv("../hosted_data/countries_freq.csv"),
+        d3.json("../hosted_data/word_connections_UK.json"),
+        d3.json("../hosted_data/word_connections_USA.json"),
+        d3.json("../hosted_data/word_connections_IN.json"),
+        d3.json("../hosted_data/word_connections_SA.json"),
       ])
         .then((datasets) => {
             // define each dataset
