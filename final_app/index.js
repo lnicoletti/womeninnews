@@ -54,7 +54,7 @@
     Promise.all([
         d3.csv("https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@d5a987c/hosted_data/headlines_site.csv"),
         d3.csv("https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@d5a987c/hosted_data/countries_clusters.csv"),
-        d3.csv("https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@d5a987c/hosted_data/headlines_cl_sent_pol.csv"),
+        d3.csv("https://raw.githubusercontent.com/lnicoletti/womeninnews/master/hosted_data/headlines_cl_sent_pol.csv"),
         d3.csv("https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@d5a987c/hosted_data/countries_freq.csv"),
         d3.json("https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@d5a987c/hosted_data/word_connections_UK.json"),
         d3.json("https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@d5a987c/hosted_data/word_connections_USA.json"),
