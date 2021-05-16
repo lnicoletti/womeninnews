@@ -5,10 +5,10 @@ console.log("before json")
 // d3.json("../data/processed/word_connections_4_themes_filtered.json").then(function(data) {
   Promise.all([
     d3.csv("../data/processed/countries_freq.csv"),
-    d3.json("../data/processed/word_connections_UK.json"),
-    d3.json("../data/processed/word_connections_USA.json"),
-    d3.json("../data/processed/word_connections_IN.json"),
-    d3.json("../data/processed/word_connections_SA.json"),
+    d3.json("../data/processed/word_connections_UK_verbs_adjs.json"),
+    d3.json("../data/processed/word_connections_USA_verbs_adjs.json"),
+    d3.json("../data/processed/word_connections_IN_verbs_adjs.json"),
+    d3.json("../data/processed/word_connections_SA_verbs_adjs.json"),
         ]).then(function(data) {
     countries_data = data[0]
     UK_data = data[1]
@@ -18,13 +18,13 @@ console.log("before json")
     console.log(SA_data)
     console.log(countries_data)
     drawBarLegend()
-    drawNetwork(UK_data, "div#my_network", "United Kingdom")
+    drawNetwork(UK_data, "div#my_network", "United Kingdom", "#chart1", "UK")
     // drawBars(countries_data, "#chart1", "UK", 20, "United Kingdom")  
-    // drawNetwork(USA_data, "div#my_network2", "United States")  
+    drawNetwork(USA_data, "div#my_network2", "United States", "#chart2", "USA")  
     // drawBars(countries_data, "#chart2", "USA", 20, "United States")   
-    // drawNetwork(IN_data, "div#my_network3", "India") 
+    drawNetwork(IN_data, "div#my_network3", "India", "#chart3", "India",) 
     // drawBars(countries_data, "div#chart3", "India", 20, "India")   
-    // drawNetwork(SA_data, "div#my_network4", "South Africa") 
+    drawNetwork(SA_data, "div#my_network4", "South Africa", "#chart4", "South Africa") 
     // drawBars(countries_data, "#chart4", "South Africa", 20, "South Africa")  
      }
         )
@@ -53,7 +53,7 @@ function drawBarLegend() {
           .attr("class", "barLegendText")
           .call(wrap, 170)
 }
-function drawNetwork(data, network, country) {
+function drawNetwork(data, network, country, chart, selected_country) {
 
     // set the dimensions and margins of the graph
     var margin = {top: 10, right: 30, bottom: 30, left: 30},
@@ -108,11 +108,11 @@ function drawNetwork(data, network, country) {
           console.log(extentLinkWeight)
   var linkWeight = d3.scaleLinear()
                 .domain(extentLinkWeight)
-                .range([0.005, 4])
+                .range([0.5, 4])//.range([0.005, 4])
   
   var linkOpacity = d3.scaleLinear()
                 .domain(extentLinkWeight)
-                .range([0.1, 1])
+                .range([0.2, 1])//.range([0.3, 1])
 
   var nodeOpacity = d3.scaleLinear()
                 .domain(extentWordFreq)
@@ -129,8 +129,10 @@ function drawNetwork(data, network, country) {
                 .range([1, 20])
 
   // draw the bar chart
-  drawBars(nodes, "#chart1", "UK", 20, "United Kingdom")  
-  
+  // drawBars(nodes, "#chart1", "UK", 20, country)  
+  drawBars(nodes, chart, selected_country, 20, country)  
+
+  // drawBars(graph_nodes, chart, selected_country, word_count, country_name) {
   // var linkWeight = d3.scaleLinear()
   //               .domain(extentLinkWeight)
   //               .range([0.005, 10])

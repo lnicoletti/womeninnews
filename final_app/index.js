@@ -27,7 +27,7 @@
 
     // create dataset to for logos of the first chart
     logoData = [{site:"nytimes.com", link:"https://www.vectorlogo.zone/logos/nytimes/nytimes-icon.svg"},
-                {site:"dailymail.co.uk", link:"https://seeklogo.com/images/D/Daily_Mail-logo-EBD7A83A1F-seeklogo.com.gif"},
+                {site:"dailymail.co.uk", link:"https://seeklogo.com/images/D/Daily_Mail-logo-EBD7A83A1F-seeklogo.com.png"},
                 {site:"cnn.com", link:"https://www.vectorlogo.zone/logos/cnn/cnn-icon.svg"},//https://www.vectorlogo.zone/logos/cnn/cnn-wordmark.svg
                 {site:"bbc.co.uk", link:"https://www.vectorlogo.zone/logos/bbc/bbc-icon.svg"},
                 {site:"telegraph.co.uk", link:"https://upload.wikimedia.org/wikipedia/commons/4/48/The_Telegraph_logo.svg"},
@@ -52,9 +52,11 @@
 
     // Load data and run functions to render charts
     Promise.all([
-        d3.csv("https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@d5a987c/hosted_data/headlines_site.csv"),
+        // d3.csv("https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@d5a987c/hosted_data/headlines_site.csv"),
+        d3.csv("../data/processed/headlines_site_rapi.csv"),
         d3.csv("https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@d5a987c/hosted_data/countries_clusters.csv"),
-        d3.csv("https://raw.githubusercontent.com/lnicoletti/womeninnews/master/hosted_data/headlines_cl_sent_pol.csv"),
+        // d3.csv("https://raw.githubusercontent.com/lnicoletti/womeninnews/master/hosted_data/headlines_cl_sent_pol.csv"),
+        d3.csv("../data/processed/headlines_cl_sent_sm_rapi.csv"),
         d3.csv("https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@d5a987c/hosted_data/countries_freq.csv"),
         d3.json("https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@d5a987c/hosted_data/word_connections_UK.json"),
         d3.json("https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@d5a987c/hosted_data/word_connections_USA.json"),
@@ -80,32 +82,32 @@
             drawBarLegend()
             // render second and third chart on scroll (to avoid overloading at the beginning)
             var fired = 0;
-            $(window).scroll(function(){
-                // detect if the element is scrolled into view
-                function elementScrolled(elem)
-                {
-                  var docViewTop = $(window).scrollTop();
-                  var docViewBottom = docViewTop + $(window).height();
-                  var elemTop = $(elem).offset().top;
-                  return ((elemTop <= docViewBottom) && (elemTop >= docViewTop));
-                }
-                // detect if "#clusterChart" is scrolled into view, and when it is run the remaining functions to render charts
-                if(elementScrolled('#clusterChart')&&(fired == 0)) {
-                // draw the second chart
-                drawWordClusters(countriesCls)
-                // draw the networks and bars of the final chart
-                drawNetwork(UK_data, "div#my_network", "United Kingdom", "#chart1", "chart1")
-                drawBars(countries_data, "#chart1", "UK", 20, "United Kingdom", "chart1")  
-                drawNetwork(USA_data, "div#my_network2", "United States", "#chart2", "chart2")  
-                drawBars(countries_data, "#chart2", "USA", 20, "United States", "chart2")   
-                drawNetwork(IN_data, "div#my_network3", "India", "#chart3", "chart3") 
-                drawBars(countries_data, "div#chart3", "India", 20, "India", "chart3")   
-                drawNetwork(SA_data, "div#my_network4", "South Africa", "#chart4", "chart4") 
-                drawBars(countries_data, "#chart4", "South Africa", 20, "South Africa", "chart4")
-                fired = 1;
-                }   
+            // $(window).scroll(function(){
+            //     // detect if the element is scrolled into view
+            //     function elementScrolled(elem)
+            //     {
+            //       var docViewTop = $(window).scrollTop();
+            //       var docViewBottom = docViewTop + $(window).height();
+            //       var elemTop = $(elem).offset().top;
+            //       return ((elemTop <= docViewBottom) && (elemTop >= docViewTop));
+            //     }
+            //     // detect if "#clusterChart" is scrolled into view, and when it is run the remaining functions to render charts
+            //     if(elementScrolled('#clusterChart')&&(fired == 0)) {
+            //     // draw the second chart
+            //     drawWordClusters(countriesCls)
+            //     // draw the networks and bars of the final chart
+            //     drawNetwork(UK_data, "div#my_network", "United Kingdom", "#chart1", "chart1")
+            //     drawBars(countries_data, "#chart1", "UK", 20, "United Kingdom", "chart1")  
+            //     drawNetwork(USA_data, "div#my_network2", "United States", "#chart2", "chart2")  
+            //     drawBars(countries_data, "#chart2", "USA", 20, "United States", "chart2")   
+            //     drawNetwork(IN_data, "div#my_network3", "India", "#chart3", "chart3") 
+            //     drawBars(countries_data, "div#chart3", "India", 20, "India", "chart3")   
+            //     drawNetwork(SA_data, "div#my_network4", "South Africa", "#chart4", "chart4") 
+            //     drawBars(countries_data, "#chart4", "South Africa", 20, "South Africa", "chart4")
+            //     fired = 1;
+            //     }   
 
-              });
+            //   });
 
         })
 
@@ -140,7 +142,7 @@
             // find a random headline
             randHeadline = Math.floor(Math.random() * data.length)
             console.log(data[randHeadline].headline_no_site)
-            console.log(data[randHeadline].subtitle)
+            // console.log(data[randHeadline].subtitle)
 
             // tooltip dimensions
             let ttipMargin = { left: 40, bottom: 110, right: 20, top: 20 }
@@ -197,8 +199,9 @@
                                               (d.site !== "news.yahoo.com")&(d.site !== "bbc.com"))
 
             // create chart horizontal scale
-            var xScale = d3.scaleLinear()
-                    .range([margin5.left+margin5.right, bodywidth5])
+            // var xScale = d3.scaleLinear()
+            var xScale = d3.scaleSymlog()
+                    .range([margin5.left*2+margin5.right, bodywidth5])
                     .domain([0, d3.max(filterData, d => +d.bias)])
 
             // create radial scale for bubble size
