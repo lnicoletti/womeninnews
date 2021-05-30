@@ -55,6 +55,7 @@ function drawBarLegend() {
 }
 function drawNetwork(data, network, country, chart, selected_country) {
 
+    node_metric = "degree"
     // set the dimensions and margins of the graph
     var margin = {top: 10, right: 30, bottom: 30, left: 30},
     // big network
@@ -92,7 +93,7 @@ function drawNetwork(data, network, country, chart, selected_country) {
   // Initialize the links
 
   // scales
-  extentWordFreq = d3.extent(nodes, d=>d.perc_freq)
+  extentWordFreq = d3.extent(nodes, d=>d[node_metric])
             console.log(extentWordFreq)
   var bubbleRadius = d3.scaleSqrt()
                 .domain(extentWordFreq)
@@ -108,11 +109,11 @@ function drawNetwork(data, network, country, chart, selected_country) {
           console.log(extentLinkWeight)
   var linkWeight = d3.scaleLinear()
                 .domain(extentLinkWeight)
-                .range([0.5, 4])//.range([0.005, 4])
+                .range([0.1, 4])//.range([0.005, 4])
   
   var linkOpacity = d3.scaleLinear()
                 .domain(extentLinkWeight)
-                .range([0.2, 1])//.range([0.3, 1])
+                .range([0.15, 1])//.range([0.3, 1])
 
   var nodeOpacity = d3.scaleLinear()
                 .domain(extentWordFreq)
@@ -146,7 +147,7 @@ function drawNetwork(data, network, country, chart, selected_country) {
             .links(links)  
       )
 
-     .force("charge", d3.forceManyBody().strength(-30))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+     .force("charge", d3.forceManyBody().strength(-50))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
       // word_connections_4_themes_filtered
      .force("center", d3.forceCenter(width / 2, height / 2)) 
      .force("x", d3.forceX())
@@ -183,13 +184,13 @@ function drawNetwork(data, network, country, chart, selected_country) {
   var node = svg
     .selectAll("circle")
     // .data(data.nodes)
-    .data(nodes.filter( d => (d.perc_freq >= 60) ))
+    .data(nodes.filter( d => (d[node_metric] >= 20) ))
     // .data(nodes)
 
     circle = node.join("circle")
-      // .attr("r", d=>bubbleRadius(d.perc_freq))
+      // .attr("r", d=>bubbleRadius(d[node_metric]))
       .attr("r", 0)
-      .attr("opacity", d=>nodeOpacity(d.perc_freq))
+      .attr("opacity", d=>nodeOpacity(d[node_metric]))
       // .style("fill", d=>d.theme === "female_bias"?"pink":
       //                   d.theme === "male_bias"?"blue":
       //                   d.theme === "empowerment"?"#ccad34":
@@ -210,7 +211,7 @@ function drawNetwork(data, network, country, chart, selected_country) {
   var text = svg
     .selectAll("text")
     // .data(data.nodes.filter( d => (d.frequency >= 70) ))
-    .data(nodes.filter(d => (d.perc_freq >= 150)))
+    .data(nodes.filter(d => (d[node_metric] >= 40)))
     .join("text")
     .text(d=>d.id)
     // .style("fill", "black")
@@ -227,9 +228,9 @@ function drawNetwork(data, network, country, chart, selected_country) {
     //                     d.cluster === "4"?"red":"grey")
     .style("fill", d=>colorScale(d.cluster))
     // .attr("font-size", 10);
-    .attr("font-size", d=>fontScale(d.perc_freq))
+    .attr("font-size", d=>fontScale(d[node_metric]))
     .attr("font-weight", "900")
-    .attr("opacity", d=>textOpacity(d.perc_freq))
+    .attr("opacity", d=>textOpacity(d[node_metric]))
     .attr("class", 'nodeText')
     .attr("id", function(d,i) { return "nodeText" + d.id; })
     .on('mouseover.fade', fade(0.05))
@@ -273,13 +274,13 @@ function drawNetwork(data, network, country, chart, selected_country) {
         circle.style('opacity', function (o) { 
           // console.log(d)
           // console.log(o)
-          return isConnected(d, o) ?d=>nodeOpacity(d.perc_freq): opacity });
+          return isConnected(d, o) ?d=>nodeOpacity(d[node_metric]): opacity });
         text.style('visibility', function (o) { return isConnected(d, o) ? "visible" : "hidden" });
         link.style('opacity', o => (o.source === d || o.target === d ? 1 : opacity));
         if(opacity === 1){
-          circle.style('opacity', d=>nodeOpacity(d.perc_freq))
+          circle.style('opacity', d=>nodeOpacity(d[node_metric]))
           text.style('visibility', 'visible')
-          text.style('opacity', d=>textOpacity(d.perc_freq))
+          text.style('opacity', d=>textOpacity(d[node_metric]))
           link.style('opacity', d=>linkOpacity(d.weight))
         }
       };
@@ -485,9 +486,10 @@ function drawNetwork(data, network, country, chart, selected_country) {
          cluster:d.cluster,
          id:d.id,
          frequency:d.frequency,
-         perc_freq:d.perc_freq
+         perc_freq:d[node_metric]
       }})
 
+      console.log("bars")
       console.log(dataBars)
       // country_data = countries_data.filter(d=>d.country == selected_country)
       dataBars = dataBars.sort(function(a,b) { return d3.descending(+a.frequency, +b.frequency) })
