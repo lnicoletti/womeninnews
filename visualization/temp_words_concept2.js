@@ -22,79 +22,169 @@ col = d3.scaleBand()
     .paddingInner(0.2) 
 
 // world events data
+radius = 6
+padding = 1.5
 numberOfCategories = 5
 categories = ["0", "1", "2", "3", "4"]
 dateRange = [new Date(2010, 0).getTime(), new Date(2019, 0).getTime()];
 
 eventsWorld = [
-       {uid: 1, 
-        name: "Horrifying gang rape and murder in New Delhi, India", 
-        category: 4, 
-        date: new Date(2012, 1, 0)},
-       {uid: 1, 
-        name: "Caitlyn Jenner comes out in an interview", 
-        category: 4, 
-        date: new Date(2015, 1, 0)},
-       {uid: 1, 
-        name: "#EndRapeCulture in South Africa", 
-        category: 4, 
-        date: new Date(2016, 1, 0)},
-       {uid: 2, 
-        name: "Trump: “Grab her by the pussy”", 
-        category: 4, 
-        date: new Date(2016, 1, 0)},
-       {uid: 1, 
-        name: "#MeToo in U.S.A.", 
-        category: 4, 
-        date: new Date(2017, 1, 0)},
-       {uid: 2, 
-        name: "Harvey Weinstein Trial", 
-        category: 4, 
-        date: new Date(2017, 1, 0)},
-       {uid: 3, 
-        name: "Release of Wonder Woman", 
-        category: 4, 
-        date: new Date(2017, 1, 0)},
-       {uid: 4, 
-        name: "#MeToo in India", 
-        category: 4, 
-        date: new Date(2017, 1, 0)},
-       {uid: 1, 
-        name: "Meghan Markle’s wedding to Prince Harry", 
-        category: 4, 
-        date: new Date(2018, 1, 0)},
-       {uid: 2, 
-        name: "Priyanka Chopra marries Nick Jonas", 
-        category: 4, 
-        date: new Date(2018, 1, 0)},
-       {uid: 3, 
-        name: "People v. Turner", 
-        category: 4, 
-        date: new Date(2018, 1, 0)},
-       {uid: 1, 
-        name: "Greta Thunberg: Climate Action Summit and sail to NYC", 
-        category: 4, 
-        date: new Date(2019, 1, 0)},
-       {uid: 1, 
-        name: "#SayHerName: Murder of Breonna Taylor", 
-        category: 4, 
-        date: new Date(2020, 1, 0)},
-       {uid: 2, 
-        name: "Meghan Markle: scandal with royal family", 
-        category: 4, 
-        date: new Date(2020, 1, 0)},
-       {uid: 3, 
-        name: "Kamala Harris: first vice president Black/Indian woman", 
-        category: 4, 
-        date: new Date(2020, 1, 0)},
-       {uid: 1, 
-        name: "International Women’s Cricket T20", 
-        category: 4, 
-        date: new Date(2021, 1, 0)},
-       {uid: 2, 
-        name: "Makiyah Bryant murder", 
-        category: 4, 
-        date: new Date(2021, 1, 0)}]
+    {uid: 1, 
+     name: "Horrifying gang rape and murder in New Delhi, India", 
+     category: 4, 
+     date: new Date(2012, 11, 16)},
+{uid: 1, 
+     name: "The U.S. military removes a ban against women serving in combat positions", 
+     category: 4, 
+     date: new Date(2013, 1, 24)},
+    {uid: 1, 
+     name: "Caitlyn Jenner comes out in an interview", 
+     category: 4, 
+     date: new Date(2015, 4, 24)},
+{uid: 2, 
+     name: "People v. Turner: Brock Turner is arrested for sexually assaulting an unconscious woman", 
+     category: 4, 
+     date: new Date(2015, 1, 18)},
+    {uid: 1, 
+     name: "#EndRapeCulture in South Africa", 
+     category: 4, 
+     date: new Date(2016, 4, 0)},
+{uid: 2, 
+     name: "Hillary Clinton becomes the first woman to receive a presidential nomination from a major political party", 
+     category: 4, 
+     date: new Date(2016, 7, 26)},
+    {uid: 3, 
+     name: "Trump: “Grab ‘em by the pussy”", 
+     category: 4, 
+     date: new Date(2016, 10, 8)},
+{uid: 4, 
+     name: "People v. Turner: Brock Turner is convicted for three counts of felony sexual assault", 
+     category: 4, 
+     date: new Date(2016, 3, 30)},
+{uid: 5, 
+     name: "People v. Turner: Brock Turner is released after spending 3 months in jail", 
+     category: 4, 
+     date: new Date(2016, 9, 2)},
+    {uid: 1, 
+     name: "#MeToo in U.S.A.", 
+     category: 4, 
+     date: new Date(2017, 10, 15)},
+    {uid: 2, 
+     name: "Harvey Weinstein Trial", 
+     category: 4, 
+     date: new Date(2017, 10, 0)},
+{uid: 3, 
+     name: "#ChurchToo in U.S.A.", 
+     category: 4, 
+     date: new Date(2017, 11, 0)},
+ {uid: 4, 
+     name: "#MeTooSTEM and removal of Francisco J. Ayala from UC Irvine", 
+     category: 4, 
+     date: new Date(2017, 11, 0)},
+    {uid: 5, 
+     name: "Release of Wonder Woman", 
+     category: 4, 
+     date: new Date(2017, 5, 15)},
+    {uid: 6, 
+     name: "Larry Nassar U.S. Gymnastics doctor sexual assault scandal", 
+     category: 4, 
+     date: new Date(2017, 12, 0)},
+{uid: 7, 
+     name: "Jessie Reyez releases “Gatekeeper”", 
+     category: 4, 
+     date: new Date(2017, 4, 26)},
+{uid: 8, 
+     name: "The 2017 Westminster sexual scandals in the U.K. and resignation of Sir Michael Fallon", 
+     category: 4, 
+     date: new Date(2017, 11, 0)},
+    {uid: 1, 
+     name: "Meghan Markle’s wedding to Prince Harry in U.K.", 
+     category: 4, 
+     date: new Date(2018, 5, 19)},
+{uid: 2, 
+     name: "MEE TOO bill in U.S. Congress", 
+     category: 4, 
+     date: new Date(2018, 1, 18)},
+    {uid: 3, 
+     name: "Priyanka Chopra marries Nick Jonas in India", 
+     category: 4, 
+     date: new Date(2018, 12, 1)},
+    {uid: 4, 
+     name: "People v. Turner: Brock Turner is convicted by jury trial of three counts of felony sexual assault", 
+     category: 4, 
+     date: new Date(2018, 1, 0)},
+{uid: 5, 
+     name: "Google’s Andy Rubin sexual misconduct scandal", 
+     category: 4, 
+     date: new Date(2018, 10, 25)},
+  {uid: 6, 
+     name: "Global Women’s March", 
+     category: 4, 
+     date: new Date(2018, 1, 20)},
+  {uid: 7, 
+     name: "#MeTooMilitary in U.S.A", 
+     category: 4, 
+     date: new Date(2018, 1, 0)},
+  {uid: 8, 
+     name: "#MeToo in India", 
+     category: 4, 
+     date: new Date(2018, 10, 0)},
+  {uid: 9, 
+     name: "Mass sexual assaults during the 2018 new year's celebrations in Bangalore", 
+     category: 4, 
+     date: new Date(2018, 12, 0)},
+  {uid: 10, 
+     name: "Indian actress Tanushree Dutta accuses Nana Patekar of sexual harassment", 
+     category: 4, 
+     date: new Date(2018, 9, 27)},
+  {uid: 11, 
+     name: "Indian minister of state for External Affairs, MJ Akbar is accused of sexual harassment by several female colleagues through the 'Me Too' Movement in India", 
+     category: 4, 
+     date: new Date(2018, 10, 0)},
+  {uid: 12, 
+     name: "Indian music director Anu Malik is suspended from the jury panel of Indian Idol 2018, after facing multiple allegations of sexual harassment", 
+     category: 4, 
+     date: new Date(2018, 10, 21)},
+  {uid: 13, 
+     name: "Marriage of Prince Harry and Meghan Markle", 
+     category: 4, 
+     date: new Date(2018, 5, 19)},
+    {uid: 1, 
+     name: "Greta Thunberg: Climate Action Summit and sail to NYC", 
+     category: 4, 
+     date: new Date(2019, 8, 28)},
+    {uid: 2, 
+     name: "Release of “Surviving R. Kelly” documentary", 
+     category: 4, 
+     date: new Date(2019, 1, 0)},
+    {uid: 3, 
+     name: "Arrest of R. Kelly for 10 counts of sexual abuse against four women", 
+     category: 4, 
+     date: new Date(2019, 2, 0)},
+    {uid: 1, 
+     name: "#SayHerName: Murder of Breonna Taylor", 
+     category: 4, 
+     date: new Date(2020, 3, 0)},
+    {uid: 2, 
+     name: "International Women’s Cricket T20", 
+     category: 4, 
+     date: new Date(2020, 2, 0)},
+{uid: 3, 
+     name: "Rape and murder of Vanessa Guillén in U.S. military", 
+     category: 4, 
+     date: new Date(2020, 4, 22)},
+    {uid: 1, 
+     name: "16 year old Ma'Khia Bryant is fatally shot by police officer Nicholas Reardon in Columbus, Ohio", 
+     category: 4, 
+     date: new Date(2021, 4, 20)},
+    {uid: 2, 
+     name: "Kamala Harris is sworn in as the first woman and first woman of color vice president of the United States", 
+     category: 4, 
+     date: new Date(2021, 1, 20)},
+    {uid: 3, 
+     name: "Oprah with Meghan and Harry and “Megxit”", 
+     category: 4, 
+     date: new Date(2021, 3, 7)}]
 
 events = eventsWorld.map(d=>{
   return {
@@ -119,7 +209,7 @@ console.log(events)
 // d3.csv("../hosted_data/country_time_freq_rapi.csv", d3.autoType).then(function(dataset) {
 d3.csv("../data/processed/country_time_freqrank_rapi.csv", d3.autoType).then(function(dataset) {
 
-    filter_years = [2009, 2020]
+    filter_years = [2009, 2022]
     country = "USA"
     variable = "frequency" //freq_prop_headlines // frequency
     dataset = dataset.filter(d=>(d.word!=="thehill")&&(d.word!=="time.com")&&(d.word!=="ew.com"))
@@ -189,7 +279,7 @@ function hideTooltip(event, d) {
     d3.selectAll(".incText").remove()
 }
 
-// timeline ruler
+// timeline ruler tooltip and function
 const tooltip = d3
                 .select("body")
                 .append("div")
@@ -198,12 +288,14 @@ const tooltip = d3
                 // .style("font-family", "Lato")
                 .style("position", "absolute")
                 .style("text-align", "left")
-                // .style("width", "auto")
-                // .style("height", "auto")
+                .style("width", "200")
+                .style("height", "auto")
                 .style("padding", "5px")
-                .style("background", "none")
-                .attr("border", "grey")
-                .style("border-width", 1)
+                // .style("background", "#161616")
+                .style("background", "grey")
+                .style("border", "1.5px grey solid")
+                // .style("stroke", "grey")
+                // .style("border-width", 1)
                 .style("pointer-events", "none")
                 .style("opacity", 0)
 
@@ -237,13 +329,14 @@ function timeRuler(event, d, g) {
         // .html(`<b>${d.title}</b><br>
         // <b>${format(+d[metric_t])+"</b> "+legend_label_t.toLowerCase()}<br>
         // <b>${format(+d[metric_p])+"</b> "+legend_label_p.toLowerCase()}`)
-        .html(`<b>${d.date}</b><br>
+        .html(`<b>${d3.timeFormat("%m/%Y")(d.date)}</b><br>
         <b>${(d.name)}`)
-        .style("left", event.pageX + 10+ "px")
-        .style("top", event.pageY - 28 + "px")
+        .style("left", event.pageX + "px")
+        .style("top", event.pageY - 100 + "px")
         .style("font-family", "sans-serif")
         .attr("font-size", "10px")
-        .style("color", "grey");
+        .style("color", "#161616");
+        // .style("color", "grey");
 
     // const textBox = g.append("g")
     //                   .append("rect")
@@ -268,6 +361,52 @@ function timeRuler(event, d, g) {
     //                     .style("color", "white")
 }
 
+// function for beeswarm timeline
+function dodge(data, {radius = 1, x = d => d} = {}) {
+    const radius2 = radius ** 2;
+    const circles = data.map((d, i) => ({x: +x(d, i, data), data: d})).sort((a, b) => a.x - b.x);
+    const epsilon = 1e-3;
+    let head = null, tail = null;
+  
+    // Returns true if circle ⟨x,y⟩ intersects with any circle in the queue.
+    function intersects(x, y) {
+      let a = head;
+      while (a) {
+        if (radius2 - epsilon > (a.x - x) ** 2 + (a.y - y) ** 2) {
+          return true;
+        }
+        a = a.next;
+      }
+      return false;
+    }
+  
+    // Place each circle sequentially.
+    for (const b of circles) {
+  
+      // Remove circles from the queue that can’t intersect the new circle b.
+      while (head && head.x < b.x - radius2) head = head.next;
+  
+      // Choose the minimum non-intersecting tangent.
+      if (intersects(b.x, b.y = 0)) {
+        let a = head;
+        b.y = Infinity;
+        do {
+          let y1 = a.y + Math.sqrt(radius2 - (a.x - b.x) ** 2);
+          let y2 = a.y - Math.sqrt(radius2 - (a.x - b.x) ** 2);
+          if (Math.abs(y1) < Math.abs(b.y) && !intersects(b.x, y1)) b.y = y1;
+          if (Math.abs(y2) < Math.abs(b.y) && !intersects(b.x, y2)) b.y = y2;
+          a = a.next;
+        } while (a);
+      }
+  
+      // Add b to the queue.
+      b.next = null;
+      if (head === null) head = tail = b;
+      else tail = tail.next = b;
+    }
+  
+    return circles;
+  }
 
 // small multiples chart function
 function renderChart(dataset, filter, country, variable) {
@@ -304,7 +443,8 @@ function renderChart(dataset, filter, country, variable) {
 
     // same x-scale for all charts
     minDate = data[0].rates[0].date
-    maxDate = data[0].rates[data[0].rates.length - 1].date
+    // maxDate = data[0].rates[data[0].rates.length - 1].date
+    maxDate = new Date(2021, 6, 0)
 
     x = d3.scaleTime()
         .domain([minDate, maxDate])
@@ -456,24 +596,29 @@ function renderChart(dataset, filter, country, variable) {
             g.append("g")
                     .attr('transform', `translate(${col(0)}, -${margin.top/3})`)
                     .selectAll("circle")
-                    .data(events)
+                    // .data(events)
+                    .data(dodge(eventsWorld, {radius: radius * 2 + padding, x: d => x(d.date)}))
+
+    console.log(dodge(eventsWorld, {radius: radius * 2 + padding, x: d => x(d.date)}))
 
     const circles = circleEvents
                     .join("circle")
-                    .attr('transform', (d, i) => `translate(0, ${d.uid * 12 * (d.position ? 1 : -1 )})`)
-                    .attr("cx", d=>x(d.date))
-                    .attr("cy", 0)
+                    // .attr('transform', (d, i) => `translate(0, ${d.uid * 12 * (d.position ? 1 : -1 )})`)
+                    // .attr("cx", d=>x(d.date))
+                    // .attr("cy", 0)
+                    .attr("cx", d => d.x)
+                    .attr("cy", d =>  d.y)
                     .attr("fill", "red")
-                    .attr("r", 6)
+                    .attr("r", radius)
                     .attr("opacity", "0.5")
-                    .on("mouseover", (event, d) => timeRuler(event, d, g))
+                    .on("mouseover", (event, d) => timeRuler(event, d.data, g))
                     // .on("mousemove", (event, d) => timeRuler(event, d, g))
                     .on("mouseleave", (event, d) => {
                                     d3.selectAll(".timeRuler").remove()
-                                    // tooltip
-                                    //         .transition()
-                                    //         .duration(500)
-                                    //         .style("opacity", 0)
+                                    tooltip
+                                            .transition()
+                                            .duration(500)
+                                            .style("opacity", 0)
                                         }
                                             )
 
