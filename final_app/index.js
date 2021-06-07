@@ -45,7 +45,9 @@
                 {site:"politico.com", link:"https://www.vectorlogo.zone/logos/politico/politico-icon.svg"},
                 {site:"usatoday.com", link:"https://www.vectorlogo.zone/logos/usatoday/usatoday-icon.svg"},
                 {site:"nydailynews.com", link:"https://cdn6.myket.ir/icons/large/b0f31373-17ec-46d5-b6ef-66135cc1b242_.png"},
-                {site:"businessinsider.com", link:""},
+                {site:"businessinsider.com", link:"https://i.insider.com/596e4e7a552be51d008b50fd?width=600&format=jpeg"},
+                {site:"aajtak.in", link:"https://static.wikia.nocookie.net/logopedia/images/d/db/Aaj_tak.png"},
+                // {site:"ft.com", link:"https://www.ft.com/__origami/service/image/v2/images/raw/ftlogo-v1:brand-ft-logo-square-coloured-dot?source=origami-registry&width=200"},
                 {site:"espn.go.com", link:"https://cdn.worldvectorlogo.com/logos/espn.svg"},
                 {site:"huffingtonpost.com", link:"https://www.vectorlogo.zone/logos/huffingtonpost/huffingtonpost-icon.svg"}
             ]
@@ -188,7 +190,7 @@
             ttip = "bias"
 
             // set dimensions
-            let margin5 = {left: 30, bottom: 20, right: 30, top: 110}
+            let margin5 = {left: 50, bottom: 20, right: 30, top: 110}
             let bodywidth5 = width5 - margin5.left - margin5.right;
             let bodyheight5 = height5 - margin5.top - margin5.bottom;
             
@@ -211,7 +213,7 @@
 
             var radius = d3.scaleSqrt()
                                 .domain(extentvisits)
-                                .range([3, 60])
+                                .range([3, 70])
 
             // create linear scale for logo size
             var logoScale = d3.scaleLinear()
@@ -283,6 +285,8 @@
                                                     : d.site=="politico.com" | d.site=="ksl.com" | d.site=="abcnews.go.com" | d.site=="nydailynews.com" ? "translate(-12.5,-12.5)"
                                                     : d.site=="telegraph.co.uk" ? "translate(-15,-3)"
                                                     : d.site=="breitbart.com" ? "translate(-14,-10)"
+                                                    : d.site=="aajtak.in" ? "translate(-25,-20)"
+                                                    : d.site=="businessinsider.com" ? "translate(-14,-13)"
                                                     : "translate(-15,-15)")
                                 .attr('width', d=>logoScale(+d.monthly_visits))
                                 .attr("xlink:href", d=>+d.monthly_visits>150000000 ? logoData.filter(x=>x.site==d.site)[0]["link"]:'')
