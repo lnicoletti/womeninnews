@@ -26,7 +26,7 @@ radius = 6
 padding = 1.5
 numberOfCategories = 5
 categories = ["0", "1", "2", "3", "4"]
-dateRange = [new Date(2010, 0).getTime(), new Date(2019, 0).getTime()];
+dateRange = [new Date(2010, 0).getTime(), new Date(2021, 0).getTime()];
 
 eventsWorld = [
     {uid: 1, 
@@ -212,7 +212,7 @@ d3.csv("../data/processed/country_time_freqrank_rapi.csv", d3.autoType).then(fun
     filter_years = [2009, 2022]
     country = "USA"
     variable = "frequency" //freq_prop_headlines // frequency
-    dataset = dataset.filter(d=>(d.word!=="thehill")&&(d.word!=="time.com")&&(d.word!=="ew.com"))
+    dataset = dataset.filter(d=>(d.word!=="thehill")&&(d.word!=="time.com")&&(d.word!=="ew.com")&&(d.word!=="covid"))
     renderChart(dataset, filter_years, country, variable)
 
     // update chart when country is changed
