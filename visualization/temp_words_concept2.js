@@ -2,6 +2,9 @@
 margin = ({top: 400, bottom: 20, left: 40, right: 40})
 visWidth = 1200 - margin.left - margin.right
 visHeight = 10000 - margin.top - margin.bottom
+// colors
+mainColor = "cyan" //"red"
+lineThickness = 3
 // structure of plots
 cols = 1
 rows = 200/cols
@@ -14,7 +17,7 @@ console.log(grid)
 row = d3.scaleBand()
     .domain(d3.range(rows))
     .range([0, visHeight])
-    .paddingInner(-1.5)
+    .paddingInner(-1)
 
 col = d3.scaleBand()
     .domain(d3.range(cols))
@@ -207,12 +210,12 @@ console.log(events)
 
 // load and render data
 // d3.csv("../hosted_data/country_time_freq_rapi.csv", d3.autoType).then(function(dataset) {
-d3.csv("../data/processed/country_time_freqrank_rapi.csv", d3.autoType).then(function(dataset) {
+d3.csv("../data/processed/country_time_freqrank_rapi_clean.csv", d3.autoType).then(function(dataset) {
 
     filter_years = [2009, 2022]
     country = "USA"
     variable = "frequency" //freq_prop_headlines // frequency
-    dataset = dataset.filter(d=>(d.word!=="thehill")&&(d.word!=="time.com")&&(d.word!=="ew.com")&&(d.word!=="covid"))
+    // dataset = dataset.filter(d=>(d.word!=="thehill")&&(d.word!=="time.com")&&(d.word!=="ew.com")&&(d.word!=="covid"))
     renderChart(dataset, filter_years, country, variable)
 
     // update chart when country is changed
@@ -512,7 +515,7 @@ function renderChart(dataset, filter, country, variable) {
     linearGradient.append("stop")
         .attr("offset", "0%")
         // .attr("stop-color", "hsl(10, 100%, 50%)");
-        .attr("stop-color", "red");
+        .attr("stop-color", mainColor);
 
     
     linearGradient.append("stop")
@@ -553,7 +556,7 @@ function renderChart(dataset, filter, country, variable) {
     cells.append('path')
         // .attr('stroke', 'black')
         .style("stroke", "url(#linear-gradient)")
-        .attr('stroke-width', 2)
+        .attr('stroke-width', lineThickness)
         .attr('fill', 'none')
         .attr("class", "wordLine")
         .attr("id", d=> 'line'+ d.word)  
@@ -608,7 +611,7 @@ function renderChart(dataset, filter, country, variable) {
                     // .attr("cy", 0)
                     .attr("cx", d => d.x)
                     .attr("cy", d =>  d.y)
-                    .attr("fill", "red")
+                    .attr("fill", mainColor)
                     .attr("r", radius)
                     .attr("opacity", "0.5")
                     .on("mouseover", (event, d) => timeRuler(event, d.data, g))
