@@ -1,6 +1,6 @@
 <html>
   <head>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../final_app/styles.css">
 </head>
   <body>
     <h1 style = "text-align: center">A decade of headlines: the words we cho(o)se to sensationalize women</h1>
@@ -9,22 +9,8 @@
                 the <b>United Kingdom</b>, and the <b>United States</b>. The evolution of each word's usage is charted over time. Are 
                 we moving towards more empowering reporting, or have our biases snowballed out of control?</p>
       </div>
-    <!-- <div class="barLegend" style="text-align: center; align-items:center">
-    <svg width="185" height="65" style="text-align: center;" id="barLegend">
-      <rect width="185" height="15" style="fill:#aaa;stroke:none" />
-    </svg>
-    </div>
-    <div class="subtitle">
-      <p class="description">On the right side, the associations between words across headlines is visualized in the form of a network. A word association is an instance
-        of two words in the same sentence. In the networks, each node represents a word and each link represents a connection between two words.
-        The thickness of each link represents the number of times any two words are found together in the same headline. Nodes and their associated text are sized by 
-        frequency of occurrence.</br></br>
-        In both the bar charts and the networks, bars, nodes, words and links are colored according to 6 categories: <b><span style="color:#ccad34">Empowerment</span></b>, 
-        <b><span style="color:pink">Women Stereotypes</span></b>, <b><span style="color:red">Violence</b></span>, <b><span style="color:blue">Male Dominance</b></span>,
-        <b><span style="color:#964B00">Race</b></span>, and <b><span style="color:green">Politics</b></span>.</br></br>
-        Hover over a bar or a word to explore the word associations of a specific word!</p>
-    </div> -->
-    <h2 style="text-align: center;">filter by country</h2>
+    
+    <h2 style="text-align: center">filter by country</h2>
         <div class="buttons">
           <button class="country" value="USA">United States</button>
           <button class="country" value="South Africa">South Africa</button>
@@ -32,11 +18,12 @@
           <button class="country" value="India">India</button>
         </div>
 
-    <h2 style="text-align: center;">view data by <button class="freq" value="frequency">absolute frequency</button> or by  
-        <button class="freq" value="freq_prop_headlines">normalized frequency</button></h2>
+    <!-- <h2 style="text-align: center; margin-bottom:100">view data by <button class="freq" value="frequency">absolute frequency</button> or by  
+        <button class="freq" value="freq_prop_headlines">normalized frequency</button></h2> -->
         
     <!-- <div class="netbars"> -->
       <!-- <div id="chart1" class="svg-container3" style="text-align: center;"> </div> -->
+      <div id = "stickyXaxis" style="text-align: center;"></div>
       <div id="smChart" class="svg-container3" style="text-align: center;"></div>
       <!-- <div id="chart2" class="svg-container3" style="text-align: center;"> </div>
       <div id="my_network2" class="svg-container3" style="text-align: center;"></div>

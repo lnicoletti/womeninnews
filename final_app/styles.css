@@ -350,3 +350,25 @@ left: 0;
     text-align:center;
     opacity:0.65
 }
+
+/* sticky axis for wavy chart */
+#stickyXaxis {
+    /* position: -webkit-sticky; */
+    position: sticky;
+    top: 0;
+    background-color: #161616;
+    /* z-index:0; */
+}
+
+.timeRuler {
+    z-index:10;
+    position:fixed
+}
+
+/* .SMaxisSticky {
+    background-color: #c0c0c0;
+    position:fixed;
+    top:0;
+    width:100%;
+    z-index:100;
+} */

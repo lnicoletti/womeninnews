@@ -1,7 +1,9 @@
 // dimensions
-margin = ({top: 400, bottom: 20, left: 40, right: 40})
+// margin = ({top: 400, bottom: 20, left: 40, right: 40})
+margin = ({top: 150, bottom: 20, left: 40, right: 40})
 visWidth = 1200 - margin.left - margin.right
 visHeight = 10000 - margin.top - margin.bottom
+stickyAxisHeight = 250
 // colors
 mainColor = "cyan" //"red"
 lineThickness = 3
@@ -40,11 +42,19 @@ eventsWorld = [
      name: "The U.S. military removes a ban against women serving in combat positions", 
      category: 4, 
      date: new Date(2013, 1, 24)},
+{uid: 1, 
+     name: "A new Pentagon report found a 50% increase in sexual assault reports in 2013", 
+     category: 4, 
+     date: new Date(2014, 4, 1)},
     {uid: 1, 
      name: "Caitlyn Jenner comes out in an interview", 
      category: 4, 
      date: new Date(2015, 4, 24)},
-{uid: 2, 
+    {uid: 1,    
+    name: "A survey for the Department of Defense finds that in the past year 52% of active service members who reported sexual assault had experienced retaliation in the form of professional, social, and administrative actions or punishments.", 
+    category: 4, 
+    date: new Date(2015, 4, 18)},
+    {uid: 2, 
      name: "People v. Turner: Brock Turner is arrested for sexually assaulting an unconscious woman", 
      category: 4, 
      date: new Date(2015, 1, 18)},
@@ -189,6 +199,7 @@ eventsWorld = [
      category: 4, 
      date: new Date(2021, 3, 7)}]
 
+
 events = eventsWorld.map(d=>{
   return {
     uid: d.uid,
@@ -214,7 +225,7 @@ d3.csv("../data/processed/country_time_freqrank_rapi_clean.csv", d3.autoType).th
 
     filter_years = [2009, 2022]
     country = "USA"
-    variable = "frequency" //freq_prop_headlines // frequency
+    variable = "freq_prop_headlines" //freq_prop_headlines // frequency
     // dataset = dataset.filter(d=>(d.word!=="thehill")&&(d.word!=="time.com")&&(d.word!=="ew.com")&&(d.word!=="covid"))
     renderChart(dataset, filter_years, country, variable)
 
@@ -222,19 +233,22 @@ d3.csv("../data/processed/country_time_freqrank_rapi_clean.csv", d3.autoType).th
     d3.selectAll("button.country").on("click", function() {
         // Remove previous chart
         d3.select(".mainContainer").remove()
+        d3.select(".stickyAxis").remove()
         let country = d3.select(this).property("value")
         console.log(country)
         renderChart(dataset, filter_years, country, variable)
     })
     // update chart when variable is changed
-    d3.selectAll("button.freq").on("click", function() {
-        // Remove previous chart
-        d3.select(".mainContainer").remove()
-        let variable = d3.select(this).property("value")
-        console.log(variable)
-        renderChart(dataset, filter_years, country, variable)
-    })
+    // d3.selectAll("button.freq").on("click", function() {
+    //     // Remove previous chart
+    //     d3.select(".mainContainer").remove()
+    //     let variable = d3.select(this).property("value")
+    //     console.log(variable)
+    //     renderChart(dataset, filter_years, country, variable)
+    // })
+      
 })
+
 
 // tooltip functions
 //// area charts hover
@@ -301,10 +315,11 @@ const tooltip = d3
                 // .style("border-width", 1)
                 .style("pointer-events", "none")
                 .style("opacity", 0)
+                // .attr("z-index", "100")
 
-function timeRuler(event, d, g) {
+function timeRuler(event, d, g, svg) {
     
-    const ruler = g.append("g")
+    const rulerg = g.append("g")
                     .append("line")
                     .attr("class", "timeRuler")
                     .attr('transform', `translate(${col(0)}, -${margin.top/3})`)
@@ -316,6 +331,19 @@ function timeRuler(event, d, g) {
                     // .attr("fill", "grey")
                     .attr("stroke-width", 20)
                     .attr("opacity", 0.2)
+
+    // const rulersvg = svg.append("g")
+    //                 .append("line")
+    //                 .attr("class", "timeRuler")
+    //                 .attr('transform', `translate(${col(0)}, 100)`)
+    //                 .attr("x1", x(d.date))
+    //                 .attr("x2", x(d.date))
+    //                 .attr("y1", 0)
+    //                 .attr("y2", visHeight)
+    //                 .attr("stroke", "grey")
+    //                 // .attr("fill", "grey")
+    //                 .attr("stroke-width", 20)
+    //                 .attr("opacity", 0.2)
 
     // rect dimensions
     const boxWidth = 200
@@ -446,8 +474,8 @@ function renderChart(dataset, filter, country, variable) {
 
     // same x-scale for all charts
     minDate = data[0].rates[0].date
-    // maxDate = data[0].rates[data[0].rates.length - 1].date
-    maxDate = new Date(2021, 6, 0)
+    maxDate = data[0].rates[data[0].rates.length - 1].date
+    // maxDate = new Date(2021, 6, 0)
 
     x = d3.scaleTime()
         .domain([minDate, maxDate])
@@ -491,6 +519,7 @@ function renderChart(dataset, filter, country, variable) {
         .attr("class", "mainContainer")
         .attr('width', visWidth + margin.left + margin.right)
         .attr('height', visHeight + margin.top + margin.bottom);
+        
         // .attr("preserveAspectRatio", "xMinYMin meet")
         // .attr("viewBox", "0 0 "+ visWidth + margin.left + margin.right +"," + visHeight + margin.top + margin.bottom+"")
     
@@ -530,7 +559,7 @@ function renderChart(dataset, filter, country, variable) {
     // append a group element and move it left and down to create space
     // for the left and top margins
     const g = svg.append("g")
-        .attr('transform', `translate(${margin.left}, ${margin.top})`);
+        .attr('transform', `translate(${margin.left}, ${margin.top/3})`);
 
     // create a group for each small multiple
     const cells = g.append('g')
@@ -580,10 +609,19 @@ function renderChart(dataset, filter, country, variable) {
                                 //   i == 9 ? "#SayHerName":                                  
                                   "");//.tickFormat(d3.format(".0s"))
 
-    g.append("g")
-            .attr('transform', `translate(${col(0)}, -${margin.top/3})`)
+    const stickyAxis = d3.select("div#stickyXaxis").append("svg")
+        // .attr('transform', `translate(${margin.left}, ${margin.top})`)
+        .attr('transform', `translate(${margin.left}, 0)`)
+        .attr('width', visWidth + margin.left + margin.right)
+        .attr('height', stickyAxisHeight)
+        .attr("class", "stickyAxis");
+
+    // g.append("g")
+    stickyAxis.append("g")
+            .attr('transform', `translate(${col(0)}, ${margin.top})`)
             // .attr('transform', `translate(${margin.left}, ${margin.top})`)
-            .call(xaxis).attr("class", "SMaxis")
+            .call(xaxis)
+            // .attr("class", "SMaxisSticky")
             .call(g=>g.selectAll(".tick")
             // .attr("color", (d, i) => i == 0 || i == 9 ? "grey": "none")
             // .attr("opacity", (d, i) => i == 0 ||  i == 9 ? 1: 0)
@@ -596,16 +634,20 @@ function renderChart(dataset, filter, country, variable) {
 
     // circles for timeline
     const circleEvents = 
-            g.append("g")
-                    .attr('transform', `translate(${col(0)}, -${margin.top/3})`)
+            // g.append("g")
+            stickyAxis.append("g")
+                    .attr('transform', `translate(${col(0)}, ${margin.top})`)
+                    // .attr('transform', `translate(${col(0)}, -${margin.top/3})`)
                     .selectAll("circle")
+                    // .attr("class", "SMaxisSticky")
                     // .data(events)
-                    .data(dodge(eventsWorld, {radius: radius * 2 + padding, x: d => x(d.date)}))
+                    .data(dodge(eventsWorld.filter(d=>d.date<=maxDate), {radius: radius * 2 + padding, x: d => x(d.date)}))
 
-    console.log(dodge(eventsWorld, {radius: radius * 2 + padding, x: d => x(d.date)}))
+    // console.log(dodge(eventsWorld, {radius: radius * 2 + padding, x: d => x(d.date)}))
 
     const circles = circleEvents
                     .join("circle")
+                    // .attr("class", "SMaxisSticky")
                     // .attr('transform', (d, i) => `translate(0, ${d.uid * 12 * (d.position ? 1 : -1 )})`)
                     // .attr("cx", d=>x(d.date))
                     // .attr("cy", 0)
@@ -614,7 +656,7 @@ function renderChart(dataset, filter, country, variable) {
                     .attr("fill", mainColor)
                     .attr("r", radius)
                     .attr("opacity", "0.5")
-                    .on("mouseover", (event, d) => timeRuler(event, d.data, g))
+                    .on("mouseover", (event, d) => timeRuler(event, d.data, g, svg))
                     // .on("mousemove", (event, d) => timeRuler(event, d, g))
                     .on("mouseleave", (event, d) => {
                                     d3.selectAll(".timeRuler").remove()
