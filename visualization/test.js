@@ -65,9 +65,9 @@ window.onload = function() {
 // Bar charts
 
     // set the dimensions and margins of the graph
-    var margin = {top: 15, right: 30, bottom: 0, left: 90},
+    var margin = {top: 50, right: 30, bottom: 10, left: 50},
     width = 300 - margin.left - margin.right,
-    height = 300 - margin.bottom;
+    height = 420 - margin.bottom - margin.top;
 
 // Parse the Data
 Promise.all([d3.csv("../data/processed/country_time_freqrank_rapi_clean.csv", d3.autoType)]).then(function(dataset) {
@@ -76,33 +76,39 @@ Promise.all([d3.csv("../data/processed/country_time_freqrank_rapi_clean.csv", d3
 //     ]).then(function(data) {
 countries_data = dataset[0]
 //console.log(dataset[0])
-drawBar(countries_data, "#chart1", "India", 10)    
-drawBar(countries_data, "#chart2", "USA", 10)   
-drawBar(countries_data, "#chart3", "UK", 10)   
-drawBar(countries_data, "#chart4", "South Africa", 10)  
+drawBar(countries_data, "#chart1", "India", 15)    
+drawBar(countries_data, "#chart2", "USA", 15)   
+drawBar(countries_data, "#chart3", "UK", 15)   
+drawBar(countries_data, "#chart4", "South Africa", 15)  
+
  }
     )
 
 // append the svg object to the body of the page
 function drawBar(countries_data, chart, selected_country, word_count) {
 
+    // set the dimensions and margins of the graph
+    var margin = {top: 50, right: 30, bottom: 10, left: 50},
+    width = 300 - margin.left - margin.right,
+    height = 420 - margin.bottom - margin.top;
+
     dataBars = countries_data.filter(d=>d.country == selected_country)
     dataBars = dataBars.filter(d=>d.year == 2020)
     //dataBars = dataBars.sort(function(a,b) { return d3.descending(+a.frequency, +b.frequency) })
     dataBars = dataBars.sort(function(a,b) { return d3.descending(+a.frequency, +b.frequency) })
-   console.log(dataBars)
+    console.log(dataBars)
     
     top10 = dataBars.filter(function(d,i){ return i<word_count })
 
     //margin = {top: 69, right: 90, bottom: 5, left: 90},
     //width = width/1.5,
     //height = height;
-    //barpad = 20
+    // barpad = 20
 
     var svg = d3.select(chart)
     .append("svg")
     .attr("preserveAspectRatio", "xMinYMin meet")
-    .attr("viewBox", "0 0 "+ width +"," + height+"")
+    .attr("viewBox", "0 0 "+ width +"," + height + margin.top+"")
     //.attr("width", width + margin.left + margin.right)
     //.attr("height", height + margin.top + margin.bottom)
     .append("g")
@@ -113,21 +119,22 @@ function drawBar(countries_data, chart, selected_country, word_count) {
     // Add X axis
     var x = d3.scaleLinear()
     .domain([0, d3.max(top10,d=>+d.frequency)])
+    .range([ 0, width-margin.left]).nice();
 
-    .range([ 0, width/2]);
-     svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
-     .call(d3.axisBottom(x))
-     .selectAll("text")
-    .attr("transform", "translate(-10,0)rotate(-45)")
-     .style("text-anchor", "end");
+    //  svg.append("g")
+    // .attr("transform", "translate(0," + height + ")")
+    //  .call(d3.axisBottom(x))
+    //  .selectAll("text")
+    // .attr("transform", "translate(-10,0)rotate(-45)")
+    //  .style("text-anchor", "end");
     
     // Y axis
     var y = d3.scaleBand()
     .range([ 0, height ])
     .domain(top10.map(function(d) { return d.word; }))
     // change this to change the distance of the word from the bar
-    .padding(0.5);
+    .padding(0);
+
     svg.append("g")
     .call(d3.axisLeft(y).tickSize(0))
     .attr("class", "yAxis")
@@ -152,21 +159,19 @@ function drawBar(countries_data, chart, selected_country, word_count) {
     //Bars
     svg.selectAll("myRect")
     .data(top10)
-    .enter()
-    .append("rect")
+    .join("rect")
     .attr("x", x(0) )
     .attr("y", function(d) { return y(d.word); })
     .attr("width", function(d) { return x(d.frequency); })
-    .attr("height", 15 )
-    .attr("class", "barChart")
-    
-    //.attr("fill", "#69b3a2")
+    .attr("height", 20)
+    // .attr("class", "barChart")
+    .attr("fill", "lightgrey")
 
     // change name of country for bar chart
     // TODO: Fix this
     svg.append("text")
-        .attr("x", (width/10))             
-        //.attr("y", 0 - (margin.top/3))
+        .attr("x", 0)             
+        .attr("dy", -10)
         .attr("class", "barLegendText") 
         .text(selected_country);
 

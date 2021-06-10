@@ -1,8 +1,8 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="styles.css">
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@latest/final_app/styles.css"> -->
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@latest/final_app/styles.css">
 
 </head>
  
@@ -15,7 +15,6 @@
     <p style = "text-align: center" class="credits">By 
         <b><a href="https://www.leonardonicoletti.com" target="_blank" class="creditLink">Leonardo Nicoletti</a></b> 
         and <b><a href="https://twitter.com/sahitisarva" target="_blank" class="creditLink">Sahiti Sarva</a></b></h1>
-    <!-- INTRO -->
     <div class="subtitle">
         <p class="description"> 
             <span class="padded-dropcap">A</span>s observed in a lot of competitive and high paying fields, there is proven lack of representation of both women and racial 
@@ -36,51 +35,6 @@
             In this piece, we used data from more than 50,000 headlines from the news outlets of 4 different countries to illustrate how 
             women are represented in news headlines around the world. <br><br></p>
     </div>
-    <div class="header">
-    <h1 style = "text-align: center; color: red" class="sectionHeader">“Woman
-        <span
-   class="txt-rotate"
-   data-period="2000"
-   data-rotate='[" with later start to periods, menopause more likely to reach age 90”",  " may be missing out on outpatient hospital care in northern India”",  " had fatal heart attack due to years of taking antipsychotics, inquest hears”",  " dies after house catches fire in Wythenshawe”",  " found dead in River Goyt following major emergency service presence”",  ", 33, dies following crash on M66 motorway near Bury”",  " killed in Oldham named as man charged with murder”",  " banned from owning pets after dog left in dark cupboard to starve to death”",  " fined £650 for dropping cigarette butt in town centre”",  " arrested as armed police close off road for several hours”",  " who went missing before being found dead at park was suffering from depression, inquest opening hears”",  " dies and girl, 16, seriously hurt after fire rips through home in Birmingham”",  " taken to hospital after falling from M60 bridge in early hours”",  " taken to hospital after being hit by car in Stockport”",  " taken to hospital after being rescued from Stalybridge canal”",  " nearly crashes into police officers on M60 after her husband is caught drink driving”",  " spends £10k transforming her home into a pink paradise”",  " confronts masked gang stealing catalytic converter   then this happened”",  " faked terminal cancer to dupe friends into paying for dream wedding”",  ", 31, found dead in a disused graveyard after 18 day search”",  " two days away from being deported stabbed housemate 30 times”",  " who stabbed boyfriend while high on crack walks free in time for Christmas”",  " who gave birth on flight had no idea she was pregnant”",  " suffer more with anxiety, depression during months of isolation due to COVID 19   Gender differences”",  " are valuable human resource, there should be zero tolerance towards gender insensitivity: HC”",  " in Data Science: Changing the rules of the game”",  " capable of creating history, future with formidable grace: Rahul Gandhi”"]'></span>
-    </div>
-    </h1>
-        <div class="subtitle" style="text-align: center">
-          <p class="description" style="text-align: center">The charts below show the words used most frequently by news outlets to talk about women in four countries. </p>
-        </div>
-    <div class="barLegend" style="text-align: center; align-items:center">
-        <svg width="185" height="65" style="text-align: center;" id="barLegend">
-            <rect width="185" height="15" style="fill:#aaa;stroke:none" />
-        </svg>
-    </div>
-    <div class="centeredCont">
-      <div class="container">
-        <div id="chart1" class="freqBars"> </div>
-        <div id="chart2" class="freqBars"> </div>
-        <div id="chart3" class="freqBars"> </div>
-        <div id="chart4" class="freqBars"> </div>
-      </div>
-    </div>
-    <!-- 2 TEMPORAL CHART -->
-    <div class="header">
-    <h1 style = "text-align: center" class="sectionHeader">A decade of headlines: the words we cho(o)se to sensationalize women</h1>
-    </div>
-      <div class="subtitle">
-        <p class="description">The charts below show the words used most frequently by news outlets to talk about women in <b>India</b>, <b>South Africa</b>,
-                the <b>United Kingdom</b>, and the <b>United States</b>. The evolution of each word's usage is charted over time. Are 
-                we moving towards more empowering reporting, or have our biases snowballed out of control?</p>
-      </div>
-    
-    <h2 style="text-align: center">filter by country</h2>
-        <div class="buttons">
-          <button class="country" value="USA">United States</button>
-          <button class="country" value="South Africa">South Africa</button>
-          <button class="country" value="UK">United Kingdom</button>
-          <button class="country" value="India">India</button>
-        </div>
-      <div id = "stickyXaxis" style="text-align: center;"></div>
-      <div id="smChart" class="svg-container3" style="text-align: center;"></div>
-    </div>
-    <!-- 3 BIAS BUBBLE CHART -->
     <div class="header">
     <h1 style = "text-align: center" class="sectionHeader">Innocent outlets? The influence of news platforms in reinforcing gender biases</h1>
     </div>
@@ -151,6 +105,11 @@
                 the <b>United Kingdom</b>, and the <b>United States</b>. On the left side, the most frequent words for each country are shown. The length of each bar indicates the number of headlines
                 that were found to contain a specific word.</p>
       </div>
+    <div class="barLegend" style="text-align: center; align-items:center">
+    <svg width="185" height="65" style="text-align: center;" id="barLegend">
+      <rect width="185" height="15" style="fill:#aaa;stroke:none" />
+    </svg>
+    </div>
     <div class="subtitle">
       <p class="description">On the right side, the associations between words across headlines is visualized in the form of a network. A word association is an instance
         of two words in the same sentence. In the networks, each node represents a word and each link represents a connection between two words.
@@ -172,8 +131,8 @@
       <div id="my_network4" class="svg-container3" style="text-align: center;"></div>
     </div>
 </body>
-<script src="https://d3js.org/d3.v6.min.js"></script>
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.10.0/d3.js" integrity="sha512-DyoWbEfs+NLId7Ocar5ViC9tUvCns1vA3y4hwGylwZ6t1Xi7zf2OKWYEf2O/ZzycZcVEuXc4Gxxb6cwY15niHg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+<!-- <script src="https://d3js.org/d3.v5.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.10.0/d3.js" integrity="sha512-DyoWbEfs+NLId7Ocar5ViC9tUvCns1vA3y4hwGylwZ6t1Xi7zf2OKWYEf2O/ZzycZcVEuXc4Gxxb6cwY15niHg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="index.js"></script>
 <!-- <script src="https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@4856f13/final_app/index.js"></script> -->

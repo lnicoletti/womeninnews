@@ -342,13 +342,23 @@ left: 0;
     padding-bottom:10px
 }
 
-.barLegendText {
+/* .barLegendText {
     font-size: 12px;
     font-family: sans-serif;
     fill:silver;
     text-anchor: start;
     text-align:center;
     opacity:0.65
+} */
+
+.barLegendText {
+    font-size: 13px;
+    font-family: Georgia;
+    fill:silver;
+    text-anchor: start;
+    text-align:left;
+    opacity:0.9;
+    font-weight: 800;
 }
 
 /* sticky axis for wavy chart */
@@ -372,3 +382,58 @@ left: 0;
     width:100%;
     z-index:100;
 } */
+
+/* FIRST BAR CHART */
+
+.container {
+    display: grid;
+    /* grid-template-columns: 15vw 15vw 15vw 15vw; */
+    grid-template-columns: repeat(auto-fit, 15vw);
+    grid-template-rows: 80vh; 
+    grid-column-gap: 5vw;
+    /* align-items: center; */
+    /* justify-items: center;  */
+  }
+
+  .centeredCont {
+    justify-content: center;
+    align-items: center;
+    justify-items: center;
+    text-align: center;
+    /* display: flex;
+    text-anchor: middle; */
+    }
+  
+
+  /* .freqBars {
+    width: 100%;
+    margin: 0 auto;
+  } */
+
+  .movingHeadline{
+    font-size: 20px;
+    font-family: sans-serif
+}
+
+.barChart {
+    /* font-size: 13px;
+    font-family: Helvetica; */
+    /* fill:cyan; */
+    text-anchor: start;
+    text-align:left;
+
+}
+
+.yAxis text {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    text-anchor: end;
+    fill: silver;
+    font-weight: bold;
+    }
+    
+
+    span{
+        color: silver;
+        font-family: sans-serif
+    }

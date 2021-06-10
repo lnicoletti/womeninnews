@@ -7,7 +7,7 @@ body {
   .container {
       display: grid;
       grid-template-columns: 20vw 20vw 20vw 20vw;
-      grid-template-rows: 10vh; 
+      grid-template-rows: 50vh; 
       grid-column-gap: 5vw;
     }
 
@@ -84,7 +84,8 @@ body {
       fill:silver;
       text-anchor: start;
       text-align:left;
-      opacity:0.9
+      opacity:0.9;
+      font-weight: 800;
   }
   
   .barChart {
@@ -95,7 +96,6 @@ body {
     text-align:left;
 
 }
-
 
 
   .xAxis line, .yAxis line{
