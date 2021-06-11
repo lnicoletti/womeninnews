@@ -319,7 +319,7 @@
             // margin = ({top: 150, bottom: 20, left: 200, right: 200})
             visWidth = 1200 - margin.left - margin.right
             visHeight = 10000 - margin.top - margin.bottom
-            stickyAxisHeight = 250
+            stickyAxisHeight = 200
             // colors
             mainColor = "cyan" //"red"
             lineThickness = 2.5
@@ -349,7 +349,7 @@
             categories = ["0", "1", "2", "3", "4"]
             dateRange = [new Date(2010, 0).getTime(), new Date(2021, 0).getTime()];
 
-            eventsWorld = [
+        eventsWorld = [
                 {uid: 1, 
                  name: "Horrifying gang rape and murder in New Delhi, India", 
                  category: 4, 
@@ -590,19 +590,21 @@
          ]
          
             words = dataset.filter(d=>(d.year>filter[0])&&(d.year<filter[1])&&(d.country===country))
-
+            console.log("words")
+            console.log(words)
             words = words.map(d=> {
                 return {
                     year: d.year,
                     frequency: d[variable],
-                    word: d.word
+                    word: d.word,
+                    word_type: d.word_type
                 }
             })
 
             freqByWord = d3.rollup(
                 words,
                 g => g.map(({ year, frequency}) => ({date: new Date(year, 0, 1), frequency})),
-                d => d.word,
+                d => d.word
                 // e => e.frequency//words.filter(c=>(c.word>d.word)&&(c.year==filter[1]))['frequency'],
 
             )
@@ -618,6 +620,8 @@
                 col,
                 })
             )
+            console.log("test")
+            console.log(data)
 
             // same x-scale for all charts
             minDate = data[0].rates[0].date
