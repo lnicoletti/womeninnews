@@ -312,7 +312,7 @@
             stickyAxisHeight = 250
             // colors
             mainColor = "cyan" //"red"
-            lineThickness = 3
+            lineThickness = 2.5
             // structure of plots
             cols = 1
             rows = 200/cols
