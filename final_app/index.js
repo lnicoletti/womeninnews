@@ -131,36 +131,17 @@
             
             // 3) bubble chart
             drawBubbleChart(headlinesSite)
-            // render second and third chart on scroll (to avoid overloading at the beginning)
-            var fired = 0;
-            // $(window).scroll(function(){
-            //     // detect if the element is scrolled into view
-            //     function elementScrolled(elem)
-            //     {
-            //       var docViewTop = $(window).scrollTop();
-            //       var docViewBottom = docViewTop + $(window).height();
-            //       var elemTop = $(elem).offset().top;
-            //       return ((elemTop <= docViewBottom) && (elemTop >= docViewTop));
-            //     }
-            //     // detect if "#clusterChart" is scrolled into view, and when it is run the remaining functions to render charts
-            //     if(elementScrolled('#clusterChart')&&(fired == 0)) {
-            //     // draw the second chart
-            //     drawWordClusters(countriesCls)
-            //     // draw the networks and bars of the final chart
-            //     drawNetwork(UK_data, "div#my_network", "United Kingdom", "#chart1", "chart1")
-            //     drawBars(countries_data, "#chart1", "UK", 20, "United Kingdom", "chart1")  
-            //     drawNetwork(USA_data, "div#my_network2", "United States", "#chart2", "chart2")  
-            //     drawBars(countries_data, "#chart2", "USA", 20, "United States", "chart2")   
-            //     drawNetwork(IN_data, "div#my_network3", "India", "#chart3", "chart3") 
-            //     drawBars(countries_data, "div#chart3", "India", 20, "India", "chart3")   
-            //     drawNetwork(SA_data, "div#my_network4", "South Africa", "#chart4", "chart4") 
-            //     drawBars(countries_data, "#chart4", "South Africa", 20, "South Africa", "chart4")
-            //     fired = 1;
-            //     }   
-
-            //   });
 
         })
+
+        // Sticky timeline enabled only during temporal chart
+        $(window).scroll(function() {
+            if ($(this).scrollTop() - $('#bubbleSection').position().top > -700){
+                $('#stickyXaxis').css({'position': 'static', 'top': '0px'}); 
+            }else{
+                $('#stickyXaxis').css({'position': 'sticky', 'top': '0px'}); 
+            }
+        });
 
         // Text transition
         var TxtRotate = function(el, toRotate, period) {
@@ -272,13 +253,13 @@
             var svg = d3.select(chart)
             .append("svg")
             .attr("preserveAspectRatio", "xMinYMin meet")
-            .attr("viewBox", "0 0 "+ width +"," + height + margin.top+"")
-            //.attr("width", width + margin.left + margin.right)
-            //.attr("height", height + margin.top + margin.bottom)
+            .attr("viewBox", "0 0 "+ width +"," + (height + margin.top)+"")
+            .attr("class", "svgBars")
+            // .attr("width", width + margin.left + margin.right)
+            // .attr("height", height + margin.top + margin.bottom)
             .append("g")
             .attr("transform",
                 "translate(" + margin.left + "," + margin.top + ")")
-            .attr("id", "wordBars");
         
             // Add X axis
             var x = d3.scaleLinear()
@@ -325,6 +306,7 @@
             // dimensions
             // margin = ({top: 400, bottom: 20, left: 40, right: 40})
             margin = ({top: 150, bottom: 20, left: 40, right: 40})
+            // margin = ({top: 150, bottom: 20, left: 200, right: 200})
             visWidth = 1200 - margin.left - margin.right
             visHeight = 10000 - margin.top - margin.bottom
             stickyAxisHeight = 250
@@ -661,11 +643,11 @@
                 })
             )
 
-            console.log(words)
-            console.log(freqByWord)
-            console.log(data)
-            console.log(minDate, maxDate)
-            console.log(wordToScaleAndArea)
+            // console.log(words)
+            // console.log(freqByWord)
+            // console.log(data)
+            // console.log(minDate, maxDate)
+            // console.log(wordToScaleAndArea)
 
             // draw the chart
             // create and select an svg element that is the size of the bars plus margins 
@@ -676,7 +658,7 @@
                 .attr('height', visHeight + margin.top + margin.bottom);
                 
                 // .attr("preserveAspectRatio", "xMinYMin meet")
-                // .attr("viewBox", "0 0 "+ visWidth + margin.left + margin.right +"," + visHeight + margin.top + margin.bottom+"")
+                // .attr("viewBox", "0 0 "+ (visWidth + margin.left + margin.right) +"," + (visHeight + margin.top + margin.bottom) +"")
             
             // Gradient definition (not ideal, using HTML). TODO: refactor
             // svg.append('defs')
@@ -769,6 +751,8 @@
                 .attr('transform', `translate(${margin.left}, 0)`)
                 .attr('width', visWidth + margin.left + margin.right)
                 .attr('height', stickyAxisHeight)
+                // .attr("preserveAspectRatio", "xMinYMin meet")
+                // .attr("viewBox", "0 0 "+ (visWidth + margin.left + margin.right) +"," + (stickyAxisHeight) +"")
                 .attr("class", "stickyAxis");
 
             // g.append("g")
@@ -1061,8 +1045,8 @@
             let x = coords[0]-120;
             let y = coords[1]-200;
 
-            console.log(c)
-            console.log(data)
+            // console.log(c)
+            // console.log(data)
             // remove previous text: 
             tooltipHeadline.selectAll("#tooltipText").remove()
             // create box
@@ -1081,11 +1065,11 @@
             data = c.bias>0.5?data.filter(d=>(d.site === text1)&(d.bias > 0.5)):
                      data.filter(d=>(d.site === text1)&(d.bias < 0.5))
 
-            console.log(data)
+            // console.log(data)
 
             // find a random headline
             randHeadline = Math.floor(Math.random() * data.length)
-            console.log(data[randHeadline].headline_no_site)
+            // console.log(d3.timeFormat("%d/%m/%Y")(new Date(data[randHeadline].time)))
             // console.log(data[randHeadline].subtitle)
 
             // tooltip dimensions
@@ -1112,7 +1096,8 @@
                 .attr("font-size", "11px")
                 // .attr("font-weight", "bold")
                 .attr("fill", "rgb(196, 195, 195)")
-                .html('"' + data[randHeadline].subtitle + '..."')
+                .html(d3.timeFormat("%d/%m/%Y")(new Date(data[randHeadline].time)))
+                // .html('"' + data[randHeadline].subtitle + '..."')
                 .call(wrap, 300)
 
             tooltipHeadline.append("text")
@@ -1269,7 +1254,7 @@
                 .attr("id", "hoverGuide")
                 // .attr("transform", "rotate(-90)")
                 .attr("y", bodyheight5/4)
-                .attr("x",bodywidth5/1.7)
+                .attr("x",bodywidth5/1.5)
                 .attr("dy", "1em")
                 .attr("font-size", "17px")
                 .style("text-anchor", "start")
@@ -1278,11 +1263,11 @@
                 .style("font-weight", "bold")  
                 .style("font-family", "sans-serif")
 
-        // line y coordinate
+        // line coordinates
         wp = +data.filter(d=>d.site==="telegraph.co.uk")[0].bias+0.01
         bubbleChart.append("line")
             .attr("y1", bodyheight5/3.2)
-            .attr("x1",bodywidth5/1.3)
+            .attr("x1",bodywidth5/1.2)
             .attr("x2", xScale(wp))
             .attr("y2", bodyheight5/1.85)
             .attr("stroke-width", 1)
@@ -1317,9 +1302,9 @@
                 .style("font-family", "sans-serif")
 
         // create the dataset for the bubble legend
-        legendData = [{level: "", radius: radius(10000000), y: bodyheight5+70, x: bodywidth5/2.2, anchor:"end", xtext: bodywidth5/2.235, ytext: bodyheight5+53,id: ""}, 
-        {level: "", radius: radius(100000000), y: bodyheight5+70, x: bodywidth5/2.1,id: ""}, 
-        {level: "1B Monthly Viewers", radius: radius(1000000000), y: bodyheight5+70, x: bodywidth5/1.9, anchor:"middle", xtext: bodywidth5/1.9, ytext: bodyheight5+41,id: ""},
+        legendData = [{level: "", radius: radius(10000000), y: bodyheight5+75, x: bodywidth5/2.2, anchor:"end", xtext: bodywidth5/2.235, ytext: bodyheight5+53,id: ""}, 
+        {level: "", radius: radius(100000000), y: bodyheight5+75, x: bodywidth5/2.05,id: ""}, 
+        {level: "1B Monthly Viewers", radius: radius(1000000000), y: bodyheight5+75, x: bodywidth5/1.85, anchor:"middle", xtext: bodywidth5/1.85, ytext: bodyheight5+46,id: ""},
         {level: "?", radius: radius(30000000), y: bodyheight5*1.08+11, x: bodywidth5+15, anchor:"middle", xtext: bodywidth5+15, ytext: bodyheight5*1.08+16,id: "info"}]
 
         // make the bubble legend and initialize the tooltip for methodology info if they hover on the "#info" circle
@@ -1330,7 +1315,8 @@
                 .attr("cx", d => d.x)
                 .attr("cy", d => d.y)
                 .attr("r", d => d.radius)
-                .attr("fill","#161616")
+                // .attr("fill","#161616")
+                .attr("fill","none")
                 .attr("stroke","lightgrey")
                 .on("mouseover", (event, d)=>d.id==="info" ? tooltipInfo(event.clientX-150, event.clientY-420):"")
                 .on("mouseleave", (event, d)=>d3.select("#tooltipInfo").style("visibility", "hidden"))
@@ -1480,6 +1466,7 @@
                 })
 
         }
+
 
 
 

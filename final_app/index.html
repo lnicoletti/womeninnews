@@ -49,7 +49,7 @@
         </div>
     <div class="barLegend" style="text-align: center; align-items:center">
         <svg width="185" height="65" style="text-align: center;" id="barLegend">
-            <rect width="185" height="15" style="fill:#aaa;stroke:none" />
+            <rect width="185" height="20" style="fill:#aaa;stroke:none" />
         </svg>
     </div>
     <div class="centeredCont">
@@ -81,7 +81,7 @@
       <div id="smChart" class="svg-container3" style="text-align: center;"></div>
     </div>
     <!-- 3 BIAS BUBBLE CHART -->
-    <div class="header">
+    <div class="header" id="bubbleSection">
     <h1 style = "text-align: center" class="sectionHeader">Innocent outlets? The influence of news platforms in reinforcing gender biases</h1>
     </div>
     <div class="subtitle">
@@ -117,60 +117,8 @@
         <g class="body" />
     </svg>
     </div>
-    <div class="header">
-    <h1 style = "text-align: center" class="sectionHeader">Across 4 continents, women make the news 
-        <span style="color:#F52D4F">most often</span> when we talk about <b>violence</b> or <b>women stereotypes</b></h1>
-    </div>
-    <div class="subtitle">
-        <p class="description">The chart below shows the words used by news outlets to talk about women in <b>India</b>, <b>South Africa</b>,
-                the <b>United Kingdom</b>, and the <b>United States</b>. The words are split into four categories: <b>Empowerment</b>, <b>Women Stereotypes</b>, 
-                <b>Violence</b>, and <b>Male Dominance</b>. Each bubble represents a word. The size of the bubble indicates the frequency in which a word
-                has been used.<br><br>
-                Groups of words make up clusters. Clusters composed of more bubbles indicate more words used for a specific 
-                category. The color intensity of the clusters reflects the prevalence of each theme in each country's 
-                news, from <b><span style="color:lightgray">least prevalent</span></b> to <b><span style="color:#F52D4F">most prevalent</span></b>.
-                Prevalence is the proportion of a categorical group of words over the total number of words used in analyzed headlines. 
-    </div>
-    <div id="legendDiv" width="200" height="300" style="text-align: center;">
-    </div>
-    <div id="clusterChart" class="svg-container2" style="text-align: center;">
-        <svg id="bubbleClusters">
-            <g class="xAxis" />
-            <g class="yAxis" />
-            <g class="body" />
-        </svg>
-    </div>
     <svg id="tooltipHeadline"></svg>
-    <div id="tooltipCluster"></div>
     <div id="tooltipInfo"></div>
-    <div class="header">
-    <h1 style = "text-align: center" class="sectionHeader">Language matters: the words we choose to sensationalize women</h1>
-    </div>
-      <div class="subtitle">
-        <p class="description">The charts below show the words used by news outlets to talk about women in <b>India</b>, <b>South Africa</b>,
-                the <b>United Kingdom</b>, and the <b>United States</b>. On the left side, the most frequent words for each country are shown. The length of each bar indicates the number of headlines
-                that were found to contain a specific word.</p>
-      </div>
-    <div class="subtitle">
-      <p class="description">On the right side, the associations between words across headlines is visualized in the form of a network. A word association is an instance
-        of two words in the same sentence. In the networks, each node represents a word and each link represents a connection between two words.
-        The thickness of each link represents the number of times any two words are found together in the same headline. Nodes and their associated text are sized by 
-        frequency of occurrence.</br></br>
-        In both the bar charts and the networks, bars, nodes, words and links are colored according to 6 categories: <b><span style="color:#ccad34">Empowerment</span></b>, 
-        <b><span style="color:pink">Women Stereotypes</span></b>, <b><span style="color:red">Violence</b></span>, <b><span style="color:turquoise">Male Dominance</b></span>,
-        <b><span style="color:#964B00">Race</b></span>, and <b><span style="color:green">Politics</b></span>.</br></br>
-        Hover over a word in the network to explore the word associations of a specific word!</p>
-    </div>
-    <div class="netbars">
-      <div id="chart1" class="svg-container3" style="text-align: center;"> </div>
-      <div id="my_network" class="svg-container3" style="text-align: center;"></div>
-      <div id="chart2" class="svg-container3" style="text-align: center;"> </div>
-      <div id="my_network2" class="svg-container3" style="text-align: center;"></div>
-      <div id="chart3" class="svg-container3" style="text-align: center;"> </div>
-      <div id="my_network3" class="svg-container3" style="text-align: center;"></div>
-      <div id="chart4" class="svg-container3" style="text-align: center;"> </div>
-      <div id="my_network4" class="svg-container3" style="text-align: center;"></div>
-    </div>
 </body>
 <script src="https://d3js.org/d3.v6.min.js"></script>
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.10.0/d3.js" integrity="sha512-DyoWbEfs+NLId7Ocar5ViC9tUvCns1vA3y4hwGylwZ6t1Xi7zf2OKWYEf2O/ZzycZcVEuXc4Gxxb6cwY15niHg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->

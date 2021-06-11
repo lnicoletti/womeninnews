@@ -385,30 +385,48 @@ left: 0;
 
 /* FIRST BAR CHART */
 
-.container {
+/* .container {
     display: grid;
+    grid-template-columns: repeat(auto-fit, 17vw);
+    grid-template-rows: 70vh; 
+    grid-column-gap: 2vw;
+    transform: translateX(12vw)
+  } */
     /* grid-template-columns: 15vw 15vw 15vw 15vw; */
-    grid-template-columns: repeat(auto-fit, 15vw);
-    grid-template-rows: 80vh; 
-    grid-column-gap: 5vw;
+    /* grid-template-columns: repeat(auto-fit, 17vw); */
+    /* align-items: center; */
+    /* justify-items: center;  */
+
+  .container {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction:row;
+    justify-content: center;
+    /* flex-direction: row; */
+    /* grid-template-columns: 15vw 15vw 15vw 15vw; */
+    /* grid-template-columns: repeat(auto-fit, 17vw); */
+    /* grid-template-columns: repeat(auto-fit, 17vw);
+    grid-template-rows: 70vh; 
+    grid-column-gap: 2vw;
+    transform: translateX(12vw) */
     /* align-items: center; */
     /* justify-items: center;  */
   }
 
-  .centeredCont {
+  /* .centeredCont {
     justify-content: center;
     align-items: center;
     justify-items: center;
     text-align: center;
-    /* display: flex;
-    text-anchor: middle; */
-    }
+
+    } */
   
 
-  /* .freqBars {
-    width: 100%;
-    margin: 0 auto;
-  } */
+  .freqBars {
+    width: 16vw;
+    height:35vw
+    /* margin: 0 auto; */
+  }
 
   .movingHeadline{
     font-size: 20px;
@@ -430,10 +448,10 @@ left: 0;
     text-anchor: end;
     fill: silver;
     font-weight: bold;
-    }
+}
     
 
-    span{
-        color: silver;
-        font-family: sans-serif
-    }
+span{
+    color: silver;
+    font-family: sans-serif
+}
