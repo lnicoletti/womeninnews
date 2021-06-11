@@ -434,6 +434,10 @@ left: 0;
     font-family: sans-serif
 }
 
+#hlAnimation {
+    height: 5vw
+}
+
 .barChart {
     /* font-size: 13px;
     font-family: Helvetica; */

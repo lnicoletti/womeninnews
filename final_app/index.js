@@ -249,6 +249,9 @@
             //width = width/1.5,
             //height = height;
             // barpad = 20
+
+            flags = [{country:"South Africa", flag:"flags/south-africa.svg"}, {country:"USA", flag:"flags/united-states.svg"}, 
+                     {country:"India", flag:"flags/india.svg"}, {country:"UK", flag:"flags/united-kingdom.svg"}]
         
             var svg = d3.select(chart)
             .append("svg")
@@ -292,12 +295,19 @@
         
             // change name of country for bar chart
             // TODO: Fix this
-            svg.append("text")
-                .attr("x", 0)             
-                .attr("dy", -10)
-                .attr("class", "barLegendText") 
-                .text(selected_country);
-        
+            // svg.append("text")
+            //     .attr("x", 0)             
+            //     .attr("dy", -10)
+            //     .attr("class", "barLegendText") 
+            //     .text(selected_country);
+
+            svg.append("svg:image")
+            .attr('width', "40px")
+            .attr("x", 0) 
+            .attr("y", 0)            
+            .attr("transform", "translate(0, -40)")
+            .attr("xlink:href", flags.filter(c=>c.country===selected_country)[0]['flag'])
+
         }
 
         // TEMPORAL CHART
