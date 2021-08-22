@@ -1,6 +1,6 @@
 /* CSS Styles */
 body {
-    background-color: #161616;
+    background-color: #FEFAF1;
 }
 .padded-dropcap {
     padding-left: 10px;
@@ -13,22 +13,23 @@ body {
     margin-right: 2px;
     font-size: 100px;
     font-family: Georgia;
+    color: #282828;
   }
 
   #hoverGuide {
     font-size: 17px;
-    fill: silver;
+    fill:#282828;
     font-weight: bold; 
     font-family: sans-serif;
   }
 
   #hoverGuideLine {
-    stroke: silver;
-    stroke-width: 0.8px;
-}
+      stroke: #282828;
+      stroke-width: 0.8px;
+  }
   
 #tooltipText {
-    /* border: solid 1px #ccc;
+    /* border: solid 1px #282828;
     top: 10px;
     left: 0px;
     padding: 5px; */
@@ -38,11 +39,11 @@ body {
     display: block;
     /* background-color: none; */
     /* fill:rgb(196, 195, 195);            */
-    /* color:#ccc;            */
+    /* color:#282828;            */
 }
 
 #tooltipHeadline {
-    /* border: solid 1px #ccc; */
+    /* border: solid 1px #282828; */
     top: 10px;
     left: 0px;
     padding: 5px;
@@ -51,7 +52,7 @@ body {
     /* opacity:0; */
     /* hide it for when theres no hovering */
     /* display:none; */
-    background-color: #161616;
+    background-color: #FEFAF1;
 }
 
 
@@ -68,9 +69,11 @@ fill: silver;
 }
 
 .forceCircles {
-    fill: white;
+    fill: #FEFAF1;
     opacity: 0.8;
-    stroke: #161616
+    stroke: #282828;
+    stroke-width: 0.8px;
+    /* stroke: #FEFAF1 */
 }
 
 .themesText {
@@ -78,7 +81,7 @@ fill: silver;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 14px;
     text-anchor: middle;
-    fill: silver;
+    fill: #282828;
     }
 
 /* .forceLogo {
@@ -112,7 +115,7 @@ font-family: Arial, Helvetica, sans-serif;
 
 .xAxisLabel {
     font-size: 17px;
-    fill: silver;
+    fill: #282828;
     font-weight: bold;
     font-family: sans-serif
 
@@ -128,20 +131,21 @@ h1 {
     font-family: Georgia;
     /* font-size: x-large; */
     font-style: bold;
-    color: #ccc
+    color: #282828
     }
 
 .title {
     margin-top: 80px;
     margin-bottom: 50px;
     font-weight:900;
-    font-size:85px;
-    max-width: 750px;
+    font-size:100px;
+    max-width: 1100px;
     text-align: center;
     font-family: Georgia;
     /* font-size: x-large; */
     font-style: bold;
-    color: #ccc
+    text-transform: uppercase;
+    color: #282828
 }
 
 .subTitle {
@@ -154,7 +158,7 @@ h1 {
 }
 
 .creditLink{
-    color: #ccc
+    color: #282828
 }
 
 .credits {
@@ -163,7 +167,7 @@ h1 {
     opacity: 0.8;
     margin-bottom: 50px;
     font-family: Arial, Helvetica, sans-serif;
-    color: #ccc
+    color: #282828
 }
 
 .sectionHeader {
@@ -171,7 +175,7 @@ h1 {
     font-family: Arial, Helvetica, sans-serif;
     /* font-size: x-large; */
     font-style: bold;
-    color: #ccc;
+    color: #282828;
     max-width: 700;
     text-anchor: middle;
     justify-content:left;
@@ -182,7 +186,7 @@ h2 {
     font-family: Georgia;
     /* font-size: x-large; */
     font-style: bold;
-    color: #ccc
+    color: #282828
     }
 
 h4 {
@@ -190,7 +194,7 @@ h4 {
 font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 font-size: x-large;
 font-style: bold;
-color: #ccc
+color: #282828
 }
 
 h5 {
@@ -201,14 +205,14 @@ font-size:medium;
 font-weight: 600;
 text-align: center;
 margin-bottom: 0;
-color: #ccc
+color: #282828
 }
 
 .description {
 max-width: 45vw;
 text-align: justify;
 text-anchor: middle;
-color: rgb(167, 167, 167);
+color: #282828;
 /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
 font-family: Georgia, 'Times New Roman', Times, serif;
 font-size: 18px;
@@ -241,8 +245,8 @@ display: flex;
 
 button {
 border-color: lightgray;
-background-color: #161616;
-color: #ccc;
+background-color: #FEFAF1;
+color: #282828;
 font-weight: bold;
 border-style:solid;
 border-width: 1;
@@ -255,6 +259,8 @@ text-decoration: none;
 font-size: 20px;
 font-family: Georgia, 'Times New Roman', Times, serif;
 }
+
+
 
 #wordFreq {
     margin-top: 0;
@@ -281,13 +287,13 @@ text-align: center;
 
 .legend circle {
 fill: none;
-stroke: #ccc;
+stroke: #282828;
 }
 
 .legendBubble {
     fill: none;
-    stroke: lightgray;
-    /* stroke-width: 0.8; */
+    stroke: #282828;
+    stroke-width: 0.8;
     }
 
 .legend text {
@@ -327,7 +333,7 @@ left: 0;
 }
 
 #tooltipCluster {
-    border: solid 1px #ccc;
+    border: solid 1px #282828;
     padding: 10px;
     /* change the tooltip so that its position can be moved around */
     position: fixed;
@@ -338,7 +344,7 @@ left: 0;
 }
 
 #tooltipInfo {
-    border: solid 1px #ccc;
+    border: solid 1px #282828;
     /* visibility:hidden; */
     padding: 10px;
     max-width: 180px;
@@ -347,9 +353,9 @@ left: 0;
     position: fixed;
     /* hide it for when theres no hovering */
     display: block;
-    color:silver; 
+    color: #282828; 
     /* background-color: white; */
-    background-color: #161616;           
+    background-color: #FEFAF1;           
 }
 
 .clusterLegend {
@@ -401,9 +407,9 @@ left: 0;
     position: sticky;
     top: 0;
     background-color: #FEFAF1;
-    fill: grey;
-    color: grey;
-    stroke-width: 2;
+    fill: #282828;
+    color: #282828;
+    stroke-width: 1;
     font-weight: 800;
     font-size: 12
     /* z-index:0; */
@@ -411,7 +417,7 @@ left: 0;
 
 .wordText {
     text-anchor: end;
-    fill: grey;
+    fill: #282828;
     font-weight: 800;
     font-size: 12;
     font-family: sans-serif;
@@ -513,7 +519,7 @@ span{
 .inputTitle {
     font-family: Arial, Helvetica, sans-serif;
     font-size:14px;
-    color: lightgray;
+    color: #282828;
   }
 
   .methodDescription {
@@ -528,7 +534,7 @@ span{
     max-width: 45vw;
     text-align: justify;
     text-anchor: middle;
-    color: lightgray;
+    color: #282828;
     /* color: rgb(167, 167, 167); */
     /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
 }
@@ -543,7 +549,7 @@ span{
 }
 
 .intextLink{
-    color: white;
+    color: blue;
     font-weight:500;
     text-decoration: underline;
   }

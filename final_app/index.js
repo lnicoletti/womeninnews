@@ -321,8 +321,8 @@
             visHeight = 10000 - margin.top - margin.bottom
             stickyAxisHeight = 200
             // colors
-            mainColor = "cyan" //"red"
-            lineThickness = 2.5
+            mainColor = "#3569DC" //"red" //"cyan"
+            lineThickness = 1.5 //2.5
             // structure of plots
             cols = 1
             rows = 200/cols
@@ -700,11 +700,11 @@
             
             linearGradient.append("stop")
                 .attr("offset", "90%")
-                .attr("stop-color", "#202020");
+                .attr("stop-color", "#FEFAF1");//#202020
 
             linearGradient.append("stop")
                 .attr("offset", "100%")
-                .attr("stop-color", "#161616")
+                .attr("stop-color", "#FEFAF1") //#161616
                 // .attr("opacity", 0.1);
 
             // append a group element and move it left and down to create space
@@ -726,6 +726,7 @@
                 .attr('d', d => wordToScaleAndArea[d.word].area(d.rates))
                 // .attr('fill', "url(#Gradient2)")
                 .attr('fill', "url(#linear-gradient)")
+                // .attr('fill', mainColor)
                 .attr('opacity', 0.5)
                 .attr("class", "wordArea")
                 .attr("id", d=> 'area'+ d.word)
@@ -736,6 +737,7 @@
             cells.append('path')
                 // .attr('stroke', 'black')
                 .style("stroke", "url(#linear-gradient)")
+                // .style("stroke", mainColor) // .style("stroke", "url(#linear-gradient)")
                 .attr('stroke-width', lineThickness)
                 .attr('fill', 'none')
                 .attr("class", "wordLine")
@@ -747,18 +749,14 @@
             // append the x axis once on top of the chart
 
             const xaxis = d3.axisBottom(x)
-                    .ticks(7)
-                    .tickSizeOuter(20)
-                    .tickSizeInner(7)
-                    .tickPadding(20)
-                    .tickFormat((d, i) => i == 0 || i == 9 ? d3.timeFormat('%Y')(new Date(d)):
-                                        //   i == 5 ? "Caitlyn Jenner comes out":
-                                        //   i == 6 ? "Trump: 'Grab her by the pussy'":
-                                        //   i == 7 ? "#MeToo":
-                                        //   i == 8 ? "People v. Turner":
-                                        //   i == 9 ? "Greta":
-                                        //   i == 9 ? "#SayHerName":                                  
-                                        "");//.tickFormat(d3.format(".0s"))
+                    .ticks(10)
+                    .tickSizeOuter(0)
+                    .tickSizeInner(0)
+                    .tickPadding(30)
+                    .tickFormat((d, i) => i == 0 || i == 3 || i == 6 || i == 9 || i == 11 ? d3.timeFormat('%Y')(new Date(d)):                                
+                                        "");
+                                        
+                                        //.tickFormat(d3.format(".0s"))
 
             const stickyAxis = d3.select("div#stickyXaxis").append("svg")
                 // .attr('transform', `translate(${margin.left}, ${margin.top})`)
@@ -778,11 +776,12 @@
                     .call(g=>g.selectAll(".tick")
                     // .attr("color", (d, i) => i == 0 || i == 9 ? "grey": "none")
                     // .attr("opacity", (d, i) => i == 0 ||  i == 9 ? 1: 0)
-                    .attr("color", "grey")
-                    .attr('stroke-width', 2)
-                    .attr("font-weight", 800)
-                    .attr("font-size", 12))
-                    .call(g => g.select('.domain').attr("color", "grey").attr('stroke-width', 2))
+                    // .attr("color", "grey")
+                    // .attr('stroke-width', 2)
+                    // .attr("font-weight", 800)
+                    // .attr("font-size", 12)
+                    )
+                    .call(g => g.select('.domain').attr('stroke-width', 2).attr("color", "#282828"))//.attr("color", "grey")
                     // .call(g => g.select('.domain').remove())
 
             // circles for timeline
@@ -871,11 +870,6 @@
                 // .attr("text-anchor", "middle")
                 .attr("x", -10)
                 .attr("y", row.bandwidth())
-                .attr("text-anchor", "end")
-                .attr("fill", "grey")
-                .attr("font-weight", 800)
-                .style("font-size", 12)
-                .style("font-family", "sans-serif")
                 .attr("class", "wordText")
                 .attr("id", d=> 'text'+ d.word) 
                 .text(d.word)
@@ -1196,9 +1190,9 @@
                         newCircles = circles.enter()
                             .append('circle')
                             .attr("class", "forceCircles")
-                            .attr("fill", "white")
-                            .attr("opacity", "0.8")
-                            .style('stroke', "#161616")
+                            // .attr("fill", "white")
+                            // .attr("opacity", "0.8")
+                            // .style('stroke', "#161616")
                             .attr('r', d=>radius(+d.monthly_visits))
                             .on("mouseenter", (event, d) => {
                                 showTooltipHeadline(ttip, d.site, d.country_of_pub, d.monthly_visits, [event.clientX, event.clientY], headlines, d.polarity, d)
@@ -1270,12 +1264,13 @@
                 .attr("y", bodyheight5/4)
                 .attr("x",bodywidth5/1.5)
                 .attr("dy", "1em")
-                .attr("font-size", "17px")
                 .style("text-anchor", "start")
-                .style("fill", "silver")
+                // .attr("font-size", "17px")
+                // .style("fill", "silver")
+                // .style("font-weight", "bold")  
+                // .style("font-family", "sans-serif")
                 .text("Hover over a bubble to explore headlines from that outlet!")
-                .style("font-weight", "bold")  
-                .style("font-family", "sans-serif")
+                
 
         // line coordinates
         wp = +data.filter(d=>d.site==="telegraph.co.uk")[0].bias+0.01
@@ -1284,37 +1279,38 @@
             .attr("x1",bodywidth5/1.2)
             .attr("x2", xScale(wp))
             .attr("y2", bodyheight5/1.85)
-            .attr("stroke-width", 1)
             .attr("id", "hoverGuideLine")
-            .attr("stroke", 'silver')
+            // .attr("stroke-width", 1)
+            // .attr("stroke", 'silver')
 
         // label the x axis
         bubbleChart.append("text")
-                .attr("id", "xAxisLabel")
+                .attr("class", "xAxisLabel")
                 // .attr("transform", "rotate(-90)")
                 .attr("y", bodyheight5*1.08)
                 .attr("x",margin5.left+margin5.right)
                 .attr("dy", "1em")
-                .attr("font-size", "17px")
+                // .attr("font-size", "17px")
                 .style("text-anchor", "start")
-                .style("fill", "silver")
+                // .style("fill", "silver")
+                // .style("font-weight", "bold")  
+                // .style("font-family", "sans-serif")
                 .text("← Less Biased Language")
-                .style("font-weight", "bold")  
-                .style("font-family", "sans-serif")
+               
     
         bubbleChart.append("text")
-                .attr("id", "xAxisLabel")
+                .attr("class", "xAxisLabel")
                 // .attr("transform", "rotate(-90)")
                 .attr("y", bodyheight5*1.08)
                 .attr("x",bodywidth5)
                 .attr("dy", "1em")
-                .attr("font-size", "17px")
+                // .attr("font-size", "17px")
                 .style("text-anchor", "end")
-                .style("fill", "silver")
+                // .style("fill", "silver")
+                // .style("font-weight", "bold")  
+                // .style("font-family", "sans-serif")
                 .text("More Biased Language →")
-                .style("font-weight", "bold")  
-                .style("font-family", "sans-serif")
-
+                
         // create the dataset for the bubble legend
         legendData = [{level: "", radius: radius(10000000), y: bodyheight5+75, x: bodywidth5/2.2, anchor:"end", xtext: bodywidth5/2.235, ytext: bodyheight5+53,id: ""}, 
         {level: "", radius: radius(100000000), y: bodyheight5+75, x: bodywidth5/2.05,id: ""}, 
@@ -1330,8 +1326,9 @@
                 .attr("cy", d => d.y)
                 .attr("r", d => d.radius)
                 // .attr("fill","#161616")
-                .attr("fill","none")
-                .attr("stroke","lightgrey")
+                // .attr("fill","none")
+                // .attr("stroke","lightgrey")
+                .attr("class","legendBubble")
                 .on("mouseover", (event, d)=>d.id==="info" ? tooltipInfo(event.clientX-150, event.clientY-420):"")
                 .on("mouseleave", (event, d)=>d3.select("#tooltipInfo").style("visibility", "hidden"))
             
@@ -1345,7 +1342,7 @@
                 .attr("y", d => d.ytext)
                 .attr("class", "themesText")
                 .style("text-anchor", d=>d.anchor)
-                .attr("fill","lightgrey")
+                // .attr("fill","lightgrey")
                 .attr("id", "info") 
                 .call(wrap, 10)
                 .on("mouseover", (event, d)=>d.id==="info" ? tooltipInfo(event.clientX-150, event.clientY-420):"")
