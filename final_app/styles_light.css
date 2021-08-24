@@ -1,4 +1,57 @@
 /* CSS Styles */
+
+/* scrolling text at the top */
+.textscroll {
+    height: 80px;  
+    /* width: 1000%; */
+    overflow:hidden;
+    position: relative;
+    background-color:#E75C33;
+   }
+   .textscroll h1 {
+    font-size: 2em;
+    color: #282828;
+    position: absolute;
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    font-weight:500;
+    width: 100%;
+    /* height: 100%; */
+    margin: 0;
+    line-height: 50px;
+    text-align: center;
+    /* Starting position */
+    -moz-transform:translateX(100%);
+    -webkit-transform:translateX(100%);  
+    transform:translateX(100%);
+    /* Apply animation to this element */  
+    -moz-animation: textscroll 15s linear infinite;
+    -webkit-animation: textscroll 15s linear infinite;
+    animation: textscroll 15s linear infinite;
+   }
+   /* Move it (define the animation) */
+   @-moz-keyframes textscroll {
+    0%   { -moz-transform: translateX(100%); }
+    100% { -moz-transform: translateX(-100%); }
+   }
+   @-webkit-keyframes textscroll {
+    0%   { -webkit-transform: translateX(100%); }
+    100% { -webkit-transform: translateX(-100%); }
+   }
+   @keyframes textscroll {
+    0%   { 
+    -moz-transform: translateX(100%); /* Firefox bug fix */
+    -webkit-transform: translateX(100%); /* Firefox bug fix */
+    transform: translateX(100%);     
+    }
+    100% { 
+    -moz-transform: translateX(-100%); /* Firefox bug fix */
+    -webkit-transform: translateX(-100%); /* Firefox bug fix */
+    transform: translateX(-100%); 
+    }
+   }
+
+/* ---------------------- */
 body {
     background-color: #FEFAF1;
 }
@@ -26,6 +79,10 @@ body {
   #hoverGuideLine {
       stroke: #282828;
       stroke-width: 0.8px;
+  }
+
+  .txt-rotate {
+    fill: #282828;
   }
   
 #tooltipText {
@@ -135,45 +192,52 @@ h1 {
     }
 
 .title {
-    margin-top: 80px;
-    margin-bottom: 50px;
+    /* margin-top: 80px; */
+    margin-bottom: 30px;
     font-weight:900;
-    font-size:100px;
-    max-width: 1100px;
+    font-size:150px;
+    max-width: 1200px;
     text-align: center;
     font-family: Georgia;
     /* font-size: x-large; */
     font-style: bold;
     text-transform: uppercase;
-    color: #282828
+    color: #282828;
+    /* font-weight: 900; */
+    /* font-size: 200px; */
+    line-height: 39px;
 }
 
-.subTitle {
+.subTitleArt {
     font-weight:500;
     font-size:25px;
     opacity: 0.9;
     font-family: Arial, Helvetica, sans-serif;
-    margin-top: 0px;
-    margin-bottom: 0px;
+    text-transform: uppercase;
+    /* padding-left: 1000px; */
+    /* padding-right: 200px; */
+    /* margin-top: 0px;
+    margin-bottom: 0px; */
 }
 
 .creditLink{
-    color: #282828
+    color: #282828;
+    text-transform: uppercase;
 }
 
 .credits {
     font-weight:500;
     font-size:14;
     opacity: 0.8;
-    margin-bottom: 50px;
+    /* margin-bottom: 50px; */
     font-family: Arial, Helvetica, sans-serif;
-    color: #282828
+    color: #282828;
+    position:absolute;
 }
 
 .sectionHeader {
     /* text-align: left; */
     font-family: Arial, Helvetica, sans-serif;
-    /* font-size: x-large; */
     font-style: bold;
     color: #282828;
     max-width: 700;
@@ -230,6 +294,48 @@ justify-content: center;
 justify-content: center;
 display: flex;
 text-anchor: middle;
+}
+
+.titleArt {
+justify-content: center;
+display: flex;
+text-anchor: middle;
+margin-bottom: 100px;
+/* max-width: 100%; */
+/* margin-top: 100px; */
+/* border: 2px solid #282828; */
+}
+
+.titlewords {
+    border: 1.5px solid #282828;
+    /* padding-top: 0px; */
+    /* transform: translate(); */
+
+}
+
+.titlesep {
+  width: 100%;
+  /* margin-left: auto;
+  margin-right: auto; */
+  border: 0.1px solid #282828;
+  transform: translate(0,32px);
+  line-height: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.titleCredits {
+    justify-content: center;
+    /* display: flex; */
+    /* text-anchor: middle; */
+    /* text-align: center; */
+    vertical-align: middle;
+    max-width: 200px;
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-top: 160px;
+    border:1px solid #282828
+    /* margin-bottom: 100px; */
 }
 
 .dropOptions {
@@ -488,7 +594,7 @@ left: 0;
 }
 
 #hlAnimation {
-    height: 15vh
+    height: 15vh;
 }
 
 .barChart {
