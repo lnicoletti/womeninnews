@@ -641,3 +641,63 @@ span{
     font-weight:500;
     text-decoration: underline;
   }
+
+  /* Polarity Comparison bubble chart styling */
+.polarityCompyAxis text {
+    font-family: Helvetica;
+    text-align: left;
+    text-anchor: end;
+    fill: black;
+    font-size :15px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+   .grid {
+    stroke: lightgrey;
+    stroke-width: 1px;
+    
+    shape-rendering: crispEdges;
+  }
+  
+  .polarityCompBubbleLeft {
+    fill: #FEFAF1;
+    stroke: #282828;
+    stroke-width: 3px;
+    box-sizing: border-box;
+  
+  }
+  
+  .polarityCompBubbleRight {
+    fill: #53B67C;
+    stroke: #282828;
+    stroke-width: 3px;
+    box-sizing: border-box;
+    
+  }
+  
+  .polarityCompFemText {
+    fill: #53B67C;
+    font-family: Helvetica;
+    font-weight: bold;
+    font-size: 20px;
+  }
+  
+  .polarityCompAllText {
+    fill: black;
+    font-family: Helvetica;
+    font-size: 20px;
+  }
+  
+  
+  .polarityCompxAxisLabel {
+    font-size: 17px;
+    fill: #282828;
+    font-family: sans-serif
+  
+  }
+  
+  
+  .polarityCompxAxis {
+    display:none;
+  } 

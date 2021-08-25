@@ -90,6 +90,7 @@
         // d3.csv("https://raw.githubusercontent.com/lnicoletti/womeninnews/master/hosted_data/headlines_cl_sent_pol.csv"),
         d3.csv("../data/processed/headlines_cl_sent_sm_rapi.csv"),
         d3.csv("../data/processed/country_time_freqrank_rapi_clean.csv", d3.autoType),
+        d3.csv("../data/processed/polarity_comparison.csv", d3.autoType),
         // d3.csv("https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@d5a987c/hosted_data/countries_freq.csv"),
         // d3.json("https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@d5a987c/hosted_data/word_connections_UK.json"),
         // d3.json("https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@d5a987c/hosted_data/word_connections_USA.json"),
@@ -103,6 +104,7 @@
             // countriesCls = datasets[1]
             headlines = datasets[2]
             tempWords = datasets[3]
+            polComparison = datasets[4]
             // countries_data = datasets[3]
             // UK_data = datasets[4]
             // USA_data = datasets[5]
@@ -114,6 +116,8 @@
             // console.log(countriesCls) 
             // console.log(headlines) 
 
+            // 1) lollipop chart
+            renderLollipop(polComparison)
             // 1) bar charts
             drawBar(countries_data, "#chart1", "India", 15)    
             drawBar(countries_data, "#chart2", "USA", 15)   
@@ -316,6 +320,143 @@
             .attr("transform", "translate(0, -40)")
             .attr("xlink:href", flags.filter(c=>c.country===selected_country)[0]['flag'])
 
+        }
+
+        // LOLLIPOP CHART
+        function renderLollipop(data){
+
+            // set the dimensions and margins of the graph
+            var margin = {top: 10, right: 30, bottom: 30, left: 250},
+            width = 1000 - margin.left - margin.right,
+            height = 1500 - margin.top - margin.bottom;
+        
+            // append the svg object to the body of the page
+            var lollipopChart = d3.select("#lollipopChart")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform",
+                  "translate(" + margin.left + "," + margin.top + ")");
+        
+            // console.log(data)
+            //data = data.sort((a,b)=>d3.descending(+a.polarity_women, +b.polarity_women)) 
+            data = data.filter(d=>d.popularity==1)
+            // data = data.sort((a,b)=> d3.descending(+a.difference, +b.difference))
+            data = data.filter(d=> Math.abs(d.difference) > 0.05)
+            // data = data.filter(d=>d.site_clean !== "dailysun.co.za")
+        
+        
+          // Add X axis
+          var x = d3.scaleLinear()
+            .domain([-0.1,d3.max(data, d=>d.difference)+0.1])
+            // .domain(d3.extent(data, d=>d.difference))
+            .range([ 0, width-10]);
+           // .padding(0.001);
+            
+          lollipopChart.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x))
+            .attr("class", "polarityCompxAxis")
+          lollipopChart.append("text")
+            .attr("class", "polarityCompxAxisLabel")
+            .attr("y", height)
+            .attr("x",margin)
+            .attr("dy", "1em")
+            .style("text-anchor", "start")
+            .text("← Less polarizing language")
+                      
+          
+          lollipopChart.append("text")
+            .attr("class", "polarityCompxAxisLabel")
+            .attr("y", height)
+            .attr("x",width)
+            .attr("dy", "1em")
+            .style("text-anchor", "end")
+            .text("More polarizing language →")
+        
+          lollipopChart.append("text")
+            .attr("class", "xAxisLabel")
+            .attr("y", margin)
+            .attr("x",50)
+            .attr("dy", "1em")
+            .style("text-anchor", "start")
+            .text("All headlines")
+            .attr("class", "polarityCompAllText")
+                      
+          
+          lollipopChart.append("text")
+            .attr("class", "xAxisLabel")
+            .attr("y", margin)
+            .attr("x",width)
+            .attr("dy", "1em")
+            .style("text-anchor", "end")
+            .text("Headlines about women")
+            .attr("class", "polarityCompFemText")
+        
+          // Y axis
+          var y = d3.scaleBand()
+            .range([ 0, height ])
+            .domain(data.map(d=>d.site_clean))
+            // Padding from the top
+            .padding(1);
+          lollipopChart.append("g")
+            .call(d3.axisLeft(y)
+                    .tickSize(0))
+            .call(g => g.select(".domain").remove())
+            .attr("class", "polarityCompyAxis");
+        
+          // Lines  
+          
+        
+          lollipopChart.selectAll("gridLine")
+          .data(data)
+          .enter()
+          .append("line")
+            .attr("x1", 10)
+            .attr("x2", width)
+            .attr("y1", function(d) { return y(d.site_clean); })
+            .attr("y2", function(d) { return y(d.site_clean); })
+            .attr("class", "grid");
+        
+        
+          // Horizontal line between bubbles
+          lollipopChart.selectAll("myline")
+            .data(data)
+            .enter()
+            .append("line")
+              .attr("x1", function(d) { return x(d.polarity_base); })
+              .attr("x2", function(d) { return x(d.polarity_women); })
+              .attr("y1", function(d) { return y(d.site_clean); })
+              .attr("y2", function(d) { return y(d.site_clean); })
+              .attr("stroke", "black")
+              .attr("stroke-width", "1px")
+        
+        
+             // .attr("class", "polarityCompLine")
+        
+          // Circles of variable 1
+          lollipopChart.selectAll("mycircle")
+            .data(data)
+            .enter()
+            .append("circle")
+              .attr("cx", function(d) { return x(d.polarity_base); })
+              .attr("cy", function(d) { return y(d.site_clean); })
+              .attr("r", "12")
+              .attr("class", "polarityCompBubbleLeft")
+              // .style("fill", "#69b3a2")
+        
+          // Circles of variable 2
+          lollipopChart.selectAll("mycircle")
+            .data(data)
+            .enter()
+            .append("circle")
+              .attr("cx", function(d) { return x(d.polarity_women); })
+              .attr("cy", function(d) { return y(d.site_clean); })
+              .attr("class", "polarityCompBubbleRight")
+              // size of the bubble
+              .attr("r", "12")
+              // .style("fill", "#4C4082")
         }
 
         // TEMPORAL CHART
