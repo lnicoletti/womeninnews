@@ -1,0 +1,695 @@
+/* CSS Styles */
+
+/* scrolling text at the top */
+
+   /* -------- Marquee method*/
+
+   .txtscroll {
+    height: 70px;  
+    /* overflow:hidden; */
+    /* position: relative; */
+    background-color:#E75C33;
+   }
+
+   .txtscroll h1 {
+    font-size: 2em;
+    color: #282828;
+    /* position: absolute; */
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    font-style: italic;
+    font-weight: 500;
+    margin: 14;
+    /* line-height: 50px; */
+    /* text-align: left; */
+
+   }
+
+/* ---------------------- */
+body {
+    background-color: #FEFAF1;
+}
+.padded-dropcap {
+    padding-left: 10px;
+    padding-right: 10px;
+    float: left;
+    position: relative;
+    top: -0.15em;
+    margin-bottom: -0.5em;
+    margin-left: -6px;
+    margin-right: 2px;
+    font-size: 100px;
+    font-family: Georgia;
+    color: #282828;
+  }
+
+  #hoverGuide {
+    font-size: 17px;
+    fill:#282828;
+    font-weight: bold; 
+    font-family: sans-serif;
+  }
+
+  #hoverGuideLine {
+      stroke: #282828;
+      stroke-width: 0.8px;
+  }
+
+  .txt-rotate {
+    fill: #282828;
+  }
+  
+#tooltipText {
+    /* border: solid 1px #282828;
+    top: 10px;
+    left: 0px;
+    padding: 5px; */
+    /* font-size: 12px; */
+    font-family: Arial, Helvetica, sans-serif;
+    /* position: fixed; */
+    display: block;
+    /* background-color: none; */
+    /* fill:rgb(196, 195, 195);            */
+    /* color:#282828;            */
+}
+
+#tooltipHeadline {
+    /* border: solid 1px #282828; */
+    top: 10px;
+    left: 0px;
+    padding: 5px;
+    position:fixed;
+    visibility: hidden;
+    /* opacity:0; */
+    /* hide it for when theres no hovering */
+    /* display:none; */
+    background-color: #FEFAF1;
+}
+
+
+#tooltipHeadline path {
+    fill: none
+}
+
+.forceText {
+font-weight: bold;
+font-family: Arial, Helvetica, sans-serif;
+font-size: 8px;
+text-anchor: middle;
+fill: silver;
+}
+
+.forceCircles {
+    fill: #FEFAF1;
+    opacity: 0.8;
+    stroke: #282828;
+    stroke-width: 0.8px;
+    /* stroke: #FEFAF1 */
+}
+
+.themesText {
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    text-anchor: middle;
+    fill: #282828;
+    }
+
+/* .forceLogo {
+    display: ;
+    margin-left: auto;
+    margin-right: auto;
+    width: 5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    } */
+
+/* .xAxis text, .yAxis text{
+fill: silver;
+font-size: 10px;
+font-family: Arial, Helvetica, sans-serif;
+} */
+
+.xAxis line, .yAxis line{
+stroke: silver;
+}
+
+.xAxis text {
+font-family: Arial, Helvetica, sans-serif;
+}
+
+.xAxis path, .yAxis path {
+  display: none;
+}
+
+.xAxisLabel {
+    font-size: 17px;
+    fill: #282828;
+    font-weight: bold;
+    font-family: sans-serif
+
+}
+
+.axisLabel {
+font-weight: bold;
+font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+    /* text-align: left; */
+    font-family: Georgia;
+    /* font-size: x-large; */
+    font-style: bold;
+    color: #282828
+    }
+
+.title {
+    /* margin-top: 80px; */
+    margin-bottom: 30px;
+    font-weight:900;
+    font-size:150px;
+    max-width: 1200px;
+    text-align: center;
+    font-family: Georgia;
+    /* font-size: x-large; */
+    font-style: bold;
+    text-transform: uppercase;
+    color: #282828;
+    /* font-weight: 900; */
+    /* font-size: 200px; */
+    line-height: 39px;
+}
+
+.subTitleArt {
+    font-weight:500;
+    font-size:25px;
+    opacity: 0.9;
+    font-family: Helvetica;
+    text-transform: uppercase;
+    /* padding-left: 1000px; */
+    /* padding-right: 200px; */
+    /* margin-top: 0px;
+    margin-bottom: 0px; */
+}
+
+.creditLink{
+    color: #282828;
+    text-transform: uppercase;
+}
+
+.credits {
+    font-weight:500;
+    font-size:16;
+    opacity: 0.8;
+    /* margin-bottom: 50px; */
+    font-family: Arial, Helvetica, sans-serif;
+    color: #282828;
+    position:absolute;
+}
+
+.sectionHeader {
+    /* text-align: left; */
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: bold;
+    color: #282828;
+    max-width: 700;
+    text-anchor: middle;
+    justify-content:left;
+    }
+
+h2 {
+    /* text-align: left; */
+    font-family: Georgia;
+    /* font-size: x-large; */
+    font-style: bold;
+    color: #282828
+    }
+
+h4 {
+/* text-align: left; */
+font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+font-size: x-large;
+font-style: bold;
+color: #282828
+}
+
+h5 {
+/* text-align: left; */
+font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+font-size:medium;
+/* font-style:oblique; */
+font-weight: 600;
+text-align: center;
+margin-bottom: 0;
+color: #282828
+}
+
+.description {
+max-width: 45vw;
+text-align: justify;
+text-anchor: middle;
+color: #282828;
+/* font-family: Verdana, Geneva, Tahoma, sans-serif; */
+font-family: Georgia, 'Times New Roman', Times, serif;
+font-size: 18px;
+margin-bottom: 0;
+}
+
+.subtitle {
+margin-top: 0;
+margin-bottom: 10;
+display: flex;
+justify-content: center;
+}
+
+.header {
+justify-content: center;
+display: flex;
+text-anchor: middle;
+}
+
+.titleArt {
+justify-content: center;
+display: flex;
+text-anchor: middle;
+margin-bottom: 100px;
+/* max-width: 100%; */
+/* margin-top: 100px; */
+/* border: 2px solid #282828; */
+}
+
+ .titlewords {
+    /* border: 1.5px solid #282828; */
+    /* padding-top: 0px; */
+    /* transform: translate(); */
+
+} 
+
+.titlesep {
+  width: 100%;
+  /* margin-left: auto;
+  margin-right: auto; */
+  border: 0.1px solid #282828;
+  transform: translate(0,32px);
+  line-height: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.titleCredits {
+    justify-content: center;
+    /* display: flex; */
+    /* text-anchor: middle; */
+    /* text-align: center; */
+    vertical-align: middle;
+    max-width: 300px;
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-top: 190px;
+    /* border:1px solid #282828 */
+    /* margin-bottom: 100px; */
+}
+
+.dropOptions {
+font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+font-size: x-large;
+font-weight: bold;
+}
+
+.buttons {
+justify-content: center;
+display: flex;
+}
+
+button {
+border-color: lightgray;
+background-color: #FEFAF1;
+color: #282828;
+font-weight: bold;
+border-style:solid;
+border-width: 1;
+/* color: white; */
+padding: 10px 20px;
+margin-top: 5;
+text-align: center;
+text-decoration: none;
+/* display: inline-block; */
+font-size: 20px;
+font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+
+
+#wordFreq {
+    margin-top: 0;
+    margin-bottom: 100
+}
+
+button:hover {
+background-color: lightgray;
+color: #161616;
+}
+
+button:focus {
+    background-color: lightgray;
+    color: #161616;
+    }
+
+button:focus{
+font-weight: bold;
+}
+
+.search {
+text-align: center;
+}
+
+.legend circle {
+fill: none;
+stroke: #282828;
+}
+
+.legendBubble {
+    fill: none;
+    stroke: #282828;
+    stroke-width: 0.8;
+    }
+
+.legend text {
+fill: silver;
+font: 8px sans-serif;
+text-anchor: end;
+}
+
+.svg-container {
+display: inline-block;
+position: relative;
+width: 95%;
+padding-bottom: 40%;
+margin-left: 2.5%;
+margin-right: 2.5%;
+vertical-align: top;
+overflow: hidden;
+}
+
+.svg-container2 {
+    display: inline-block;
+    position: relative;
+    width: 95%;
+    padding-bottom: 50%;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    vertical-align: top;
+    overflow: hidden;
+    }
+
+.svg-content {
+display: inline-block;
+position: absolute;
+text-align: center;
+top: 50;
+left: 0;
+}
+
+#tooltipCluster {
+    border: solid 1px #282828;
+    padding: 10px;
+    /* change the tooltip so that its position can be moved around */
+    position: fixed;
+    /* hide it for when theres no hovering */
+    display: block;
+    /* background-color: white; */
+    color:#03071e;            
+}
+
+#tooltipInfo {
+    border: solid 1px #282828;
+    /* visibility:hidden; */
+    padding: 10px;
+    max-width: 180px;
+    text-align: justify;
+    /* change the tooltip so that its position can be moved around */
+    position: fixed;
+    /* hide it for when theres no hovering */
+    display: block;
+    color: #282828; 
+    /* background-color: white; */
+    background-color: #FEFAF1;           
+}
+
+.clusterLegend {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    /* width: 50%; */
+  }
+
+.netbars {
+    display: grid;
+    grid-template-columns: 27vw 65vw; 
+    grid-template-rows: 60vh 60vh 60vh 60vh;
+    column-gap: 0vw;
+    row-gap: 40vh;
+    align-items: center;
+    margin-top:30vh;
+    margin-left:4vw;
+    margin-right:4vw;
+    }
+
+.barLegend {
+    margin-top:20px;
+    padding-bottom:10px
+}
+
+/* .barLegendText {
+    font-size: 12px;
+    font-family: sans-serif;
+    fill:silver;
+    text-anchor: start;
+    text-align:center;
+    opacity:0.65
+} */
+
+.barLegendText {
+    font-size: 13px;
+    font-family: Georgia;
+    fill:silver;
+    text-anchor: start;
+    text-align:left;
+    opacity:0.9;
+    font-weight: 800;
+}
+
+/* sticky axis for wavy chart */
+#stickyXaxis {
+    /* position: -webkit-sticky; */
+    position: sticky;
+    top: 0;
+    background-color: #FEFAF1;
+    fill: #282828;
+    color: #282828;
+    stroke-width: 1;
+    font-weight: 800;
+    font-size: 12
+    /* z-index:0; */
+}
+
+.wordText {
+    text-anchor: end;
+    fill: #282828;
+    font-weight: 800;
+    font-size: 12;
+    font-family: sans-serif;
+    text-transform: uppercase
+}
+
+.timeRuler {
+    z-index:10;
+    position:fixed
+}
+
+/* .SMaxisSticky {
+    background-color: #c0c0c0;
+    position:fixed;
+    top:0;
+    width:100%;
+    z-index:100;
+} */
+
+/* FIRST BAR CHART */
+
+/* .container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 17vw);
+    grid-template-rows: 70vh; 
+    grid-column-gap: 2vw;
+    transform: translateX(12vw)
+  } */
+    /* grid-template-columns: 15vw 15vw 15vw 15vw; */
+    /* grid-template-columns: repeat(auto-fit, 17vw); */
+    /* align-items: center; */
+    /* justify-items: center;  */
+
+  .container {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction:row;
+    justify-content: center;
+    /* flex-direction: row; */
+    /* grid-template-columns: 15vw 15vw 15vw 15vw; */
+    /* grid-template-columns: repeat(auto-fit, 17vw); */
+    /* grid-template-columns: repeat(auto-fit, 17vw);
+    grid-template-rows: 70vh; 
+    grid-column-gap: 2vw;
+    transform: translateX(12vw) */
+    /* align-items: center; */
+    /* justify-items: center;  */
+  }
+
+  /* .centeredCont {
+    justify-content: center;
+    align-items: center;
+    justify-items: center;
+    text-align: center;
+
+    } */
+  
+
+  .freqBars {
+    width: 16vw;
+    height:35vw
+    /* margin: 0 auto; */
+  }
+
+  .movingHeadline{
+    font-size: 20px;
+    font-family: sans-serif
+}
+
+#hlAnimation {
+    height: 15vh;
+}
+
+.barChart {
+    /* font-size: 13px;
+    font-family: Helvetica; */
+    /* fill:cyan; */
+    text-anchor: start;
+    text-align:left;
+
+}
+
+.yAxis text {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    text-anchor: end;
+    fill: silver;
+    font-weight: bold;
+}
+    
+
+span{
+    color: silver;
+    font-family: sans-serif
+}
+
+/* method section */
+
+.inputTitle {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size:14px;
+    color: #282828;
+  }
+
+  .methodDescription {
+    /* max-width: 520px; */
+    text-align: justify;
+    text-anchor: middle;
+    /* color: rgb(167, 167, 167); */
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: small;
+    margin-bottom: 0;
+    line-height: 1.1;
+    max-width: 45vw;
+    text-align: justify;
+    text-anchor: middle;
+    color: #282828;
+    /* color: rgb(167, 167, 167); */
+    /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
+}
+
+.methodSep {
+  width: 45%;
+  margin-left: auto;
+  margin-right: auto;
+  border: 0.1px solid;
+  color:rgb(112, 112, 112)
+
+}
+
+.intextLink{
+    color: blue;
+    font-weight:500;
+    text-decoration: underline;
+  }
+
+/* Polarity Comparison bubble chart styling */
+.polarityCompyAxis text {
+  font-family: Helvetica;
+  text-align: left;
+  text-anchor: end;
+  fill: black;
+  font-size :15px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+ .grid {
+  stroke: lightgrey;
+  stroke-width: 1px;
+  
+  shape-rendering: crispEdges;
+}
+
+.polarityCompBubbleLeft {
+  fill: #FEFAF1;
+  stroke: #282828;
+  stroke-width: 3px;
+  box-sizing: border-box;
+
+}
+
+.polarityCompBubbleRight {
+  fill: #53B67C;
+  stroke: #282828;
+  stroke-width: 3px;
+  box-sizing: border-box;
+  
+}
+
+.polarityCompFemText {
+  fill: #53B67C;
+  font-family: Helvetica;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.polarityCompAllText {
+  fill: black;
+  font-family: Helvetica;
+  font-size: 20px;
+}
+
+
+.polarityCompxAxisLabel {
+  font-size: 17px;
+  fill: #282828;
+  font-family: sans-serif
+
+}
+
+
+.polarityCompxAxis {
+  display:none;
+} 
