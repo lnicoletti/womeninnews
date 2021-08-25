@@ -1,54 +1,27 @@
 /* CSS Styles */
 
 /* scrolling text at the top */
-.textscroll {
+
+   /* -------- Marquee method*/
+
+   .txtscroll {
     height: 80px;  
-    /* width: 1000%; */
-    overflow:hidden;
-    position: relative;
+    /* overflow:hidden; */
+    /* position: relative; */
     background-color:#E75C33;
    }
-   .textscroll h1 {
-    font-size: 2em;
+
+   .txtscroll h1 {
+    font-size: 3em;
     color: #282828;
-    position: absolute;
+    /* position: absolute; */
     font-family: Arial, Helvetica, sans-serif;
     text-transform: uppercase;
-    font-weight:500;
-    width: 100%;
-    /* height: 100%; */
-    margin: 0;
-    line-height: 50px;
-    text-align: center;
-    /* Starting position */
-    -moz-transform:translateX(100%);
-    -webkit-transform:translateX(100%);  
-    transform:translateX(100%);
-    /* Apply animation to this element */  
-    -moz-animation: textscroll 15s linear infinite;
-    -webkit-animation: textscroll 15s linear infinite;
-    animation: textscroll 15s linear infinite;
-   }
-   /* Move it (define the animation) */
-   @-moz-keyframes textscroll {
-    0%   { -moz-transform: translateX(100%); }
-    100% { -moz-transform: translateX(-100%); }
-   }
-   @-webkit-keyframes textscroll {
-    0%   { -webkit-transform: translateX(100%); }
-    100% { -webkit-transform: translateX(-100%); }
-   }
-   @keyframes textscroll {
-    0%   { 
-    -moz-transform: translateX(100%); /* Firefox bug fix */
-    -webkit-transform: translateX(100%); /* Firefox bug fix */
-    transform: translateX(100%);     
-    }
-    100% { 
-    -moz-transform: translateX(-100%); /* Firefox bug fix */
-    -webkit-transform: translateX(-100%); /* Firefox bug fix */
-    transform: translateX(-100%); 
-    }
+    font-weight: 500;
+    margin: 14;
+    /* line-height: 50px; */
+    /* text-align: left; */
+
    }
 
 /* ---------------------- */
