@@ -5,20 +5,21 @@
    /* -------- Marquee method*/
 
    .txtscroll {
-    height: 80px;  
+    height: 70px;  
     /* overflow:hidden; */
     /* position: relative; */
     background-color:#E75C33;
    }
 
    .txtscroll h1 {
-    font-size: 3em;
+    font-size: 2.2em;
     color: #282828;
     /* position: absolute; */
     font-family: Arial, Helvetica, sans-serif;
     text-transform: uppercase;
     font-weight: 500;
-    margin: 14;
+    margin: 16;
+    font-style: italic;
     /* line-height: 50px; */
     /* text-align: left; */
 
@@ -100,9 +101,9 @@ fill: silver;
 
 .forceCircles {
     fill: #FEFAF1;
-    opacity: 0.8;
+    opacity: 1;
     stroke: #282828;
-    stroke-width: 0.8px;
+    stroke-width: 0.6px;
     /* stroke: #FEFAF1 */
 }
 
@@ -143,7 +144,7 @@ font-family: Arial, Helvetica, sans-serif;
   display: none;
 }
 
-.xAxisLabel {
+#xAxisLabel {
     font-size: 17px;
     fill: #282828;
     font-weight: bold;
@@ -216,6 +217,7 @@ h1 {
     max-width: 700;
     text-anchor: middle;
     justify-content:left;
+    text-transform: uppercase;
     }
 
 h2 {
@@ -274,17 +276,22 @@ justify-content: center;
 display: flex;
 text-anchor: middle;
 margin-bottom: 100px;
+/* padding: 100px; */
+flex-direction: row;
+/* border: 1px red solid; */
 /* max-width: 100%; */
 /* margin-top: 100px; */
 /* border: 2px solid #282828; */
 }
 
-.titlewords {
-    border: 1.5px solid #282828;
-    /* padding-top: 0px; */
-    /* transform: translate(); */
+/* .titlewords { */
+    /* border: 1.5px solid #282828;
+    padding-top: 0px;
+    transform: translate(); */
+    /* margin-left: 0px; */
+    /* margin-right: 50px; */
 
-}
+/* } */
 
 .titlesep {
   width: 100%;
@@ -306,9 +313,11 @@ margin-bottom: 100px;
     max-width: 200px;
     padding-left: 100px;
     padding-right: 100px;
-    padding-top: 160px;
-    border:1px solid #282828
-    /* margin-bottom: 100px; */
+    padding-top: 190px;
+    /* border:1px solid #282828 */
+    /* margin-left: 50px; */
+    /* margin-right: 0px; */
+
 }
 
 .dropOptions {
@@ -628,7 +637,7 @@ span{
 }
 
 .intextLink{
-    color: blue;
+    color: #E75C33;
     font-weight:500;
     text-decoration: underline;
   }

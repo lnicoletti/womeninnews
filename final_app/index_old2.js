@@ -10,13 +10,7 @@
     maxRadius = 12;
     
     // create constants for bubble chart and cluster chart
-    let bubbleChartB = d3.select("div#chartB").select("#bubblechartBias")
-                    .attr("preserveAspectRatio", "xMinYMin meet")
-                    .attr("viewBox", "0 0 "+ width5 +"," + height5+"")
-                    .classed("svg-content", true);
-
-    // create constants for bubble chart and cluster chart
-    let bubbleChartP = d3.select("div#chartP").select("#bubblechartPolarity")
+    let bubbleChart = d3.select("div#chart").select("#bubblechart")
                     .attr("preserveAspectRatio", "xMinYMin meet")
                     .attr("viewBox", "0 0 "+ width5 +"," + height5+"")
                     .classed("svg-content", true);
@@ -135,10 +129,8 @@
                 renderTempChart(tempWords, filter_years, country, variable)
             })
             
-            // 3) bubble charts
-            drawBubbleChart(headlinesSite, bubbleChartB, "bias")
-            drawBubbleChart(headlinesSite, bubbleChartP, "polarity")
-            // drawBubbleChartB(headlinesSite, bubbleChartB)
+            // 3) bubble chart
+            drawBubbleChart(headlinesSite)
 
         })
 
@@ -1128,357 +1120,10 @@
         }
 
         // function to draw the first chart
-        function drawBubbleChart(data, chart, variable) {
+        function drawBubbleChart(data) {
             
             ttip = "bias"
-            // console.log(chart, variable)
-            // set dimensions
-            let margin5 = {left: 50, bottom: 20, right: 30, top: 110}
-            let bodywidth5 = width5 - margin5.left - margin5.right;
-            let bodyheight5 = height5 - margin5.top - margin5.bottom;
-            
-            // filter data, removing irrelevant news outlets
-            filterData = data.filter(d=>(+d.monthly_visits !== 0)&(+d[variable] !== 0))
-            filterData = filterData.filter(d=>(d.site !== "msn.com")&(d.site !== "sports.yahoo.com")&
-                                              (d.site !== "finance.yahoo.com")&(d.site !== "news.google.com")&
-                                              (d.site !== "news.yahoo.com")&(d.site !== "bbc.com")&
-                                              (d.site !== "makeuseof.com")&(d.site !== "which.co.uk")&
-                                              (d.site !== "espncricinfo.com")&(d.site !== "seekingalpha.com")&
-                                              (d.site !== "prokerala.com"))
 
-            // create chart horizontal scale
-            // var xScale = d3.scaleLinear()
-            var xScale = d3.scaleSymlog()
-                    .range([margin5.left*2+margin5.right, bodywidth5])
-                    .domain(d3.extent(filterData, d => +d[variable]))
-
-            console.log(chart, variable, d3.extent(filterData, d => +d[variable]))
-
-            // create radial scale for bubble size
-            extentvisits = d3.extent(filterData, d=>+d.monthly_visits)
-            // console.log(extentvisits)
-            // console.log(d3.extent(filterData, d=>+d.polarity))
-
-            var radius = d3.scaleSqrt()
-                                .domain(extentvisits)
-                                .range([3, 70])
-
-            // create linear scale for logo size
-            var logoScale = d3.scaleLinear()
-                                .domain(extentvisits)
-                                .range([18, 100])
-
-            // console.log(filterData)
-
-            // initialize the force simulation layout
-            let simulation = d3.forceSimulation()
-                        .nodes(filterData)
-                        .force('charge', d3.forceManyBody().strength(1))
-                        .force('x', d3.forceX().x(function(d) {
-                            return xScale(+d[variable]);
-                        }))
-                        .force("y", d3.forceY(bodyheight5/1.5).strength(0.05))
-                        .force('collide', d3.forceCollide((d)=>{ 
-                            return radius(+d.monthly_visits)}))
-                        .on('tick', function() {
-            
-                        // function for collision detection
-                        for ( i = 0; i < filterData.length; i++ ) {
-                            var node = filterData[i];
-                            node.cx = node.x;
-                            node.cy = node.y;
-                        }
-                        
-                        // define circles elements
-                        circles = chart.select(".body"+variable)
-                                        .selectAll('circle')
-                                        .data(filterData);
-
-                        // define logos elements
-                        logos = chart.select(".body"+variable)
-                                        .selectAll('image')
-                                        .data(filterData);
-                
-                        // append the circles and define style properties and hover events (tooltip)
-                        newCircles = circles.enter()
-                            .append('circle')
-                            .attr("class", "forceCircles")
-                            // .attr("fill", "white")
-                            // .attr("opacity", "0.8")
-                            // .style('stroke', "#161616")
-                            .attr('r', d=>radius(+d.monthly_visits))
-                            .on("mouseenter", (event, d) => {
-                                showTooltipHeadline(ttip, d.site, d.country_of_pub, d.monthly_visits, [event.clientX, event.clientY], headlines, d.polarity, d)
-                            })
-                            .on("mousemove", (event, d) => {
-                                showTooltipHeadline(ttip, d.site, d.country_of_pub, d.monthly_visits,  [event.clientX, event.clientY], headlines, d.polarity, d)
-                            })
-                            .on("mouseleave", (event, d) => {
-                                d3.select("#tooltipHeadline").style("display", "none")
-                            })
-                            .on("mouseover.color", function() { d3.select(this).style("stroke", "#E75C33").style("stroke-width", "2px"); })
-                            .on("mouseleave.color", function() { d3.select(this).style("stroke", "#323232").style("stroke-width", "0.6px"); })
-                            
-                        // append the logos and define style properties and hover events (tooltip)
-                        newLogos = logos.enter()
-                                .append("svg:image")
-                                .attr("class", "forceLogo")
-                                // each logo needs to be centered in the bubble (couldnt find better way of doing this)
-                                .attr("transform", d=>d.site=="bbc.co.uk" ? "translate(-50,-50)"
-                                                    : d.site=="cnn.com" | d.site=="foxnews.com" ? "translate(-30,-30)"
-                                                    : d.site=="espn.go.com" ? "translate(-34,-10)"
-                                                    : d.site=="nytimes.com" | d.site=="buzzfeed.com" ? "translate(-25,-25)"
-                                                    : d.site=="washingtonpost.com" | d.site=="huffingtonpost.com" | d.site== "usatoday.com" ? "translate(-20,-20)"
-                                                    : d.site=="dailymail.co.uk" ? "translate(-22,-18)"
-                                                    : d.site=="politico.com" | d.site=="ksl.com" | d.site=="abcnews.go.com" | d.site=="nydailynews.com" ? "translate(-12.5,-12.5)"
-                                                    : d.site=="telegraph.co.uk" ? "translate(-15,-3)"
-                                                    : d.site=="breitbart.com" ? "translate(-14,-10)"
-                                                    : d.site=="aajtak.in" ? "translate(-25,-20)"
-                                                    : d.site=="businessinsider.com" ? "translate(-14,-13)"
-                                                    : "translate(-15,-15)")
-                                .attr('width', d=>logoScale(+d.monthly_visits))
-                                .attr("xlink:href", d=>+d.monthly_visits>150000000 ? logoData.filter(x=>x.site==d.site)[0]["link"]:'')
-                                .on("mouseenter", (event, d) => {
-                                    showTooltipHeadline(ttip, d.site, d.country_of_pub, d.monthly_visits, [event.clientX, event.clientY], headlines, d.polarity, d)
-                                })
-                                .on("mousemove", (event, d) => {
-                                    showTooltipHeadline(ttip, d.site, d.country_of_pub, d.monthly_visits,  [event.clientX, event.clientY], headlines, d.polarity, d)
-                                })
-                                .on("mouseleave", (event, d) => {
-                                    d3.select("#tooltipHeadline").style("display", "none")
-                                })
-
-                        // show the circles
-                        circles.merge(newCircles)
-                            .attr('cx', function(d) {
-                                return d.x;
-                            })
-                            .attr('cy', function(d) {
-                                return d.y;
-                            })
-
-                        // show the logos
-                        logos.merge(newLogos)
-                            .attr('x', function(d) {
-                                return d.x;
-                            })
-                            .attr('y', function(d) {
-                                return d.y;
-                            })
-                        
-                        // this is not used now, but if we want to add a transition it is set up
-                        circles.exit().remove();
-                });
-                
-        // add text and line to prompt the user to hover on the bubbles
-        chart.append("text")
-                .attr("id", "hoverGuide")
-                // .attr("transform", "rotate(-90)")
-                .attr("y", bodyheight5/4)
-                .attr("x",bodywidth5/1.5)
-                .attr("dy", "1em")
-                .style("text-anchor", "start")
-                // .attr("font-size", "17px")
-                // .style("fill", "silver")
-                // .style("font-weight", "bold")  
-                // .style("font-family", "sans-serif")
-                .text("Hover over a bubble to explore headlines from that outlet!")
-                
-
-        // line coordinates
-        wp = +data.filter(d=>d.site==="telegraph.co.uk")[0].bias+0.01
-        chart.append("line")
-            .attr("y1", bodyheight5/3.2)
-            .attr("x1",bodywidth5/1.2)
-            .attr("x2", xScale(wp))
-            .attr("y2", bodyheight5/1.85)
-            .attr("id", "hoverGuideLine")
-            // .attr("stroke-width", 1)
-            // .attr("stroke", 'silver')
-
-        // label the x axis
-        chart.append("text")
-                .attr("id", "xAxisLabel")
-                // .attr("transform", "rotate(-90)")
-                .attr("y", bodyheight5*1.08)
-                .attr("x",margin5.left+margin5.right)
-                .attr("dy", "1em")
-                // .attr("font-size", "17px")
-                .style("text-anchor", "start")
-                // .style("fill", "silver")
-                // .style("font-weight", "bold")  
-                // .style("font-family", "sans-serif")
-                .text(variable==="bias"?"← Less Biased Language":"← Less Polarized Language")
-               
-    
-        chart.append("text")
-                .attr("id", "xAxisLabel")
-                // .attr("transform", "rotate(-90)")
-                .attr("y", bodyheight5*1.08)
-                .attr("x",bodywidth5)
-                .attr("dy", "1em")
-                // .attr("font-size", "17px")
-                .style("text-anchor", "end")
-                // .style("fill", "silver")
-                // .style("font-weight", "bold")  
-                // .style("font-family", "sans-serif")
-                .text(variable==="bias"?"More Biased Language →":"More Polarized Language →")
-                
-        // create the dataset for the bubble legend
-        legendData = [{level: "", radius: radius(10000000), y: bodyheight5+75, x: bodywidth5/2.2, anchor:"end", xtext: bodywidth5/2.235, ytext: bodyheight5+53,id: ""}, 
-        {level: "", radius: radius(100000000), y: bodyheight5+75, x: bodywidth5/2.05,id: ""}, 
-        {level: "1B Monthly Viewers", radius: radius(1000000000), y: bodyheight5+75, x: bodywidth5/1.85, anchor:"middle", xtext: bodywidth5/1.85, ytext: bodyheight5+46,id: ""},
-        {level: "?", radius: radius(30000000), y: bodyheight5*1.08+11, x: bodywidth5+15, anchor:"middle", xtext: bodywidth5+15, ytext: bodyheight5*1.08+16,id: "info"}]
-
-        // make the bubble legend and initialize the tooltip for methodology info if they hover on the "#info" circle
-        legend = chart.append("g")
-                .selectAll("circle")
-                .data(legendData)
-                .join('circle')
-                .attr("cx", d => d.x)
-                .attr("cy", d => d.y)
-                .attr("r", d => d.radius)
-                // .attr("fill","#161616")
-                // .attr("fill","none")
-                // .attr("stroke","lightgrey")
-                .attr("class","legendBubble")
-                .on("mouseover", (event, d)=>d.id==="info" ? tooltipInfo(event.clientX-150, event.clientY-420):"")
-                .on("mouseleave", (event, d)=>d3.select("#tooltipInfo").style("visibility", "hidden"))
-            
-        textLegend = chart.append("g")
-            // textLegend = legend.append("g")
-                .selectAll("text")
-                .data(legendData)
-                .join("text")
-                .text(d=>d.level)
-                .attr("x", d => d.xtext)
-                .attr("y", d => d.ytext)
-                .attr("class", "themesText")
-                .style("text-anchor", d=>d.anchor)
-                // .attr("fill","lightgrey")
-                .attr("id", "info") 
-                .call(wrap, 10)
-                .on("mouseover", (event, d)=>d.id==="info" ? tooltipInfo(event.clientX-150, event.clientY-420):"")
-                .on("mouseleave", (event, d)=>d3.select("#tooltipInfo").style("visibility", "hidden"))
-
-        // UPDATE INTERACTION ON BUTTON CLICK
-        // d3.selectAll("button").on("click", function() {
-        //     // Remove X-Axis
-        //     d3.select("#bubblechart").selectAll("#xAxisLabel").remove()
-        //     let metric = d3.select(this).property("value")
-            
-        //     // Update metric data on click (from bias to polarity)
-        //     if (metric === "polarity") {
-
-        //         chart.append("text")
-        //                 .attr("id", "xAxisLabel")
-        //                 // .attr("transform", "rotate(-90)")
-        //                 .attr("y", bodyheight5*1.08)
-        //                 .attr("x",margin5.left+margin5.right)
-        //                 .attr("dy", "1em")
-        //                 .style("text-anchor", "start")
-        //                 .text("← Less Polarizing Language")
-            
-        //         chart.append("text")
-        //                 .attr("id", "xAxisLabel")
-        //                 // .attr("transform", "rotate(-90)")
-        //                 .attr("y", bodyheight5*1.08)
-        //                 .attr("x",bodywidth5)
-        //                 .attr("dy", "1em")
-        //                 .style("text-anchor", "end")
-        //                 .text("More Polarizing Language →")
-                
-        //         // restart simulation
-        //         simulation
-        //         .alpha(1)
-        //             .restart();
-
-        //         simulation
-        //                 .force('x', d3.forceX().x(function(d) {
-        //                     return xScale(+d.polarity);
-        //                 }))
-        //                 .force("y", d3.forceY(bodyheight5/1.5).strength(0.05))
-        //                 .force('collide', d3.forceCollide((d)=>{ 
-        //                     return radius(+d.monthly_visits)}).strength(1))
-                    
-        //         circles
-        //             .attr('cx', function(d) {
-        //                 return d.x;
-        //             })
-        //             .attr('cy', function(d) {
-        //                 return d.y;
-        //             })
-        //             .on("mouseenter", (event, d) => {
-        //                 showTooltipHeadline(ttip, d.site, d.country_of_pub, d.monthly_visits, [event.clientX, event.clientY], headlines, d.polarity, d)
-        //             })
-        //             .on("mousemove", (event, d) => {
-        //                 showTooltipHeadline(ttip, d.site, d.country_of_pub, d.monthly_visits,  [event.clientX, event.clientY], headlines, d.polarity, d)
-        //             })
-        //             .on("mouseleave", (d) => {
-        //                 d3.select("#tooltipHeadline").style("display", "none")
-        //             })
-        //             .on("mouseover.color", function() { d3.select(this).style("stroke", "white"); })
-        //             .on("mouseleave.color", function() { d3.select(this).style("stroke", "#323232"); })
-
-        //     // Update metric data on click (back from polarity to bias)
-        //     } else {
-        //         chart.append("text")
-        //                 .attr("id", "xAxisLabel")
-        //                 // .attr("transform", "rotate(-90)")
-        //                 .attr("y", bodyheight5*1.08)
-        //                 .attr("x",margin5.left+margin5.right)
-        //                 .attr("dy", "1em")
-        //                 .style("text-anchor", "start")
-        //                 .text("← Less Biased Language")
-            
-        //         chart.append("text")
-        //                 .attr("id", "xAxisLabel")
-        //                 // .attr("transform", "rotate(-90)")
-        //                 .attr("y", bodyheight5*1.08)
-        //                 .attr("x",bodywidth5)
-        //                 .attr("dy", "1em")
-        //                 .style("text-anchor", "end")
-        //                 .text("More Biased Language →")
-        //         // reheat the simulation:
-        //         simulation
-        //             .alpha(1)
-        //             .restart();
-
-        //         simulation
-        //                 .force('x', d3.forceX().x(function(d) {
-        //                     return xScale(+d.bias);
-        //                 }))
-        //                 .force("y", d3.forceY(bodyheight5/1.5).strength(0.05))
-        //                 .force('collide', d3.forceCollide((d)=>{ 
-        //                     return radius(+d.monthly_visits)}).strength(1))
-
-        //         circles
-        //             .attr('cx', function(d) {
-        //                 return d.x;
-        //             })
-        //             .attr('cy', function(d) {
-        //                 return d.y;
-        //             })
-        //             .on("mouseenter", (event, d) => {
-        //                 showTooltipHeadline(ttip, d.site, d.country_of_pub, d.monthly_visits, [event.clientX, event.clientY], headlines, d.polarity, d)
-        //             })
-        //             .on("mousemove", (event, d) => {
-        //                 showTooltipHeadline(ttip, d.site, d.country_of_pub, d.monthly_visits,  [event.clientX, event.clientY], headlines, d.polarity, d)
-        //             })
-        //             .on("mouseleave", (d) => {
-        //                 d3.select("#tooltipHeadline").style("display", "none")
-        //             })
-        //             .on("mouseover.color", function() { d3.select(this).style("stroke", "white"); })
-        //             .on("mouseleave.color", function() { d3.select(this).style("stroke", "#323232"); })
-        //             }
-        //         })
-
-        }
-
-        function drawBubbleChartB(data, chart) {
-            
-            ttip = "bias"
-            // console.log(chart, variable)
             // set dimensions
             let margin5 = {left: 50, bottom: 20, right: 30, top: 110}
             let bodywidth5 = width5 - margin5.left - margin5.right;
@@ -1497,14 +1142,12 @@
             // var xScale = d3.scaleLinear()
             var xScale = d3.scaleSymlog()
                     .range([margin5.left*2+margin5.right, bodywidth5])
-                    .domain(d3.extent(filterData, d => +d.bias))
-
-            console.log(chart, d3.extent(filterData, d => +d.bias))
+                    .domain([0, d3.max(filterData, d => +d.bias)])
 
             // create radial scale for bubble size
             extentvisits = d3.extent(filterData, d=>+d.monthly_visits)
-            // console.log(extentvisits)
-            // console.log(d3.extent(filterData, d=>+d.polarity))
+            console.log(extentvisits)
+            console.log(d3.extent(filterData, d=>+d.polarity))
 
             var radius = d3.scaleSqrt()
                                 .domain(extentvisits)
@@ -1515,7 +1158,7 @@
                                 .domain(extentvisits)
                                 .range([18, 100])
 
-            // console.log(filterData)
+            console.log(filterData)
 
             // initialize the force simulation layout
             let simulation = d3.forceSimulation()
@@ -1537,12 +1180,12 @@
                         }
                         
                         // define circles elements
-                        circles = chart.select(".bodybias")
+                        circles = bubbleChart.select(".body")
                                         .selectAll('circle')
                                         .data(filterData);
 
                         // define logos elements
-                        logos = chart.select(".bodybias")
+                        logos = bubbleChart.select(".body")
                                         .selectAll('image')
                                         .data(filterData);
                 
@@ -1618,7 +1261,7 @@
                 });
                 
         // add text and line to prompt the user to hover on the bubbles
-        chart.append("text")
+        bubbleChart.append("text")
                 .attr("id", "hoverGuide")
                 // .attr("transform", "rotate(-90)")
                 .attr("y", bodyheight5/4)
@@ -1634,7 +1277,7 @@
 
         // line coordinates
         wp = +data.filter(d=>d.site==="telegraph.co.uk")[0].bias+0.01
-        chart.append("line")
+        bubbleChart.append("line")
             .attr("y1", bodyheight5/3.2)
             .attr("x1",bodywidth5/1.2)
             .attr("x2", xScale(wp))
@@ -1644,7 +1287,7 @@
             // .attr("stroke", 'silver')
 
         // label the x axis
-        chart.append("text")
+        bubbleChart.append("text")
                 .attr("id", "xAxisLabel")
                 // .attr("transform", "rotate(-90)")
                 .attr("y", bodyheight5*1.08)
@@ -1655,10 +1298,10 @@
                 // .style("fill", "silver")
                 // .style("font-weight", "bold")  
                 // .style("font-family", "sans-serif")
-                .text(variable==="bias"?"← Less Biased Language":"← Less Polarized Language")
+                .text("← Less Biased Language")
                
     
-        chart.append("text")
+        bubbleChart.append("text")
                 .attr("id", "xAxisLabel")
                 // .attr("transform", "rotate(-90)")
                 .attr("y", bodyheight5*1.08)
@@ -1669,7 +1312,7 @@
                 // .style("fill", "silver")
                 // .style("font-weight", "bold")  
                 // .style("font-family", "sans-serif")
-                .text(variable==="bias"?"More Biased Language →":"More Polarized Language →")
+                .text("More Biased Language →")
                 
         // create the dataset for the bubble legend
         legendData = [{level: "", radius: radius(10000000), y: bodyheight5+75, x: bodywidth5/2.2, anchor:"end", xtext: bodywidth5/2.235, ytext: bodyheight5+53,id: ""}, 
@@ -1678,7 +1321,7 @@
         {level: "?", radius: radius(30000000), y: bodyheight5*1.08+11, x: bodywidth5+15, anchor:"middle", xtext: bodywidth5+15, ytext: bodyheight5*1.08+16,id: "info"}]
 
         // make the bubble legend and initialize the tooltip for methodology info if they hover on the "#info" circle
-        legend = chart.append("g")
+        legend = bubbleChart.append("g")
                 .selectAll("circle")
                 .data(legendData)
                 .join('circle')
@@ -1692,7 +1335,7 @@
                 .on("mouseover", (event, d)=>d.id==="info" ? tooltipInfo(event.clientX-150, event.clientY-420):"")
                 .on("mouseleave", (event, d)=>d3.select("#tooltipInfo").style("visibility", "hidden"))
             
-        textLegend = chart.append("g")
+        textLegend = bubbleChart.append("g")
             // textLegend = legend.append("g")
                 .selectAll("text")
                 .data(legendData)
@@ -1709,116 +1352,116 @@
                 .on("mouseleave", (event, d)=>d3.select("#tooltipInfo").style("visibility", "hidden"))
 
         // UPDATE INTERACTION ON BUTTON CLICK
-        // d3.selectAll("button").on("click", function() {
-        //     // Remove X-Axis
-        //     d3.select("#bubblechart").selectAll("#xAxisLabel").remove()
-        //     let metric = d3.select(this).property("value")
+        d3.selectAll("button").on("click", function() {
+            // Remove X-Axis
+            d3.select("#bubblechart").selectAll("#xAxisLabel").remove()
+            let metric = d3.select(this).property("value")
             
-        //     // Update metric data on click (from bias to polarity)
-        //     if (metric === "polarity") {
+            // Update metric data on click (from bias to polarity)
+            if (metric === "polarity") {
 
-        //         chart.append("text")
-        //                 .attr("id", "xAxisLabel")
-        //                 // .attr("transform", "rotate(-90)")
-        //                 .attr("y", bodyheight5*1.08)
-        //                 .attr("x",margin5.left+margin5.right)
-        //                 .attr("dy", "1em")
-        //                 .style("text-anchor", "start")
-        //                 .text("← Less Polarizing Language")
+                bubbleChart.append("text")
+                        .attr("id", "xAxisLabel")
+                        // .attr("transform", "rotate(-90)")
+                        .attr("y", bodyheight5*1.08)
+                        .attr("x",margin5.left+margin5.right)
+                        .attr("dy", "1em")
+                        .style("text-anchor", "start")
+                        .text("← Less Polarizing Language")
             
-        //         chart.append("text")
-        //                 .attr("id", "xAxisLabel")
-        //                 // .attr("transform", "rotate(-90)")
-        //                 .attr("y", bodyheight5*1.08)
-        //                 .attr("x",bodywidth5)
-        //                 .attr("dy", "1em")
-        //                 .style("text-anchor", "end")
-        //                 .text("More Polarizing Language →")
+                bubbleChart.append("text")
+                        .attr("id", "xAxisLabel")
+                        // .attr("transform", "rotate(-90)")
+                        .attr("y", bodyheight5*1.08)
+                        .attr("x",bodywidth5)
+                        .attr("dy", "1em")
+                        .style("text-anchor", "end")
+                        .text("More Polarizing Language →")
                 
-        //         // restart simulation
-        //         simulation
-        //         .alpha(1)
-        //             .restart();
+                // restart simulation
+                simulation
+                .alpha(1)
+                    .restart();
 
-        //         simulation
-        //                 .force('x', d3.forceX().x(function(d) {
-        //                     return xScale(+d.polarity);
-        //                 }))
-        //                 .force("y", d3.forceY(bodyheight5/1.5).strength(0.05))
-        //                 .force('collide', d3.forceCollide((d)=>{ 
-        //                     return radius(+d.monthly_visits)}).strength(1))
+                simulation
+                        .force('x', d3.forceX().x(function(d) {
+                            return xScale(+d.polarity);
+                        }))
+                        .force("y", d3.forceY(bodyheight5/1.5).strength(0.05))
+                        .force('collide', d3.forceCollide((d)=>{ 
+                            return radius(+d.monthly_visits)}).strength(1))
                     
-        //         circles
-        //             .attr('cx', function(d) {
-        //                 return d.x;
-        //             })
-        //             .attr('cy', function(d) {
-        //                 return d.y;
-        //             })
-        //             .on("mouseenter", (event, d) => {
-        //                 showTooltipHeadline(ttip, d.site, d.country_of_pub, d.monthly_visits, [event.clientX, event.clientY], headlines, d.polarity, d)
-        //             })
-        //             .on("mousemove", (event, d) => {
-        //                 showTooltipHeadline(ttip, d.site, d.country_of_pub, d.monthly_visits,  [event.clientX, event.clientY], headlines, d.polarity, d)
-        //             })
-        //             .on("mouseleave", (d) => {
-        //                 d3.select("#tooltipHeadline").style("display", "none")
-        //             })
-        //             .on("mouseover.color", function() { d3.select(this).style("stroke", "white"); })
-        //             .on("mouseleave.color", function() { d3.select(this).style("stroke", "#323232"); })
+                circles
+                    .attr('cx', function(d) {
+                        return d.x;
+                    })
+                    .attr('cy', function(d) {
+                        return d.y;
+                    })
+                    .on("mouseenter", (event, d) => {
+                        showTooltipHeadline(ttip, d.site, d.country_of_pub, d.monthly_visits, [event.clientX, event.clientY], headlines, d.polarity, d)
+                    })
+                    .on("mousemove", (event, d) => {
+                        showTooltipHeadline(ttip, d.site, d.country_of_pub, d.monthly_visits,  [event.clientX, event.clientY], headlines, d.polarity, d)
+                    })
+                    .on("mouseleave", (d) => {
+                        d3.select("#tooltipHeadline").style("display", "none")
+                    })
+                    .on("mouseover.color", function() { d3.select(this).style("stroke", "white"); })
+                    .on("mouseleave.color", function() { d3.select(this).style("stroke", "#323232"); })
 
-        //     // Update metric data on click (back from polarity to bias)
-        //     } else {
-        //         chart.append("text")
-        //                 .attr("id", "xAxisLabel")
-        //                 // .attr("transform", "rotate(-90)")
-        //                 .attr("y", bodyheight5*1.08)
-        //                 .attr("x",margin5.left+margin5.right)
-        //                 .attr("dy", "1em")
-        //                 .style("text-anchor", "start")
-        //                 .text("← Less Biased Language")
+            // Update metric data on click (back from polarity to bias)
+            } else {
+                bubbleChart.append("text")
+                        .attr("id", "xAxisLabel")
+                        // .attr("transform", "rotate(-90)")
+                        .attr("y", bodyheight5*1.08)
+                        .attr("x",margin5.left+margin5.right)
+                        .attr("dy", "1em")
+                        .style("text-anchor", "start")
+                        .text("← Less Biased Language")
             
-        //         chart.append("text")
-        //                 .attr("id", "xAxisLabel")
-        //                 // .attr("transform", "rotate(-90)")
-        //                 .attr("y", bodyheight5*1.08)
-        //                 .attr("x",bodywidth5)
-        //                 .attr("dy", "1em")
-        //                 .style("text-anchor", "end")
-        //                 .text("More Biased Language →")
-        //         // reheat the simulation:
-        //         simulation
-        //             .alpha(1)
-        //             .restart();
+                bubbleChart.append("text")
+                        .attr("id", "xAxisLabel")
+                        // .attr("transform", "rotate(-90)")
+                        .attr("y", bodyheight5*1.08)
+                        .attr("x",bodywidth5)
+                        .attr("dy", "1em")
+                        .style("text-anchor", "end")
+                        .text("More Biased Language →")
+                // reheat the simulation:
+                simulation
+                    .alpha(1)
+                    .restart();
 
-        //         simulation
-        //                 .force('x', d3.forceX().x(function(d) {
-        //                     return xScale(+d.bias);
-        //                 }))
-        //                 .force("y", d3.forceY(bodyheight5/1.5).strength(0.05))
-        //                 .force('collide', d3.forceCollide((d)=>{ 
-        //                     return radius(+d.monthly_visits)}).strength(1))
+                simulation
+                        .force('x', d3.forceX().x(function(d) {
+                            return xScale(+d.bias);
+                        }))
+                        .force("y", d3.forceY(bodyheight5/1.5).strength(0.05))
+                        .force('collide', d3.forceCollide((d)=>{ 
+                            return radius(+d.monthly_visits)}).strength(1))
 
-        //         circles
-        //             .attr('cx', function(d) {
-        //                 return d.x;
-        //             })
-        //             .attr('cy', function(d) {
-        //                 return d.y;
-        //             })
-        //             .on("mouseenter", (event, d) => {
-        //                 showTooltipHeadline(ttip, d.site, d.country_of_pub, d.monthly_visits, [event.clientX, event.clientY], headlines, d.polarity, d)
-        //             })
-        //             .on("mousemove", (event, d) => {
-        //                 showTooltipHeadline(ttip, d.site, d.country_of_pub, d.monthly_visits,  [event.clientX, event.clientY], headlines, d.polarity, d)
-        //             })
-        //             .on("mouseleave", (d) => {
-        //                 d3.select("#tooltipHeadline").style("display", "none")
-        //             })
-        //             .on("mouseover.color", function() { d3.select(this).style("stroke", "white"); })
-        //             .on("mouseleave.color", function() { d3.select(this).style("stroke", "#323232"); })
-        //             }
-        //         })
+                circles
+                    .attr('cx', function(d) {
+                        return d.x;
+                    })
+                    .attr('cy', function(d) {
+                        return d.y;
+                    })
+                    .on("mouseenter", (event, d) => {
+                        showTooltipHeadline(ttip, d.site, d.country_of_pub, d.monthly_visits, [event.clientX, event.clientY], headlines, d.polarity, d)
+                    })
+                    .on("mousemove", (event, d) => {
+                        showTooltipHeadline(ttip, d.site, d.country_of_pub, d.monthly_visits,  [event.clientX, event.clientY], headlines, d.polarity, d)
+                    })
+                    .on("mouseleave", (d) => {
+                        d3.select("#tooltipHeadline").style("display", "none")
+                    })
+                    .on("mouseover.color", function() { d3.select(this).style("stroke", "white"); })
+                    .on("mouseleave.color", function() { d3.select(this).style("stroke", "#323232"); })
+                    }
+                })
 
         }
 
