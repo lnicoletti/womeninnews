@@ -73,7 +73,7 @@
       <svg id="bubblechartPolarity">
           <g class="xAxispolarity" />
           <g class="yAxispolarity" />
-          <g class="bodypolarity" />
+          <g id="bodypolarity" />
       </svg>
       </div>
     <div class="subtitle">
@@ -87,7 +87,7 @@
       <svg id="bubblechartBias">
           <g class="xAxisbias" />
           <g class="yAxisbias" />
-          <g class="bodybias" />
+          <g id="bodybias" />
       </svg>
     </div>
     <div class="subtitle">
@@ -118,18 +118,29 @@
     <div class="header">
     <h1 style = "text-align: center" class="sectionHeader">A decade of headlines: the words we cho(o)se to sensationalize women</h1>
     </div>
-      <div class="subtitle">
+      <!-- <div class="subtitle">
         <p class="description">The charts below show the words used most frequently by news outlets to talk about women in <b>India</b>, <b>South Africa</b>,
                 the <b>United Kingdom</b>, and the <b>United States</b>. The evolution of each word's usage is charted over time. Are 
                 we moving towards more empowering reporting, or have our biases snowballed out of control?</p>
-      </div>
-    
-    <h2 style="text-align: center">filter by country</h2>
+      </div> -->
         <div class="buttons">
-          <button class="country" value="USA">United States</button>
-          <button class="country" value="South Africa">South Africa</button>
-          <button class="country" value="UK">United Kingdom</button>
-          <button class="country" value="India">India</button>
+          <p style="text-align: center" class="annotationButton">Filter by Country</p>
+          <button class="country" value="USA">
+            <img src="flags/united-states.svg" class="flag"/>
+            <p>United States</p>
+          </button>
+          <button class="country" value="South Africa">
+            <img src="flags/south-africa.svg" class="flag"/>
+            <p>South Africa</p>
+          </button>
+          <button class="country" value="UK">
+            <img src="flags/united-kingdom.svg" class="flag"/>
+            <p>United Kingdom</p>
+          </button>
+          <button class="country" value="India">
+            <img src="flags/india.svg" class="flag"/>
+            <p>India</p>
+          </button>
         </div>
       <div id = "stickyXaxis" style="text-align: center;"></div>
       <div id="smChart" class="svg-container3" style="text-align: center;"></div>
@@ -138,6 +149,9 @@
     <!-- <div class="header" id="bubbleSection">
     <h1 style = "text-align: center" class="sectionHeader">Innocent outlets? The influence of news platforms in reinforcing gender biases</h1>
     </div> -->
+    <div class="header" id="conclusionSection">
+      <h1 style = "text-align: center" class="sectionHeader">Conclusion</h1>
+    </div>
     <div class="subtitle">
         <p class="description"> 
             News articles have the potential to define perceptions and shape the general public opinion around 

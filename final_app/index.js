@@ -62,7 +62,7 @@
     const tooltip = d3
         .select("body")
         .append("div")
-        .attr("class", "tooltip")
+        .attr("class", "tooltipTL")
         // .style("font-size", "10pt")
         // .style("font-family", "Lato")
         .style("position", "absolute")
@@ -71,8 +71,8 @@
         .style("height", "auto")
         .style("padding", "5px")
         // .style("background", "#161616")
-        .style("background", "grey")
-        .style("border", "1.5px grey solid")
+        // .style("background", "grey")
+        // .style("border", "1.5px grey solid")
         // .style("stroke", "grey")
         // .style("border-width", 1)
         .style("pointer-events", "none")
@@ -142,13 +142,14 @@
             // 3) bubble charts
             drawBubbleChart(headlinesSite, bubbleChartB, "bias")
             drawBubbleChart(headlinesSite, bubbleChartP, "polarity")
+            // drawBubbleChart(headlinesSiteFilt, bubbleChartP, "polarity")
             // drawBubbleChartB(headlinesSite, bubbleChartB)
 
         })
 
         // Sticky timeline enabled only during temporal chart
         $(window).scroll(function() {
-            if ($(this).scrollTop() - $('#bubbleSection').position().top > -700){
+            if ($(this).scrollTop() - $('#conclusionSection').position().top > -700){
                 $('#stickyXaxis').css({'position': 'static', 'top': '0px'}); 
             }else{
                 $('#stickyXaxis').css({'position': 'sticky', 'top': '0px'}); 
@@ -326,7 +327,7 @@
         function renderLollipop(data){
 
             // set the dimensions and margins of the graph
-            var margin = {top: 10, right: 30, bottom: 30, left: 250},
+            var margin = {top: 10, right: 50, bottom: 30, left: 230},
             width = 1000 - margin.left - margin.right,
             height = 1500 - margin.top - margin.bottom;
         
@@ -341,23 +342,38 @@
         
             // console.log(data)
             //data = data.sort((a,b)=>d3.descending(+a.polarity_women, +b.polarity_women)) 
-            data = data.filter(d=>d.popularity==1)
+            data = data.filter(d=>(d.popularity==1)&&(Math.abs(d.difference) > 0.05)&&(d.site_clean !== "dailysun.co.za"))
             // data = data.sort((a,b)=> d3.descending(+a.difference, +b.difference))
-            data = data.filter(d=> Math.abs(d.difference) > 0.05)
+            // data = data.filter(d=> Math.abs(d.difference) > 0.05)
             // data = data.filter(d=>d.site_clean !== "dailysun.co.za")
+
+            console.log(data)
         
         
           // Add X axis
           var x = d3.scaleLinear()
-            .domain([-0.1,d3.max(data, d=>d.difference)+0.1])
-            // .domain(d3.extent(data, d=>d.difference))
-            .range([ 0, width-10]);
+            // .domain([-0.1,d3.max(data, d=>d.difference)+0.1])
+            .domain(d3.extent(data, d=>d.polarity_women))
+            .range([ margin.left + margin.right, width-20]);
            // .padding(0.001);
+
+           // Y axis
+        var y = d3.scaleBand()
+            .range([ 0, height ])
+            .domain(data.map(d=>d.site_clean))
+            // Padding from the top
+            .padding(1);
+            lollipopChart.append("g")
+            .call(d3.axisLeft(y)
+                    .tickSize(0))
+            .call(g => g.select(".domain").remove())
+            .attr("class", "polarityCompyAxis");
             
           lollipopChart.append("g")
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(x))
             .attr("class", "polarityCompxAxis")
+
           lollipopChart.append("text")
             .attr("class", "polarityCompxAxisLabel")
             .attr("y", height)
@@ -375,36 +391,24 @@
             .style("text-anchor", "end")
             .text("More polarizing language →")
         
-          lollipopChart.append("text")
+
+        lollipopChart.append("text")
             .attr("class", "xAxisLabel")
-            .attr("y", margin)
-            .attr("x",50)
-            .attr("dy", "1em")
-            .style("text-anchor", "start")
+            .attr("y", y("msn"))
+            .attr("x", x(data.filter(d=>d.site_clean==="msn")[0].polarity_base))
+            // .attr("dy", "-2em")
             .text("All headlines")
             .attr("class", "polarityCompAllText")
                       
           
           lollipopChart.append("text")
             .attr("class", "xAxisLabel")
-            .attr("y", margin)
-            .attr("x",width)
-            .attr("dy", "1em")
-            .style("text-anchor", "end")
+            .attr("y", y("msn"))
+            .attr("x", x(data.filter(d=>d.site_clean==="msn")[0].polarity_women))
             .text("Headlines about women")
             .attr("class", "polarityCompFemText")
-        
-          // Y axis
-          var y = d3.scaleBand()
-            .range([ 0, height ])
-            .domain(data.map(d=>d.site_clean))
-            // Padding from the top
-            .padding(1);
-          lollipopChart.append("g")
-            .call(d3.axisLeft(y)
-                    .tickSize(0))
-            .call(g => g.select(".domain").remove())
-            .attr("class", "polarityCompyAxis");
+            .call(wrap, 100)
+            // .attr("dy", "-5em")
         
           // Lines  
           
@@ -430,7 +434,7 @@
               .attr("y1", function(d) { return y(d.site_clean); })
               .attr("y2", function(d) { return y(d.site_clean); })
               .attr("stroke", "black")
-              .attr("stroke-width", "1px")
+              .attr("stroke-width", "2.5px")
         
         
              // .attr("class", "polarityCompLine")
@@ -933,6 +937,16 @@
                     .call(g => g.select('.domain').attr('stroke-width', 2).attr("color", "#282828"))//.attr("color", "grey")
                     // .call(g => g.select('.domain').remove())
 
+            // annotation on the left
+            stickyAxis.append("g")
+                    .attr('transform', `translate(${col(0)}, ${margin.top})`)
+                        .append("text")
+                        .text("News Events")
+                        .attr("class", "annotation")
+                        .attr("font-weight", "400")
+                        .attr("x", -20)
+                        .attr("y", -4)
+
             // circles for timeline
             const circleEvents = 
                     // g.append("g")
@@ -1030,31 +1044,19 @@
 
         function timeRuler(event, d, g, svg) {
     
+
             const rulerg = g.append("g")
-                            .append("line")
+                            .append("rect")
                             .attr("class", "timeRuler")
                             .attr('transform', `translate(${col(0)}, -${margin.top/3})`)
-                            .attr("x1", x(d.date))
-                            .attr("x2", x(d.date))
-                            .attr("y1", 0)
-                            .attr("y2", visHeight)
-                            .attr("stroke", "grey")
-                            // .attr("fill", "grey")
-                            .attr("stroke-width", 20)
-                            .attr("opacity", 0.2)
-        
-            // const rulersvg = svg.append("g")
-            //                 .append("line")
-            //                 .attr("class", "timeRuler")
-            //                 .attr('transform', `translate(${col(0)}, 100)`)
-            //                 .attr("x1", x(d.date))
-            //                 .attr("x2", x(d.date))
-            //                 .attr("y1", 0)
-            //                 .attr("y2", visHeight)
-            //                 .attr("stroke", "grey")
-            //                 // .attr("fill", "grey")
-            //                 .attr("stroke-width", 20)
-            //                 .attr("opacity", 0.2)
+                            .attr("x", x(d.date)-9)
+                            // .attr("x2", x(d.date))
+                            .attr("y", 0)
+                            // .attr("width", 10)
+                            .attr("height", visHeight)
+                            // .attr("y2", visHeight)
+
+                            console.log(new Date("2021"))
         
             // rect dimensions
             const boxWidth = 200
@@ -1072,12 +1074,17 @@
                 // <b>${format(+d[metric_t])+"</b> "+legend_label_t.toLowerCase()}<br>
                 // <b>${format(+d[metric_p])+"</b> "+legend_label_p.toLowerCase()}`)
                 .html(`<b>${d3.timeFormat("%m/%Y")(d.date)}</b><br>
-                <b>${(d.name)}`)
-                .style("left", event.pageX + "px")
-                .style("top", event.pageY - 100 + "px")
-                .style("font-family", "sans-serif")
-                .attr("font-size", "10px")
-                .style("color", "#161616");
+                <i>${(d.name)}`)
+                // .style("left", event.pageX + "px")
+                // .style("top", event.pageY - 100 + "px")
+                .attr('transform', `translate(${-col(0)*3}, -${margin.top/3})`)
+                .style("left", x(new Date("01-01-2025")))
+                // .style("left", "1500px")
+                .style("top", event.pageY + "px")
+                .attr("class", "tooltipTL")
+                // .style("font-family", "sans-serif")
+                // .attr("font-size", "10px")
+                // .style("color", "#161616");
                 // .style("color", "grey");
         
             // const textBox = g.append("g")
@@ -1271,7 +1278,7 @@
         // function to draw the first chart
         function drawBubbleChart(data, chart, variable) {
             
-            ttip = "bias"
+            ttip = variable //"ttip"
             // console.log(chart, variable)
             // set dimensions
             let margin5 = {left: 50, bottom: 20, right: 30, top: 110}
@@ -1279,21 +1286,46 @@
             let bodyheight5 = height5 - margin5.top - margin5.bottom;
             
             // filter data, removing irrelevant news outlets
-            filterData = data.filter(d=>(+d.monthly_visits !== 0)&(+d[variable] !== 0))
-            filterData = filterData.filter(d=>(d.site !== "msn.com")&(d.site !== "sports.yahoo.com")&
-                                              (d.site !== "finance.yahoo.com")&(d.site !== "news.google.com")&
-                                              (d.site !== "news.yahoo.com")&(d.site !== "bbc.com")&
-                                              (d.site !== "makeuseof.com")&(d.site !== "which.co.uk")&
-                                              (d.site !== "espncricinfo.com")&(d.site !== "seekingalpha.com")&
-                                              (d.site !== "prokerala.com"))
+            filterD = data.filter(d=>(+d.monthly_visits !== 0)&(+d[variable] !== 0)&
+                                        (d.site !== "msn.com")&(d.site !== "sports.yahoo.com")&
+                                        (d.site !== "finance.yahoo.com")&(d.site !== "news.google.com")&
+                                        (d.site !== "news.yahoo.com")&(d.site !== "bbc.com")&
+                                        (d.site !== "makeuseof.com")&(d.site !== "which.co.uk")&
+                                        (d.site !== "espncricinfo.com")&(d.site !== "seekingalpha.com")&
+                                        (d.site !== "prokerala.com"))
 
+            const filterData = filterD.map((d)=>{
+                if (variable==="polarity") {
+                    
+                    return {
+                        site: d.site,
+                        polarity: d[variable],
+                        monthly_visits: d.monthly_visits,
+                        country_of_pub: d.country_of_pub
+
+                    } 
+                
+                } else {
+
+                    return {
+                        site: d.site,
+                        bias: d[variable],
+                        monthly_visits: d.monthly_visits,
+                        country_of_pub: d.country_of_pub
+
+                    }
+                
+                }
+            })
+
+            console.log("fil data", filterData)
             // create chart horizontal scale
             // var xScale = d3.scaleLinear()
             var xScale = d3.scaleSymlog()
                     .range([margin5.left*2+margin5.right, bodywidth5])
                     .domain(d3.extent(filterData, d => +d[variable]))
 
-            console.log(chart, variable, d3.extent(filterData, d => +d[variable]))
+            // console.log(chart, variable, d3.extent(filterData, d => +d[variable]))
 
             // create radial scale for bubble size
             extentvisits = d3.extent(filterData, d=>+d.monthly_visits)
@@ -1331,18 +1363,17 @@
                         }
                         
                         // define circles elements
-                        circles = chart.select(".body"+variable)
+                        circles = chart.select("#body"+variable)
                                         .selectAll('circle')
                                         .data(filterData);
 
                         // define logos elements
-                        logos = chart.select(".body"+variable)
+                        logos = chart.select("#body"+variable)
                                         .selectAll('image')
                                         .data(filterData);
                 
                         // append the circles and define style properties and hover events (tooltip)
-                        newCircles = circles.enter()
-                            .append('circle')
+                        newCircles = circles.join('circle')
                             .attr("class", "forceCircles")
                             // .attr("fill", "white")
                             // .attr("opacity", "0.8")
@@ -1361,8 +1392,7 @@
                             .on("mouseleave.color", function() { d3.select(this).style("stroke", "#323232").style("stroke-width", "0.6px"); })
                             
                         // append the logos and define style properties and hover events (tooltip)
-                        newLogos = logos.enter()
-                                .append("svg:image")
+                        newLogos = logos.join("svg:image")
                                 .attr("class", "forceLogo")
                                 // each logo needs to be centered in the bubble (couldnt find better way of doing this)
                                 .attr("transform", d=>d.site=="bbc.co.uk" ? "translate(-50,-50)"
@@ -1408,7 +1438,7 @@
                             })
                         
                         // this is not used now, but if we want to add a transition it is set up
-                        circles.exit().remove();
+                        // circles.exit().remove();
                 });
                 
         // add text and line to prompt the user to hover on the bubbles
@@ -1449,7 +1479,7 @@
                 // .style("fill", "silver")
                 // .style("font-weight", "bold")  
                 // .style("font-family", "sans-serif")
-                .text(variable==="bias"?"← Less Biased Language":"← Less Polarized Language")
+                .text(variable==="bias"?"← Less Biased Language":"← Less Polarizing Language")
                
     
         chart.append("text")
@@ -1463,7 +1493,7 @@
                 // .style("fill", "silver")
                 // .style("font-weight", "bold")  
                 // .style("font-family", "sans-serif")
-                .text(variable==="bias"?"More Biased Language →":"More Polarized Language →")
+                .text(variable==="bias"?"More Biased Language →":"More Polarizing Language →")
                 
         // create the dataset for the bubble legend
         legendData = [{level: "", radius: radius(10000000), y: bodyheight5+75, x: bodywidth5/2.2, anchor:"end", xtext: bodywidth5/2.235, ytext: bodyheight5+53,id: ""}, 
@@ -1796,7 +1826,7 @@
                 // .style("fill", "silver")
                 // .style("font-weight", "bold")  
                 // .style("font-family", "sans-serif")
-                .text(variable==="bias"?"← Less Biased Language":"← Less Polarized Language")
+                .text(variable==="bias"?"← Less Biased Language":"← Less Polarizing Language")
                
     
         chart.append("text")
@@ -1810,7 +1840,7 @@
                 // .style("fill", "silver")
                 // .style("font-weight", "bold")  
                 // .style("font-family", "sans-serif")
-                .text(variable==="bias"?"More Biased Language →":"More Polarized Language →")
+                .text(variable==="bias"?"More Biased Language →":"More Polarizing Language →")
                 
         // create the dataset for the bubble legend
         legendData = [{level: "", radius: radius(10000000), y: bodyheight5+75, x: bodywidth5/2.2, anchor:"end", xtext: bodywidth5/2.235, ytext: bodyheight5+53,id: ""}, 

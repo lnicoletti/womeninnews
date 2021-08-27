@@ -29,6 +29,22 @@
 body {
     background-color: #FEFAF1;
 }
+
+.annotation {
+    fill: black;
+    font-family: Helvetica;
+    font-size: 13px;
+    text-anchor: middle;
+    transform: translate(-45px, 6px)
+}
+
+.annotationButton {
+    fill: black;
+    font-family: Helvetica;
+    font-size: 13px;
+    text-anchor: middle;
+    transform: translate(-45px, 15px)
+}
 .padded-dropcap {
     padding-left: 10px;
     padding-right: 10px;
@@ -71,6 +87,15 @@ body {
     /* background-color: none; */
     /* fill:rgb(196, 195, 195);            */
     /* color:#282828;            */
+}
+
+.tooltipTL {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    color: #161616;
+    background-color: #FEFAF1;
+    border: 1.5px #282828 solid;
+    /* font-weight: 500; */
 }
 
 #tooltipHeadline {
@@ -147,7 +172,6 @@ font-family: Arial, Helvetica, sans-serif;
 #xAxisLabel {
     font-size: 17px;
     fill: #282828;
-    font-weight: bold;
     font-family: sans-serif
 
 }
@@ -212,9 +236,10 @@ h1 {
 .sectionHeader {
     /* text-align: left; */
     font-family: Arial, Helvetica, sans-serif;
-    font-style: bold;
+    font-style: italic;
+    font-weight: 900px;
     color: #282828;
-    max-width: 700;
+    max-width: 1000;
     text-anchor: middle;
     justify-content:left;
     text-transform: uppercase;
@@ -329,24 +354,32 @@ font-weight: bold;
 .buttons {
 justify-content: center;
 display: flex;
+margin-top: 50px;
 }
 
 button {
-border-color: lightgray;
+border-color: #FEFAF1;
 background-color: #FEFAF1;
 color: #282828;
-font-weight: bold;
+font-weight: 400px;
 border-style:solid;
 border-width: 1;
 /* color: white; */
-padding: 10px 20px;
+padding: 0px 20px;
 margin-top: 5;
 text-align: center;
 text-decoration: none;
 /* display: inline-block; */
 font-size: 20px;
-font-family: Georgia, 'Times New Roman', Times, serif;
+font-family: Arial, Helvetica, sans-serif;
+text-transform: uppercase;
+/* max-height: 500px; */
+/* transform: translateY(9px); */
 }
+
+/* button text {
+    transform: translateY(100px);
+} */
 
 
 
@@ -356,17 +389,33 @@ font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
 button:hover {
-background-color: lightgray;
+background-color: #fdf4de;
 color: #161616;
 }
 
 button:focus {
-    background-color: lightgray;
+    background-color: #F7DC5B    ;
     color: #161616;
+    font-weight: 900px;
+
     }
 
 button:focus{
 font-weight: bold;
+}
+
+.flag {
+    /* padding: 10px; */
+    height:35px;
+    text-anchor: middle;
+    padding-right: 10px;
+    transform: translateY(13px);
+
+}
+
+.country {
+    display: flex;
+    flex-direction: row
 }
 
 .search {
@@ -506,15 +555,22 @@ left: 0;
 .wordText {
     text-anchor: end;
     fill: #282828;
-    font-weight: 800;
-    font-size: 12;
-    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+    font-family: Helvetica;
     text-transform: uppercase
 }
 
+
 .timeRuler {
     z-index:10;
-    position:fixed
+    position:fixed;
+    stroke:#282828;
+    fill: none;
+    stroke-width: 1;
+    width: 20;
+    /* opacity: 0.2 */
+
 }
 
 /* .SMaxisSticky {
@@ -643,12 +699,12 @@ span{
   }
 
   /* Polarity Comparison bubble chart styling */
-.polarityCompyAxis text {
+  .polarityCompyAxis text {
     font-family: Helvetica;
     text-align: left;
     text-anchor: end;
-    fill: black;
-    font-size :15px;
+    fill: #282828;
+    font-size :14px;
     font-weight: bold;
     text-transform: uppercase;
   }
@@ -663,7 +719,7 @@ span{
   .polarityCompBubbleLeft {
     fill: #FEFAF1;
     stroke: #282828;
-    stroke-width: 3px;
+    stroke-width: 2.5px;
     box-sizing: border-box;
   
   }
@@ -671,7 +727,7 @@ span{
   .polarityCompBubbleRight {
     fill: #53B67C;
     stroke: #282828;
-    stroke-width: 3px;
+    stroke-width: 2.5px;
     box-sizing: border-box;
     
   }
@@ -680,13 +736,17 @@ span{
     fill: #53B67C;
     font-family: Helvetica;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 13px;
+    text-anchor: middle;
+    transform: translate(0,-40px);
   }
   
   .polarityCompAllText {
     fill: black;
     font-family: Helvetica;
-    font-size: 20px;
+    font-size: 13px;
+    text-anchor: middle;
+    transform: translate(0,-20px)
   }
   
   
@@ -701,3 +761,7 @@ span{
   .polarityCompxAxis {
     display:none;
   } 
+
+  .lollipop {
+      transform: translate(-90px, 0);
+  }
