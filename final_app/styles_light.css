@@ -91,11 +91,47 @@ body {
 
 .tooltipTL {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 10px;
+    /* font-size: 10px; */
     color: #161616;
     background-color: #FEFAF1;
     border: 1.5px #282828 solid;
     /* font-weight: 500; */
+}
+
+#tooltipTLleft {
+    width: 220px;
+    height: 120px;
+    margin-left: 20;
+    margin-right: 20;
+    padding:20;
+    text-transform: uppercase;
+}
+
+#tooltipTLmid{
+    width: 220px;
+    height: 120px;
+    transform: translateY(30px);
+    margin-left: 20;
+    margin-right: 20;
+    padding:20;
+    text-transform: uppercase;
+}
+
+#tooltipTLright {
+    width: 220px;
+    height: 120px;
+    margin-left: 20;
+    margin-right: 20;
+    padding:20;
+    text-transform: uppercase;
+}
+
+.exampleheadlines {
+    display: flex;
+    flex-direction: row;
+    /* text-align: center; */
+    justify-content: center;
+    margin-bottom: 50;
 }
 
 #tooltipHeadline {
@@ -196,7 +232,8 @@ h1 {
     font-size:150px;
     max-width: 1200px;
     text-align: center;
-    font-family: Georgia;
+    font-family: Arial, Helvetica, sans-serif;
+    /* font-family: Georgia, 'Times New Roman', Times, serif; */
     /* font-size: x-large; */
     font-style: bold;
     text-transform: uppercase;
