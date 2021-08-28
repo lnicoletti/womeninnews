@@ -162,7 +162,7 @@ fill: silver;
 
 .forceCircles {
     fill: #FEFAF1;
-    opacity: 1;
+    /* opacity: 1; */
     stroke: #282828;
     stroke-width: 0.6px;
     /* stroke: #FEFAF1 */
@@ -437,8 +437,14 @@ button:focus {
 
     }
 
-button:focus{
+/* button:focus{
 font-weight: bold;
+} */
+
+select::selection{
+    background-color: #F7DC5B    ;
+    color: #161616;
+    font-weight: 900px;
 }
 
 .flag {
@@ -741,7 +747,7 @@ span{
     text-align: left;
     text-anchor: end;
     fill: #282828;
-    font-size :14px;
+    font-size: 14px;
     font-weight: bold;
     text-transform: uppercase;
   }
@@ -754,7 +760,8 @@ span{
   }
   
   .polarityCompBubbleLeft {
-    fill: #FEFAF1;
+    /* fill: #FEFAF1; */
+    fill: #282828;
     stroke: #282828;
     stroke-width: 2.5px;
     box-sizing: border-box;
@@ -762,20 +769,31 @@ span{
   }
   
   .polarityCompBubbleRight {
-    fill: #53B67C;
+    fill: #0BBF99;
     stroke: #282828;
+    /* fill: #FEFAF1;
+    stroke: #0BBF99; */
     stroke-width: 2.5px;
     box-sizing: border-box;
     
   }
   
   .polarityCompFemText {
-    fill: #53B67C;
+    fill: #0BBF99;
     font-family: Helvetica;
     font-weight: bold;
     font-size: 13px;
     text-anchor: middle;
     transform: translate(0,-40px);
+  }
+
+  .polarityDiffAnnotation {
+    fill: #0BBF99;
+    font-family: Helvetica;
+    font-weight: 400;
+    font-size: 12px;
+    text-anchor: left;
+    transform: translate(20px, -10px);
   }
   
   .polarityCompAllText {
@@ -788,7 +806,7 @@ span{
   
   
   .polarityCompxAxisLabel {
-    font-size: 17px;
+    font-size: 12px;
     fill: #282828;
     font-family: sans-serif
   
@@ -802,3 +820,22 @@ span{
   .lollipop {
       transform: translate(-90px, 0);
   }
+
+  /* dropdown */
+
+  .dropdownOptions {
+    border-color:#282828;
+    background-color: #FEFAF1;
+    border-width: 0.5;
+    border-style: solid;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5;
+    margin: 10;
+  }
+
+  .bubbleFilters {
+    /* display: flex; */
+    /* flex-direction: row; */
+    text-align: center;
+    }
