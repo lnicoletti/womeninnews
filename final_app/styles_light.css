@@ -829,13 +829,20 @@ span{
     border-width: 0.5;
     border-style: solid;
     font-size: 14px;
-    font-weight: bold;
+    text-transform: uppercase;
+    /* font-weight: bold; */
     padding: 5;
     margin: 10;
+  }
+
+  .dropdownOptions.active {
+    background-color: #E75C33;
   }
 
   .bubbleFilters {
     /* display: flex; */
     /* flex-direction: row; */
     text-align: center;
+    background-color: #FEFAF1;
+    z-index: 1;
     }

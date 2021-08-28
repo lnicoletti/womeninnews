@@ -145,9 +145,6 @@
             populateDropdown(headlinesSite, "#pubdropdown", "site")
             drawBubbleChart(headlinesSite, bubbleChartB, "bias")
             drawBubbleChart(headlinesSite, bubbleChartP, "polarity")
-            // drawBubbleChart(headlinesSiteFilt, bubbleChartP, "polarity")
-            // drawBubbleChartB(headlinesSite, bubbleChartB)
-
         })
 
         // Sticky timeline enabled only during temporal chart
@@ -156,6 +153,14 @@
                 $('#stickyXaxis').css({'position': 'static', 'top': '0px'}); 
             }else{
                 $('#stickyXaxis').css({'position': 'sticky', 'top': '0px'}); 
+            }
+        });
+
+        $(window).scroll(function() {
+            if ($(this).scrollTop() - $('#scoreboardsection').position().top > -700){
+                $('.bubbleFilters').css({'position': 'static', 'top': '0px'}); 
+            }else{
+                $('.bubbleFilters').css({'position': 'sticky', 'top': '0px'}); 
             }
         });
 
@@ -1460,12 +1465,12 @@
                         }
                         
                         // define circles elements
-                        circles = chart.select("#body"+variable)
+                    circles = chart.select("#body"+variable)
                                         .selectAll('circle')
                                         .data(filterData);
 
                         // define logos elements
-                        logos = chart.select("#body"+variable)
+                    logos = chart.select("#body"+variable)
                                         .selectAll('image')
                                         .data(filterData);
                 
@@ -1637,16 +1642,25 @@
 
             // selected_city = d3.event.target.value;
             
-            console.log(selection.toLowerCase())
+            // console.log(selection.toLowerCase())
             // console.log(circles._groups[0].filter(d=>d.__data__.country_of_pub.toLowerCase() === selection))
-            console.log(circles._groups[0].filter(d=>d.__data__.country_of_pub.toLowerCase().match(selection.toLowerCase())))
+            // console.log(circles._groups[0].filter(d=>d.__data__.country_of_pub.toLowerCase().match(selection.toLowerCase())))
 
+            // allCircs = Array.from(d3.selectAll(".forceCircles")._groups[0])
+            allCircs = d3.selectAll(".forceCircles")
+            allLogos = d3.selectAll(".forceLogos")
+            
+            // console.log(allCircs.filter(d=>d.__data__.country_of_pub.toLowerCase() === selection))
+            // console.log("up",circles)
+            // console.log("all",allCircs)
             // console.log(filterData.map(d=>d.country_of_pub.toLowerCase() === selection.toLowerCase()))
 
             // circles.style("stroke", d=>d.country_of_pub.toLowerCase() === selection.toLowerCase()?"#E75C33":"#282828")
             // circles.style("stroke-width", d=>d.country_of_pub.toLowerCase() === selection.toLowerCase()?"2px":"0.6px")
-            circles.style("fill", d=>d.country_of_pub.toLowerCase() === selection.toLowerCase()?"#F7DC5B":"#FEFAF1")
-            circles.style("opacity", d=>d.country_of_pub.toLowerCase() === selection.toLowerCase()?"1":
+            allCircs.style("fill", d=>d.country_of_pub.toLowerCase() === selection.toLowerCase()?"#F7DC5B":"#FEFAF1")
+            allCircs.style("opacity", d=>d.country_of_pub.toLowerCase() === selection.toLowerCase()?"1":
+                                     selection===""?"1":"0.2")
+            allLogos.style("opacity", d=>d.country_of_pub.toLowerCase() === selection.toLowerCase()?"1":
                                      selection===""?"1":"0.2")
                     
             })
@@ -1657,17 +1671,22 @@
 
             // selected_city = d3.event.target.value;
             
-            console.log(selection.toLowerCase())
+            // console.log(selection.toLowerCase())
             // console.log(circles._groups[0].filter(d=>d.__data__.country_of_pub.toLowerCase() === selection))
-            console.log(circles._groups[0].filter(d=>d.__data__.site.toLowerCase().match(selection.toLowerCase())))
+            // console.log(circles._groups[0].filter(d=>d.__data__.site.toLowerCase().match(selection.toLowerCase())))
+
+            allCircs = d3.selectAll(".forceCircles")
+            allLogos = d3.selectAll(".forceLogos")
 
             // console.log(filterData.map(d=>d.country_of_pub.toLowerCase() === selection.toLowerCase()))
 
             // circles.style("stroke", d=>d.country_of_pub.toLowerCase() === selection.toLowerCase()?"#E75C33":"#282828")
             // circles.style("stroke-width", d=>d.country_of_pub.toLowerCase() === selection.toLowerCase()?"2px":"0.6px")
-            circles.style("fill", d=>d.site.toLowerCase() === selection.toLowerCase()?"#F7DC5B":"#FEFAF1")
-            circles.style("opacity", d=>d.site.toLowerCase() === selection.toLowerCase()?"1":
+            allCircs.style("fill", d=>d.site.toLowerCase() === selection.toLowerCase()?"#F7DC5B":"#FEFAF1")
+            allCircs.style("opacity", d=>d.site.toLowerCase() === selection.toLowerCase()?"1":
                                         selection===""?"1":"0.2")
+            allLogos.style("opacity", d=>d.site.toLowerCase() === selection.toLowerCase()?"1":
+                                     selection===""?"1":"0.2")
                     
             })
 
@@ -1679,13 +1698,14 @@
             var select = d3.select(div)
 
             const unique_countries = d3.map(data, d=>d[attribute]).filter(onlyUnique);
-            unique_countries.unshift("")
+            attribute==="country_of_pub"?unique_countries.unshift("Country..."):unique_countries.unshift("Newsroom...")
+            // unique_countries.unshift("")
             // console.log("unique",unique_countries)
 
             select.selectAll("option")
             .data(unique_countries)
             .join("option")
-                .attr("value", d=>d)
+                .attr("value", d=>d==="Country..."||d==="Newsroom..."?"":d)
                 .text(d=>d);
         }
 
