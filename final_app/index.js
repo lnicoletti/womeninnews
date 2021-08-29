@@ -353,7 +353,8 @@
             data = data.filter(d=>(d.popularity==1)&&(Math.abs(d.difference) > 0.05)
                                                    &&((d.site_clean !== "dailysun.co.za")
                                                    &&(d.site_clean !== "msnbc")))
-            // data = data.sort((a,b)=> d3.descending(+a.difference, +b.difference))
+                                                   
+            data = data.sort((a,b)=> d3.descending(+a.polarity_women, +b.polarity_women))
             // data = data.filter(d=> Math.abs(d.difference) > 0.05)
             // data = data.filter(d=>d.site_clean !== "dailysun.co.za")
 
@@ -376,32 +377,13 @@
             lollipopChart.append("g")
             .call(d3.axisLeft(y)
                     .tickSize(0))
-            .call(g => g.select(".domain").remove())
+            // .call(g => g.select(".domain").remove())
             .attr("class", "polarityCompyAxis");
             
           lollipopChart.append("g")
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(x))
             .attr("class", "polarityCompxAxis")
-        
-
-        // lollipopChart.append("text")
-        //     .attr("class", "xAxisLabel")
-        //     .attr("y", y("msn"))
-        //     .attr("x", x(data.filter(d=>d.site_clean==="msn")[0].polarity_base))
-        //     // .attr("dy", "-2em")
-        //     .text("All headlines")
-        //     .attr("class", "polarityCompAllText")
-                      
-          
-        //   lollipopChart.append("text")
-        //     .attr("class", "xAxisLabel")
-        //     .attr("y", y("msn"))
-        //     .attr("x", x(data.filter(d=>d.site_clean==="msn")[0].polarity_women))
-        //     .text("Headlines about women")
-        //     .attr("class", "polarityCompFemText")
-        //     .call(wrap, 100)
-        //     // .attr("dy", "-5em")
         
           // Lines  
         
@@ -423,6 +405,7 @@
               .attr("x2", function(d) { return x(d.polarity_women); })
               .attr("y1", function(d) { return y(d.site_clean); })
               .attr("y2", function(d) { return y(d.site_clean); })
+              .attr("class", "polarityCompBubbleLine")
               .attr("stroke", "black")
               .attr("stroke-width", "2.5px")
         
@@ -450,7 +433,7 @@
               .attr("r", "11")
               // .style("fill", "#4C4082")
 
-               // Circles of variable 2
+            // text of polarity women
           lollipopChart.selectAll("mycircle")
             .data(data)
             .join("text")
@@ -528,6 +511,87 @@
             .attr("dy", "1em")
             .style("text-anchor", "end")
             .text("More polarizing language →")
+
+
+        // sort chart by difference
+        d3.select("#sortLollipop").append("button")
+            .text("Sort by difference") //I modified the first two lines
+            .on("click", function(){
+                // reorder site names
+                dataSort = data.sort((a,b)=> d3.descending(+a.difference, +b.difference))
+                y.domain(dataSort.map(d=>d.site_clean))
+                // change axis
+                lollipopChart.select(".polarityCompyAxis").transition().duration("1000").call(d3.axisLeft(y)
+                            .tickSize(0))                     
+
+                // sort the circles
+                lollipopChart.selectAll("circle")//.attr("r", 20)//the bars were added before
+                            // .data(data.sort((a,b)=> d3.descending(+a.difference, +b.difference)))
+                    .sort((a, b) => a !== undefined? d3.ascending(+a.difference, +b.difference):""
+                    ).transition().duration("1000")
+                    .attr("cy", (d, i)=>
+                        
+                        d !== undefined?
+                        y(d.site_clean):"-60"//xScale is defined earlier
+                    )
+                // sort the annotations
+                lollipopChart.selectAll(".polarityDiffAnnotation")//.attr("r", 20)//the bars were added before
+                            // .data(data.sort((a,b)=> d3.descending(+a.difference, +b.difference)))
+                    .sort((a, b) => d3.ascending(+a.difference, +b.difference))
+                    .transition().duration("1000")
+                    .attr("y", (d, i)=> y(d.site_clean))
+                // sort the lines
+                lollipopChart.selectAll(".polarityCompBubbleLine")//.attr("r", 20)//the bars were added before
+                            // .data(data.sort((a,b)=> d3.descending(+a.difference, +b.difference)))
+                    .sort((a, b) => d3.ascending(+a.difference, +b.difference))
+                    .transition().duration("1000")
+                    .attr("x1", (d, i)=>x(d.polarity_base))
+                    .attr("x2", (d, i)=>x(d.polarity_women))
+                    .attr("y1", (d, i)=>y(d.site_clean))
+                    .attr("y2", (d, i)=>y(d.site_clean))
+                    // .attr("cy", (d, i)=>d !== undefined? y(d.site_clean):"-60"//xScale is defined earlier
+                    // )
+                })
+
+        // sort chart by polarity women
+        d3.select("#sortLollipop").append("button")
+        .text("Sort by women polarity") //I modified the first two lines
+        .on("click", function(){
+            // reorder site names
+            dataSort = data.sort((a,b)=> d3.descending(+a.polarity_women, +b.polarity_women))
+            y.domain(dataSort.map(d=>d.site_clean))
+            // change axis
+            lollipopChart.select(".polarityCompyAxis").transition().duration("1000").call(d3.axisLeft(y)
+                            .tickSize(0))
+
+            // sort the circles
+            lollipopChart.selectAll("circle")//.attr("r", 20)//the bars were added before
+                        // .data(data.sort((a,b)=> d3.descending(+a.difference, +b.difference)))
+                .sort((a, b) => a !== undefined? d3.ascending(+a.polarity_women, +b.polarity_women):""
+                ).transition().duration("1000")
+                .attr("cy", (d, i)=>
+                    
+                    d !== undefined?
+                    y(d.site_clean):"-60"//xScale is defined earlier
+                )
+            // sort the annotations
+            lollipopChart.selectAll(".polarityDiffAnnotation")//.attr("r", 20)//the bars were added before
+                        // .data(data.sort((a,b)=> d3.descending(+a.difference, +b.difference)))
+                .sort((a, b) => d3.ascending(+a.polarity_women, +b.polarity_women))
+                .transition().duration("1000")
+                .attr("y", (d, i)=> y(d.site_clean))
+            // sort the lines
+            lollipopChart.selectAll(".polarityCompBubbleLine")//.attr("r", 20)//the bars were added before
+                        // .data(data.sort((a,b)=> d3.descending(+a.difference, +b.difference)))
+                .sort((a, b) => d3.ascending(+a.polarity_women, +b.polarity_women))
+                .transition().duration("1000")
+                .attr("x1", (d, i)=>x(d.polarity_base))
+                .attr("x2", (d, i)=>x(d.polarity_women))
+                .attr("y1", (d, i)=>y(d.site_clean))
+                .attr("y2", (d, i)=>y(d.site_clean))
+                // .attr("cy", (d, i)=>d !== undefined? y(d.site_clean):"-60"//xScale is defined earlier
+                // )
+            })
 
         }
 
@@ -1713,6 +1777,8 @@
         function onlyUnique(value, index, self) {
             return self.indexOf(value) === index;
           }
+
+
 
 
 

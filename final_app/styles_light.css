@@ -751,6 +751,10 @@ span{
     font-weight: bold;
     text-transform: uppercase;
   }
+
+  .polarityCompyAxis .domain {
+      stroke:none;
+  }
   
    .grid {
     stroke: lightgrey;
