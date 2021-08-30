@@ -852,8 +852,7 @@ span{
     }
 
     .scoreChartBar {
-      stroke: black;
-      fill: white;
+      stroke: #282828;
       stroke-width: 0.5px;
 
     }
@@ -864,7 +863,7 @@ span{
       font-size:10px;
       max-width: 10px;
       text-align: center;
-      font-family: 'Barlow Condensed';
+      font-family: Arial, Helvetica, sans-serif;
       font-style: bold;
       text-transform: uppercase;
       color: #282828;
@@ -876,3 +875,19 @@ span{
       font-size: 9px;
 
   }
+
+  .stackedBarAnnotation {
+    fill: #E75C33;
+    font-family: Helvetica;
+    font-weight: 900;
+    font-size: 12px;
+    text-anchor:end;
+    transform: translate(100px, 5px)
+  }
+
+  /* #stackedRects {
+
+    stroke: #282828;
+    fill: #FEFAF1;
+    stroke-width: 0.1px;
+  } */

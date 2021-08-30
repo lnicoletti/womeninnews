@@ -330,8 +330,9 @@
             .attr("y", function(d) { return y(d.word); })
             .attr("width", barWidth)
             .attr("height", barHeight)
-            .attr("class", "scoreChartBar")
             .style("fill", function(d) { if (d.word == 'man') {return '#F7DC5B'} else {return '#FEFAF1'}})
+            // .style("stroke", "#282828")
+            .attr("class", "scoreChartBar")
 
             svg.selectAll("g")
             .data(top10)
