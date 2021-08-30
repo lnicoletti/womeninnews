@@ -320,6 +320,17 @@ font-size: 18px;
 margin-bottom: 0;
 }
 
+.stackedChartDescription {
+    max-width: 30vw;
+    text-align: justify;
+    text-anchor: middle;
+    color: #282828;
+    /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 18px;
+    margin-bottom: 0;
+}
+
 .subtitle {
 margin-top: 0;
 margin-bottom: 10;
@@ -882,8 +893,32 @@ span{
     font-weight: 900;
     font-size: 12px;
     text-anchor:end;
+    text-transform: uppercase;
     transform: translate(100px, 5px)
   }
+
+  .stackedBars {
+    transform: translateX(10px)
+  }
+
+  .stackedChartCountries {
+    margin-bottom:30px;
+    font-weight:500px;
+    transform: translate(10px, 30px);
+    font-size:13px;
+    max-width: 13px;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: bold;
+    text-transform: uppercase;
+    color: #282828;
+    
+}
+
+.stackedBarSection {
+    display:flex;
+    flex-direction: row;
+}
 
   /* #stackedRects {
 

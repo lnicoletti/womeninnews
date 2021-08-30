@@ -1523,7 +1523,8 @@
             // var xScale = d3.scaleLinear()
             var xScale = d3.scaleSymlog()
                     .range([margin5.left*2+margin5.right, bodywidth5])
-                    .domain(d3.extent(filterData, d => +d[variable]))
+                    .domain(variable==="polarity"?[0, d3.max(filterData, d => +d[variable])]:
+                                                    d3.extent(filterData, d => +d[variable]))
 
             // console.log(chart, variable, d3.extent(filterData, d => +d[variable]))
 
