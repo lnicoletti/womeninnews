@@ -1,7 +1,7 @@
 // set the dimensions and margins of the graph
 var margin = {top: 10, right: 30, bottom: 30, left: 250},
     width = 1000 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    height = 1500 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
 var svg = d3.select("#my_dataviz")
@@ -16,13 +16,16 @@ var svg = d3.select("#my_dataviz")
 d3.csv("../data/processed/polarity_comparison.csv", d3.autoType).then(function(data){
     console.log(data)
     //data = data.sort((a,b)=>d3.descending(+a.polarity_women, +b.polarity_women)) 
+    data = data.filter(d=>d.popularity==1)
     data = data.sort((a,b)=> d3.descending(+a.difference, +b.difference))
-    data = data.filter(d=> Math.abs(d.difference) > 0.15)
+    
+    data = data.filter(d=> Math.abs(d.difference) > 0.05)
+    data = data.filter(d=>d.site_clean!='dailysun.co.za')
 
 
   // Add X axis
   var x = d3.scaleLinear()
-    .domain([-0.1,d3.max(data, d=>d.difference)+0.1])
+    //.domain([0,d3.max(data, d=>d.difference)+0.1])
     .range([ 0, width-10]);
    // .padding(0.001);
     
@@ -86,7 +89,7 @@ d3.csv("../data/processed/polarity_comparison.csv", d3.autoType).then(function(d
   .enter()
   .append("line")
     .attr("x1", 10)
-    .attr("x2", width)
+    .attr("x2", 500)
     .attr("y1", function(d) { return y(d.site_clean); })
     .attr("y2", function(d) { return y(d.site_clean); })
     .attr("class", "grid");

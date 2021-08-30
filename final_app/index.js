@@ -80,7 +80,7 @@
         // .attr("z-index", "100")
     
     // draw the legend for first chart
-    drawBarLegend()
+    //drawBarLegend()
     // Load data and run functions to render charts
     Promise.all([
         // d3.csv("https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@d5a987c/hosted_data/headlines_site.csv"),
@@ -119,10 +119,11 @@
             // 1) lollipop chart
             renderLollipop(polComparison)
             // 1) bar charts
-            drawBar(countries_data, "#chart1", "India", 15)    
-            drawBar(countries_data, "#chart2", "USA", 15)   
-            drawBar(countries_data, "#chart3", "UK", 15)   
-            drawBar(countries_data, "#chart4", "South Africa", 15) 
+            drawBar(countries_data, "#chart0", "All", 8)   
+            drawBar(countries_data, "#chart1", "India", 5)    
+            drawBar(countries_data, "#chart2", "USA", 5)   
+            drawBar(countries_data, "#chart3", "UK", 5)   
+            drawBar(countries_data, "#chart4", "South Africa", 5) 
             
             // 2) temporal chart
             filter_years = [2009, 2022]
@@ -251,83 +252,115 @@
                     .call(wrap, 170)
         }
   
+        // function drawBar(countries_data, chart, selected_country, word_count) {
+
+        //     // set the dimensions and margins of the graph
+        //     var margin = {top: 50, right: 30, bottom: 10, left: 50},
+        //     width = 300 - margin.left - margin.right,
+        //     height = 420 - margin.bottom - margin.top;
+
         function drawBar(countries_data, chart, selected_country, word_count) {
 
+            //countries_data = if (selected_country == "All"){return}
+
+            // var margin = {top: 50, right: 30, bottom: 10, left: 50},
+            // width = 250 - margin.left - margin.right,
+            // height = 350 - margin.bottom - margin.top;
+
             // set the dimensions and margins of the graph
-            var margin = {top: 50, right: 30, bottom: 10, left: 50},
-            width = 300 - margin.left - margin.right,
-            height = 420 - margin.bottom - margin.top;
-        
-            dataBars = countries_data.filter(d=>d.country == selected_country)
+            var margin = {top: 50, right: 0, bottom: 10, left: 0},
+            width = 150 - margin.left - margin.right,
+            height = 200 - margin.bottom - margin.top;
+
+            // data = function(d) {if (selected_country !='All') {return countries_data.filter(d=>d.country == selected_country)}
+            // else {return countries_data}}
+            // console.log(data)
+
+            data = [{country:"South Africa", data:countries_data.filter(d=>d.country == selected_country)}, 
+            {country:"USA", data:countries_data.filter(d=>d.country == selected_country)}, 
+            {country:"India", data:countries_data.filter(d=>d.country == selected_country)}, 
+            {country:"UK", data:countries_data.filter(d=>d.country == selected_country)},
+            {country:'All', data: countries_data}]
+
+            dataBars = data.filter(c=>c.country===selected_country)[0]['data']
+            // dataBars = countries_data.filter(d=>d.country == selected_country)
             dataBars = dataBars.filter(d=>d.year == 2020)
-            //dataBars = dataBars.sort(function(a,b) { return d3.descending(+a.frequency, +b.frequency) })
+            //console.log(dataBars)
             dataBars = dataBars.sort(function(a,b) { return d3.descending(+a.frequency, +b.frequency) })
-            console.log(dataBars)
+            //console.log(dataBars)
             
             top10 = dataBars.filter(function(d,i){ return i<word_count })
-        
-            //margin = {top: 69, right: 90, bottom: 5, left: 90},
-            //width = width/1.5,
-            //height = height;
-            // barpad = 20
+            console.log(top10)
+
 
             flags = [{country:"South Africa", flag:"flags/south-africa.svg"}, {country:"USA", flag:"flags/united-states.svg"}, 
-                     {country:"India", flag:"flags/india.svg"}, {country:"UK", flag:"flags/united-kingdom.svg"}]
+                        {country:"India", flag:"flags/india.svg"}, {country:"UK", flag:"flags/united-kingdom.svg"}, {country: 'All', flag:'None'}]
+
+            countryNames = [{country:"South Africa", name:"South Africa"}, {country:"USA", name:"United States"}, 
+                        {country:"India", name:"India"}, {country:"UK", name:"United Kingdom"}, {country: 'All', name:'All 4 countries'}]
         
             var svg = d3.select(chart)
             .append("svg")
             .attr("preserveAspectRatio", "xMinYMin meet")
-            .attr("viewBox", "0 0 "+ width +"," + (height + margin.top)+"")
-            .attr("class", "svgBars")
-            // .attr("width", width + margin.left + margin.right)
-            // .attr("height", height + margin.top + margin.bottom)
+            .attr("viewBox", "0 0 "+ (width - 40) +"," + (height + margin.top)+"")
+            // .attr("class", "svgBars")
             .append("g")
             .attr("transform",
                 "translate(" + margin.left + "," + margin.top + ")")
         
             // Add X axis
-            var x = d3.scaleLinear()
-            .domain([0, d3.max(top10,d=>+d.frequency)])
-            .range([ 0, width-margin.left]).nice();
+            // var x = d3.scaleLinear()
+            // .domain([0, d3.max(top10,d=>+d.frequency)])
+            // .range([ 0, width-margin.left]).nice();
                 
             // Y axis
             var y = d3.scaleBand()
             .range([ 0, height ])
             .domain(top10.map(function(d) { return d.word; }))
             // change this to change the distance of the word from the bar
-            .padding(0);
-        
-            svg.append("g")
-            .call(d3.axisLeft(y).tickSize(0))
-            .attr("class", "yAxis")
-            .attr("transform", "translate(0, -1)")
-            
-            
+            .padding(0.1);      
+                
             //Bars
+            barHeight = height/5 - 10
+            barWidth = width/1.8
             svg.selectAll("myRect")
             .data(top10)
             .join("rect")
-            .attr("x", x(0) )
+            //.attr("x", x(0) )
             .attr("y", function(d) { return y(d.word); })
-            .attr("width", function(d) { return x(d.frequency); })
-            .attr("height", 20)
-            // .attr("class", "barChart")
-            .attr("fill", "lightgrey")
+            .attr("width", barWidth)
+            .attr("height", barHeight)
+            .attr("class", "scoreChartBar")
+            .style("fill", function(d) { if (d.word == 'man') {return '#F7DC5B'} else {return '#FEFAF1'}})
+
+            svg.selectAll("g")
+            .data(top10)
+            .join("text")
+            .attr("x", barWidth/2.5)
+            .attr("y", function(d) { return y(d.word) + barHeight/1.5; })
+            .attr("text-anchor", "left")
+            .text(function(d) { return d.word; })
+            .attr("class", "scoreChartBarText")
+            .style("font-weight", function(d) { if (d.word == 'man') {return 'bold'} else {return 'normal'}})
+            // .style("font-size", 9)
+
         
-            // change name of country for bar chart
-            // TODO: Fix this
-            // svg.append("text")
-            //     .attr("x", 0)             
-            //     .attr("dy", -10)
-            //     .attr("class", "barLegendText") 
-            //     .text(selected_country);
 
             svg.append("svg:image")
-            .attr('width', "40px")
-            .attr("x", 0) 
-            .attr("y", 0)            
+            .attr('width', "20px")
+            .attr("x", (width / 5))             
+            .attr("y", 0 - (margin.top / 5))           
             .attr("transform", "translate(0, -40)")
             .attr("xlink:href", flags.filter(c=>c.country===selected_country)[0]['flag'])
+
+            svg.append("text")
+            .attr("width", "5px")
+            .attr("x", (width / 5))             
+            .attr("y", 0-margin.top/4)
+            .attr("text-anchor", "middle")  
+            .text(countryNames.filter(c=>c.country===selected_country)[0]['name'])
+            .attr("class", "scoreChartTitle")
+            .call(wrap, 80);
 
         }
 

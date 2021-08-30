@@ -851,6 +851,8 @@ span{
     z-index: 1;
     }
 
+    /* Score board styles*/
+
     .scoreChartBar {
       stroke: black;
       fill: white;
@@ -859,9 +861,8 @@ span{
     }
     .scoreChartTitle {
       margin-bottom: 30px;
-      font-weight:500;
-      transform: translateX(10px);
-      font-size:10px;
+      font-weight:250;
+      font-size:7px;
       max-width: 10px;
       text-align: center;
       font-family: 'Barlow Condensed';
@@ -869,10 +870,4 @@ span{
       text-transform: uppercase;
       color: #282828;
       
-  }
-
-  .scoreChartBarText {
-      font-family: sans-serif;
-      font-size: 9px;
-
   }
