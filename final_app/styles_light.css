@@ -329,6 +329,7 @@ margin-bottom: 0;
     font-family: sans-serif;
     font-size: 16px;
     margin-bottom: 0;
+    transform:translateY(150px)
 }
 
 #stackedChartLegend {
@@ -910,10 +911,22 @@ span{
     /* transform: translate(100px, 5px) */
   }
 
+  .lollipopTextbutton {
+    color: #0BBF99;
+    /* font-family: Helvetica; */
+    font-weight: 400px;
+    /* font-size: 16px; */
+    /* font-family: Georgia, 'Times New Roman', Times, serif; */
+    font-family: sans-serif;
+    font-size: 18px;    
+    text-transform: uppercase;
+    /* transform: translate(100px, 5px) */
+  }
+
   .stackedBarThemeAnnotation {
     /* color: #E75C33; */
     font-family: Helvetica;
-    font-weight: 900;
+    font-weight: 900px;
     font-size: 16px;
     text-transform: uppercase;
     /* transform: translate(100px, 5px) */
@@ -934,6 +947,18 @@ span{
     color: #FEFAF1;
     
   }
+
+  .lollipopTextbutton:hover {
+    background-color: #0BBF99;
+    color: #FEFAF1;
+  }
+
+  .lollipopTextbutton:focus {
+    background-color: #0BBF99    ;
+    color: #FEFAF1;
+    font-weight: 900px;
+
+    }
 
   #inTextViolence:hover {
     background-color: #F2C5D3;
@@ -977,7 +1002,19 @@ span{
 .stackedBarSection {
     display:flex;
     flex-direction: row;
+    /* text-align: center; */
+    margin: auto;
+    width: 60%;
+    /* align-items: center; */
 }
+
+/* #stackedChart {
+    text-align: center;
+}
+
+#stackedChartLegend {
+    text-align: center;
+} */
 
   /* #stackedRects {
 

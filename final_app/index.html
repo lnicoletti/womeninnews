@@ -51,7 +51,8 @@
 
     </div>
     <!-- STACKED BAR SECTION -->
-    <div class="stackedBarSection" style="text-align: center;">
+    <div class="stackedBarSection" >
+      <!-- style="text-align: center;" -->
       <svg id="stackedChart"></svg>
       <div id="stackedChartLegend">
           <p class="stackedChartDescription"> 
@@ -118,8 +119,21 @@
     <!-- BARBELL SECTION -->
     <div class="header">
       <h1 style = "text-align: center" class="sectionHeader">Headlines about women are more polarizing</h1>
+    </div>
+    <div id="sortLollipop" style="text-align: center;">
+      <div class="subtitle">
+        <p class="description"> Clearly, newsrooms choose strong language and topics to communicate stories about
+           women subjects. Wait a second... isn't that what newsrooms are all about? To only share <italic>high impact stories</italic>, 
+           so as to capture the reader's attention in the shortest time possible? This gives reason to think that <italic>all headlines</italic> are 
+           <italic>polarizing</italic>, not just those about <italic>women</italic>.<br><br>
+           With this hypothesis in mind, or team went on to analyze the language used in headlines taken at random (regarding just about any topic) and 
+           compared it the language that is used in headlines that portray women subjects. We found, that on average, across more than <b>200 newsrooms</b>
+           In 4 continents, headlines that speak about women subjects are <b>40% more polarizing</b> than the average headline.<br><br>
+           In the chart below, we rank newsrooms according to <button id="sortLollipopDiff" class="lollipopTextbutton">where this difference is most pronounced</button> or according to 
+           <button id="sortLollipopPol" class="lollipopTextbutton">their absolute polarity score</button> regarding their women-focused headlines.
+        </p>
       </div>
-      <div id="sortLollipop" style="text-align: center;"></div>
+    </div>
       <div class="lollipop" class="svg-container" style="text-align: center;">
         <div id="lollipopChart"></div>
       </div>
@@ -163,17 +177,12 @@
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse a sodales arcu, quis mollis orci. Curabitur bibendum ac arcu nec bibendum. Nulla lobortis felis id sapien pulvinar, quis blandit orci interdum. Cras quis tincidunt ligula. Donec a magna in risus bibendum interdum malesuada eget leo. Cras vitae neque at sem sagittis porta eget eget metus. Nulla facilisi. In eget ipsum felis. Cras interdum iaculis sem a ullamcorper. Cras ac scelerisque erat. Duis venenatis justo sed maximus ornare. Fusce non varius justo.<br><br>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse a sodales arcu, quis mollis orci. Curabitur bibendum ac arcu nec bibendum. Nulla lobortis felis id sapien pulvinar, quis blandit orci interdum. Cras quis tincidunt ligula. Donec a magna in risus bibendum interdum malesuada eget leo. Cras vitae neque at sem sagittis porta eget eget metus. Nulla facilisi. In eget ipsum felis. Cras interdum iaculis sem a ullamcorper. Cras ac scelerisque erat. Duis venenatis justo sed maximus ornare. Fusce non varius justo.</p>
     </div>
-    <div class="header">
+    <!-- <div class="header">
       <h1 style = "text-align: center" class="sectionHeader" id="scoreboardsection">Most frequently used words are strikingly similar across continents</h1>
     </div>
     <div class="subtitle" style="text-align: center">
       <p class="description" style="text-align: center">The charts below show the words used most frequently by news outlets to talk about women in four countries. </p>
     </div>
-    <!-- <div class="barLegend" style="text-align: center; align-items:center">
-        <svg width="185" height="65" style="text-align: center;" id="barLegend">
-            <rect width="185" height="20" style="fill:#aaa;stroke:none" />
-        </svg>
-    </div> -->
     <div class="centeredCont">
       <div class="container">
         <div id="chart0" class="freqBars"> </div>
@@ -182,7 +191,7 @@
         <div id="chart3" class="freqBars"> </div>
         <div id="chart4" class="freqBars"> </div>
       </div>
-    </div>
+    </div> -->
     <!-- 2 TEMPORAL CHART -->
     <div class="header">
     <h1 style = "text-align: center" class="sectionHeader">A decade of headlines: the words we cho(o)se to sensationalize women</h1>

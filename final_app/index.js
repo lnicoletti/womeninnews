@@ -125,11 +125,11 @@
             // 1) lollipop chart
             renderLollipop(polComparison)
             // 1) bar charts
-            drawBar(countries_data, "#chart0", "All", 8)   
-            drawBar(countries_data, "#chart1", "India", 5)    
-            drawBar(countries_data, "#chart2", "USA", 5)   
-            drawBar(countries_data, "#chart3", "UK", 5)   
-            drawBar(countries_data, "#chart4", "South Africa", 5) 
+            // drawBar(countries_data, "#chart0", "All", 8)   
+            // drawBar(countries_data, "#chart1", "India", 5)    
+            // drawBar(countries_data, "#chart2", "USA", 5)   
+            // drawBar(countries_data, "#chart3", "UK", 5)   
+            // drawBar(countries_data, "#chart4", "South Africa", 5) 
             
             // 2) temporal chart
             filter_years = [2009, 2022]
@@ -554,8 +554,9 @@
 
 
         // sort chart by difference
-        d3.select("#sortLollipop").append("button")
-            .text("Sort by difference") //I modified the first two lines
+        // d3.select("#sortLollipop").append("button")
+        //     .text("Sort by difference") 
+        d3.select("#sortLollipopDiff")
             .on("click", function(){
                 // reorder site names
                 dataSort = data.sort((a,b)=> d3.descending(+a.difference, +b.difference))
@@ -594,44 +595,45 @@
                 })
 
         // sort chart by polarity women
-        d3.select("#sortLollipop").append("button")
-        .text("Sort by women polarity") //I modified the first two lines
-        .on("click", function(){
-            // reorder site names
-            dataSort = data.sort((a,b)=> d3.descending(+a.polarity_women, +b.polarity_women))
-            y.domain(dataSort.map(d=>d.site_clean))
-            // change axis
-            lollipopChart.select(".polarityCompyAxis").transition().duration("1000").call(d3.axisLeft(y)
-                            .tickSize(0))
+        // d3.select("#sortLollipop").append("button")
+        // .text("Sort by women polarity") 
+        d3.select("#sortLollipopPol")
+            .on("click", function(){
+                // reorder site names
+                dataSort = data.sort((a,b)=> d3.descending(+a.polarity_women, +b.polarity_women))
+                y.domain(dataSort.map(d=>d.site_clean))
+                // change axis
+                lollipopChart.select(".polarityCompyAxis").transition().duration("1000").call(d3.axisLeft(y)
+                                .tickSize(0))
 
-            // sort the circles
-            lollipopChart.selectAll("circle")//.attr("r", 20)//the bars were added before
-                        // .data(data.sort((a,b)=> d3.descending(+a.difference, +b.difference)))
-                .sort((a, b) => a !== undefined? d3.ascending(+a.polarity_women, +b.polarity_women):""
-                ).transition().duration("1000")
-                .attr("cy", (d, i)=>
-                    
-                    d !== undefined?
-                    y(d.site_clean):"-60"//xScale is defined earlier
-                )
-            // sort the annotations
-            lollipopChart.selectAll(".polarityDiffAnnotation")//.attr("r", 20)//the bars were added before
-                        // .data(data.sort((a,b)=> d3.descending(+a.difference, +b.difference)))
-                .sort((a, b) => d3.ascending(+a.polarity_women, +b.polarity_women))
-                .transition().duration("1000")
-                .attr("y", (d, i)=> y(d.site_clean))
-            // sort the lines
-            lollipopChart.selectAll(".polarityCompBubbleLine")//.attr("r", 20)//the bars were added before
-                        // .data(data.sort((a,b)=> d3.descending(+a.difference, +b.difference)))
-                .sort((a, b) => d3.ascending(+a.polarity_women, +b.polarity_women))
-                .transition().duration("1000")
-                .attr("x1", (d, i)=>x(d.polarity_base))
-                .attr("x2", (d, i)=>x(d.polarity_women))
-                .attr("y1", (d, i)=>y(d.site_clean))
-                .attr("y2", (d, i)=>y(d.site_clean))
-                // .attr("cy", (d, i)=>d !== undefined? y(d.site_clean):"-60"//xScale is defined earlier
-                // )
-            })
+                // sort the circles
+                lollipopChart.selectAll("circle")//.attr("r", 20)//the bars were added before
+                            // .data(data.sort((a,b)=> d3.descending(+a.difference, +b.difference)))
+                    .sort((a, b) => a !== undefined? d3.ascending(+a.polarity_women, +b.polarity_women):""
+                    ).transition().duration("1000")
+                    .attr("cy", (d, i)=>
+                        
+                        d !== undefined?
+                        y(d.site_clean):"-60"//xScale is defined earlier
+                    )
+                // sort the annotations
+                lollipopChart.selectAll(".polarityDiffAnnotation")//.attr("r", 20)//the bars were added before
+                            // .data(data.sort((a,b)=> d3.descending(+a.difference, +b.difference)))
+                    .sort((a, b) => d3.ascending(+a.polarity_women, +b.polarity_women))
+                    .transition().duration("1000")
+                    .attr("y", (d, i)=> y(d.site_clean))
+                // sort the lines
+                lollipopChart.selectAll(".polarityCompBubbleLine")//.attr("r", 20)//the bars were added before
+                            // .data(data.sort((a,b)=> d3.descending(+a.difference, +b.difference)))
+                    .sort((a, b) => d3.ascending(+a.polarity_women, +b.polarity_women))
+                    .transition().duration("1000")
+                    .attr("x1", (d, i)=>x(d.polarity_base))
+                    .attr("x2", (d, i)=>x(d.polarity_women))
+                    .attr("y1", (d, i)=>y(d.site_clean))
+                    .attr("y2", (d, i)=>y(d.site_clean))
+                    // .attr("cy", (d, i)=>d !== undefined? y(d.site_clean):"-60"//xScale is defined earlier
+                    // )
+                })
 
         }
 
@@ -1804,7 +1806,9 @@
             margin = ({top: 100, right: 0, bottom: 0, left: 100})
         
             var height = 2000 - margin.top - margin.bottom
-            var width = 600 - margin.left - margin.right
+            var width = 500 - margin.left - margin.right
+            // var height = 600 - margin.top - margin.bottom
+            // var width = 200 - margin.left - margin.right
         
         
             var svg = d3.select("#stackedChart")
