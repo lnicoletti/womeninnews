@@ -49,7 +49,37 @@
             <i>What are the most commonly used words to talk about women in headlines across different countries?</i> <br> <br>
             <i>What  kind  of  words  are  used  in  conjunction  with  each  other around the topic of women?</i> <br> <br>
 
-          </div>
+    </div>
+    <!-- STACKED BAR SECTION -->
+    <div class="stackedBarSection" style="text-align: center;">
+      <svg id="stackedChart"></svg>
+      <div id="stackedChartLegend">
+          <p class="stackedChartDescription"> 
+              Since 2005, a total of <b>406 unique words</b> have been used by Indian, South African, English, and American newsrooms in 
+              headlines that speak about <b>women</b>. 
+              But do cultural/geographical/political differences influence the way we portray women?<br><br><br><br>
+              Across 4 continents, the words most frequently used in headlines about women are strikingly similar. 
+              <span class="stackedBarTextAnnotation" id="inTextMan" value="man"><b>man</b></span> tops the charts in all 4 countries, followed by
+              <span class="stackedBarTextAnnotation" id="inTextKill" value="kill"><b>kill</b></span>, <span class="stackedBarTextAnnotation" id="inTextDie" value="die"><b>die</b></span>,
+              and <span class="stackedBarTextAnnotation" id="inTextPolice" value="police"><b>police</b></span>. You get the idea... In fact, it turns out that most words
+              used in headlines about women can be categorized into distinct categories: 
+              <span class="stackedBarThemeAnnotation" id="inTextViolence" value="violence"><b>violence</b></span> and 
+              <span class="stackedBarThemeAnnotation" id="inTextBias" value="female_bias"><b>women stereotypes</b></span>.<br><br><br><br>
+  
+              But what about language that is <span class="stackedBarThemeAnnotation" id="inTextEmpowerment" value="empowerement"><b>empowering</b></span> towards women?
+              Those words rank much lower in the frequency chart...
+          </p>
+      </div>
+    </div>
+    <div class="subtitle">
+      <p class="description"> 
+            It is these grounds that inform this study. The idea that we are what we consume is the ground from which we rise. <br><br>
+
+            While news consumption can influence our perceptions, news headlines allow a piece to turn from an article to a story. Headlines 
+            are designed to be catchy, sensational and with the advent of 24/7 news cycles, anxiety inducing. They make an imprint on our minds.
+            In this piece, we used data from more than 50,000 headlines from the news outlets of 4 different countries to illustrate how 
+            women are represented in news headlines around the world. <br><br></p>
+    </div>
     <div class="exampleheadlines">
       <div class="tooltipTL" id="tooltipTLmid">
         <span style="font-size: 11px; color:#E75C33"><b>MAY 2015 | TELEGRAPH.CO.UK</b></span><br><br><br>
@@ -85,7 +115,7 @@
             In this piece, we used data from more than 50,000 headlines from the news outlets of 4 different countries to illustrate how 
             women are represented in news headlines around the world. <br><br></p>
     </div>
-    <!-- tooltipTL -->
+    <!-- BARBELL SECTION -->
     <div class="header">
       <h1 style = "text-align: center" class="sectionHeader">Headlines about women are more polarizing</h1>
       </div>
@@ -237,7 +267,7 @@
 </body>
 <script src="https://d3js.org/d3.v6.min.js"></script>
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.10.0/d3.js" integrity="sha512-DyoWbEfs+NLId7Ocar5ViC9tUvCns1vA3y4hwGylwZ6t1Xi7zf2OKWYEf2O/ZzycZcVEuXc4Gxxb6cwY15niHg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="index.js"></script>
 <!-- <script src="https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@4856f13/final_app/index.js"></script> -->
 

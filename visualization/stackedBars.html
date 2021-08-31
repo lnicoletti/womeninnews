@@ -4,13 +4,25 @@
 </head>
 <div class="stackedBarSection" style="text-align: center;">
     <svg id="stackedChart"></svg>
-    <p class="stackedChartDescription"> 
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse a sodales arcu, quis mollis orci. Curabitur bibendum ac arcu nec bibendum. Nulla lobortis felis id sapien pulvinar, quis blandit orci interdum. Cras quis tincidunt ligula. Donec a magna in risus bibendum interdum malesuada eget leo. Cras vitae neque at sem sagittis porta eget eget metus. Nulla facilisi. In eget ipsum felis. Cras interdum iaculis sem a ullamcorper. Cras ac scelerisque erat. Duis venenatis justo sed maximus ornare. Fusce non varius justo.<br><br>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse a sodales arcu, quis mollis orci. Curabitur bibendum ac arcu nec bibendum. Nulla lobortis felis id sapien pulvinar, quis blandit orci interdum. Cras quis tincidunt ligula. Donec a magna in risus bibendum interdum malesuada eget leo. Cras vitae neque at sem sagittis porta eget eget metus. Nulla facilisi. In eget ipsum felis. Cras interdum iaculis sem a ullamcorper. Cras ac scelerisque erat. Duis venenatis justo sed maximus ornare. Fusce non varius justo.<br><br>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse a sodales arcu, quis mollis orci. Curabitur bibendum ac arcu nec bibendum. Nulla lobortis felis id sapien pulvinar, quis blandit orci interdum. Cras quis tincidunt ligula. Donec a magna in risus bibendum interdum malesuada eget leo. Cras vitae neque at sem sagittis porta eget eget metus. Nulla facilisi. In eget ipsum felis. Cras interdum iaculis sem a ullamcorper. Cras ac scelerisque erat. Duis venenatis justo sed maximus ornare. Fusce non varius justo.<br><br>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse a sodales arcu, quis mollis orci. Curabitur bibendum ac arcu nec bibendum. Nulla lobortis felis id sapien pulvinar, quis blandit orci interdum. Cras quis tincidunt ligula. Donec a magna in risus bibendum interdum malesuada eget leo. Cras vitae neque at sem sagittis porta eget eget metus. Nulla facilisi. In eget ipsum felis. Cras interdum iaculis sem a ullamcorper. Cras ac scelerisque erat. Duis venenatis justo sed maximus ornare. Fusce non varius justo.<br><br>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse a sodales arcu, quis mollis orci. Curabitur bibendum ac arcu nec bibendum. Nulla lobortis felis id sapien pulvinar, quis blandit orci interdum. Cras quis tincidunt ligula. Donec a magna in risus bibendum interdum malesuada eget leo. Cras vitae neque at sem sagittis porta eget eget metus. Nulla facilisi. In eget ipsum felis. Cras interdum iaculis sem a ullamcorper. Cras ac scelerisque erat. Duis venenatis justo sed maximus ornare. Fusce non varius justo.</p>
+    <div id="stackedChartLegend">
+        <p class="stackedChartDescription"> 
+            Since 2005, a total of <b>406 unique words</b> have been used by Indian, South African, English, and American newsrooms in 
+            headlines that speak about <b>women</b>. 
+            But do cultural/geographical/political differences influence the way we portray women?<br><br><br><br>
+            Across 4 continents, the words most frequently used in headlines about women are strikingly similar. 
+            <span class="stackedBarTextAnnotation" id="inTextMan" value="man"><b>man</b></span> tops the charts in all 4 countries, followed by
+            <span class="stackedBarTextAnnotation" id="inTextKill" value="kill"><b>kill</b></span>, <span class="stackedBarTextAnnotation" id="inTextDie" value="die"><b>die</b></span>,
+            and <span class="stackedBarTextAnnotation" id="inTextPolice" value="police"><b>police</b></span>. You get the idea... In fact, it turns out that most words
+            used in headlines about women can be categorized into distinct categories: 
+            <span class="stackedBarThemeAnnotation" id="inTextViolence" value="violence"><b>violence</b></span> and 
+            <span class="stackedBarThemeAnnotation" id="inTextBias" value="female_bias"><b>women stereotypes</b></span>.<br><br><br><br>
+
+            But what about language that is <span class="stackedBarThemeAnnotation" id="inTextEmpowerment" value="empowerement"><b>empowering</b></span> towards women?
+            Those words rank much lower in the frequency chart...
+        </p>
+    </div>
 </div>
 <script src="https://d3js.org/d3.v6.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="stackedBars.js"></script>
 <script>

@@ -1,22 +1,4 @@
-
-margin = ({top: 70, right: 0, bottom: 0, left: 100})
-
-var height = 2000 - margin.top - margin.bottom
-var width = 600 - margin.left - margin.right
-
-
-var svg = d3.select("#stackedChart")
-            .attr('width', width + margin.left + margin.right)
-            .attr('height', height + margin.top + margin.bottom);
-    // .attr("preserveAspectRatio", "xMinYMin meet")
-    // .attr("viewBox", "0 0 "+ width +"," + height+"")
-    // .classed("svg-content", true);
-    // margin = {top: 40, right: 100, bottom: 60, left: 60},
-    // width = +svg.attr("width")-200 - margin.left - margin.right,
-    // height = +svg.attr("height")+1000 - margin.top - margin.bottom,
-    // g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-  
+ 
 Promise.all([
     d3.csv("../data/processed/country_freqtheme_pivoted.csv", d3.autoType),
     d3.csv("../data/processed/word_themes.csv", d3.autoType)]).then((datasets) => {
@@ -32,6 +14,24 @@ Promise.all([
 // const themes = [{}]
 
 function renderStackedBars(data, themes) {
+
+    
+    margin = ({top: 100, right: 0, bottom: 0, left: 100})
+
+    var height = 2000 - margin.top - margin.bottom
+    var width = 600 - margin.left - margin.right
+
+
+    var svg = d3.select("#stackedChart")
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom);
+    // .attr("preserveAspectRatio", "xMinYMin meet")
+    // .attr("viewBox", "0 0 "+ width +"," + height+"")
+    // .classed("svg-content", true);
+    // margin = {top: 40, right: 100, bottom: 60, left: 60},
+    // width = +svg.attr("width")-200 - margin.left - margin.right,
+    // height = +svg.attr("height")+1000 - margin.top - margin.bottom,
+    // g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
   
 	console.log(data)
     // console.log(themes.filter(d=>d.word==="accuse")[0].theme)
@@ -75,21 +75,34 @@ function renderStackedBars(data, themes) {
     
 
     yAxis = g => g
-    .attr("transform", `translate(${margin.left},0)`)
-    .call(d3.axisLeft(y).ticks(null, "s"))
+    .attr("transform", `translate(${width+margin.right+30},210)`)
+    .call(d3.axisRight(y).tickSizeOuter(0).tickSizeInner(0))
     .call(g => g.selectAll(".domain").remove())
+    // .call(g=>g.selectAll(".tick text")
+    //                 .text((d, i) => i == 0 || i == 8 ? "↑ Frequency": "")).call(wrap, 100)
+
+     // y axis
+    yAxis = svg.append("g")
+     .call(yAxis)
+    
+    yAxis.selectAll(".tick text").remove()
+
+    yAxis.selectAll(".tick")
+        .append("text")
+        .text((d, i) => i == 8 ?"Frequency of use in news headlines ⇢": "")
+        // .text((d, i)=>console.log("ytick"+i))
+        .attr("x", 0)             
+        .attr("y", 0)
+        .attr("class", "stackedChartTicks")
+        .style("text-transform", "lowercase")
+        .style("transform", "rotate(-90deg)")
+        // .call(wrap, 10)
+
+    // svg.append("g")
+    //         .call(yAxis);
 
     formatValue = x => isNaN(x) ? "N/A" : x.toLocaleString("en")
 
-    svg.append("g")
-            .call(xAxis)
-            .attr("class", "stackedChartCountries")
-            .selectAll(".tick text")
-            .call(wrap, x.bandwidth());
-
-
-    // const svg = d3.create("svg")
-    //         .attr("viewBox", [0, 0, width, height]);
       
     rects = svg.append("g")
           .attr("class", "stackedBars")
@@ -112,25 +125,49 @@ function renderStackedBars(data, themes) {
             .attr("x", (d, i) => x(d.data.country))
             .attr("height", "4px")
             .attr("width", x.bandwidth())
-            .on("mouseover", (event, d) => highlightWords(d.key, d))
+            .on("mouseover", (event, d) => highlightWords(d.key, "chartHover", d))
             .on("mouseleave", (event,d)=> unHighlightWords(d.key))
             .transition().duration("5000")
             // .attr("y", d => y(d[1]))
             .attr("y", d => y(d.data[d.key]))
 
-            // .attr("height", d => y(d[0]) - y(d[1]))
-            
-    //       .append("title")
-    //         .text(d => `${d.data.country} ${d.key}
-    //   ${formatValue(d.data[d.key])}`)
-            
-      
-        // svg.append("g")
-        //     .call(yAxis);
+        
+            // x axis
+            xAxis = svg.append("g")
+            .call(xAxis)
+            .attr("class", "stackedChartCountries")
+    
+            xAxis.selectAll(".tick text").remove()
+                    // .call(wrap, x.bandwidth());
 
-        function highlightWords(word, d) {
+            // console.log(xAxis.selectAll(".tick")._groups[0][1].textContent)
 
-            console.log(themes.filter(c=>c.word===word)[0].theme)
+            // country names and flags
+            flags = [{country:"South Africa", flag:"flags/south-africa.svg"}, {country:"USA", flag:"flags/united-states.svg"}, 
+            {country:"India", flag:"flags/india.svg"}, {country:"UK", flag:"flags/united-kingdom.svg"}, {country: 'All countries', flag:''}]
+
+
+            xAxis.selectAll(".tick")
+                .append("text")
+                .text(d=>d)
+                .attr("x", 0)             
+                .attr("y", 0)
+                .attr("class", "stackedChartTicks")
+                .call(wrap, x.bandwidth())
+
+            xAxis.selectAll(".tick")
+                .append("svg:image")
+                    .attr('height', "35px")
+                    .attr("x", 0)             
+                    .attr("y", 0)
+                    .attr("transform", "translate(-17, -50)")
+                    .attr("xlink:href", d => console.log(d))
+                    .attr("xlink:href", d => flags.filter(c=>c.country===d)[0].flag)
+
+
+        function highlightWords(word, hoverType, d) {
+
+            // console.log(themes.filter(c=>c.word===word)[0].theme)
             // console.log(themes.filter(c=>c.word===word)[0].theme)
             d3.selectAll("."+ word)
             .attr("fill", "#E75C33")
@@ -140,10 +177,14 @@ function renderStackedBars(data, themes) {
               .selectAll("rect:not(."+ word+")")
               .attr("opacity", "0.5")
 
-            svg.append("text")
-                .attr("y", y(d.data[d.key]))
-                .text(d.key)
-                .attr("class", "stackedBarAnnotation")
+            if (hoverType === "chartHover") {
+                
+                svg.append("text")
+                    .attr("y", y(d.data[word]))
+                    .text(word)
+                    .attr("class", "stackedBarAnnotation")
+
+            }
         
         }
 
@@ -159,6 +200,57 @@ function renderStackedBars(data, themes) {
               .selectAll("rect")
               .attr("opacity", "1")
         }
+
+        function highlightThemes(theme) {
+
+            // console.log(themes.filter(c=>c.word===word)[0].theme)
+            // console.log(themes.filter(c=>c.word===word)[0].theme)
+
+            // d3.selectAll(".stackedBars")
+            //         .style("opacity", d=>themes.filter(c=>c.word===word)[0].theme===theme?"1":"0.2")
+        
+
+            // d3.selectAll(".stackedBars")
+            //   .allLogos.style("opacity", d=>d.site.toLowerCase() === selection.toLowerCase()?"1":
+            //   selection===""?"1":"0.2")
+        
+        }
+
+        // interaction with text
+        // words
+        $('.stackedBarTextAnnotation').on('mouseover', function () {
+            // var word = $(this)[0].innerText.toLowerCase()
+            var word = $(this)[0].attributes.value.value
+            console.log(word)
+            highlightWords(word, "inTextHover")
+            // d3.select("#rectsBlock").select("#barchart").select('svg rect[data-key='+key+']').style('fill', 'brown');
+        })
+        .on('mouseout', function () {
+            var word = $(this)[0].attributes.value.value
+            // console.log(word)
+            unHighlightWords(word)
+        })
+
+        // themes
+        $('.stackedBarThemeAnnotation').on('mouseover', function () {
+            // var word = $(this)[0].innerText.toLowerCase()
+            var theme = $(this)[0].attributes.value.value
+            console.log(theme)
+            // highlightThemes(theme)
+            d3.selectAll(".stackedBars")
+                    .selectAll("rect")//.attr("fill", d=>d.key==="man"?"red":"blue")
+                    .style("opacity", d=>themes.filter(c=>c.word===d.key)[0].theme===theme?"1":"0.2")
+        
+            // d3.select("#rectsBlock").select("#barchart").select('svg rect[data-key='+key+']').style('fill', 'brown');
+        })
+        .on('mouseout', function () {
+            d3.selectAll(".stackedBars")
+                    .selectAll("rect")
+                    .style("opacity", "1")
+        })
+
+
+
 };
 
 

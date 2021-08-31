@@ -321,14 +321,18 @@ margin-bottom: 0;
 }
 
 .stackedChartDescription {
-    max-width: 30vw;
-    text-align: justify;
-    text-anchor: middle;
+    max-width: 15vw;
+    text-align: left;
+    /* text-anchor: middle; */
     color: #282828;
     /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-size: 18px;
+    font-family: sans-serif;
+    font-size: 16px;
     margin-bottom: 0;
+}
+
+#stackedChartLegend {
+    transform: translateY(100);
 }
 
 .subtitle {
@@ -708,7 +712,7 @@ left: 0;
     
 
 span{
-    color: silver;
+    /* color: silver; */
     font-family: sans-serif
 }
 
@@ -897,22 +901,77 @@ span{
     transform: translate(100px, 5px)
   }
 
+  .stackedBarTextAnnotation {
+    color: #E75C33;
+    font-family: Helvetica;
+    font-weight: 900;
+    font-size: 16px;
+    text-transform: uppercase;
+    /* transform: translate(100px, 5px) */
+  }
+
+  .stackedBarThemeAnnotation {
+    /* color: #E75C33; */
+    font-family: Helvetica;
+    font-weight: 900;
+    font-size: 16px;
+    text-transform: uppercase;
+    /* transform: translate(100px, 5px) */
+  }
+
+  #inTextViolence {
+    color: #F2C5D3
+  }
+  #inTextBias {
+    color: #0BBF99
+  }
+  #inTextEmpowerment {
+    color: #F7DC5B
+  }
+
+  .stackedBarTextAnnotation:hover {
+    background-color: #E75C33;
+    color: #FEFAF1;
+    
+  }
+
+  #inTextViolence:hover {
+    background-color: #F2C5D3;
+    color: #FEFAF1
+  }
+
+  #inTextBias:hover {
+    background-color: #0BBF99;
+    color: #FEFAF1
+  }
+
+  #inTextEmpowerment:hover {
+    background-color: #F7DC5B;
+    color: #FEFAF1
+  }
+
   .stackedBars {
     transform: translateX(10px)
   }
 
   .stackedChartCountries {
-    margin-bottom:30px;
-    font-weight:500px;
-    transform: translate(10px, 30px);
-    font-size:13px;
+    margin-bottom:20px;
+    margin-top:30px;
+    transform: translate(10px, 80px);
     max-width: 13px;
     text-align: center;
-    font-family: Arial, Helvetica, sans-serif;
-    font-style: bold;
-    text-transform: uppercase;
-    color: #282828;
+    fill: #FEFAF1;
+    z-index: 10
     
+}
+
+.stackedChartTicks {
+    font-weight:900px;
+    font-size:12px;
+    font-family: Arial, Helvetica, sans-serif;
+    /* font-style: bold; */
+    text-transform: uppercase;
+    fill: #282828;
 }
 
 .stackedBarSection {
