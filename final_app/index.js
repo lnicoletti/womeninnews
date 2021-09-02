@@ -164,7 +164,7 @@
         });
 
         $(window).scroll(function() {
-            if ($(this).scrollTop() - $('#scoreboardsection').position().top > -700){
+            if ($(this).scrollTop() - $('#waveChartSection').position().top > -700){
                 $('.bubbleFilters').css({'position': 'static', 'top': '0px'}); 
             }else{
                 $('.bubbleFilters').css({'position': 'sticky', 'top': '0px'}); 
