@@ -83,42 +83,22 @@
     //drawBarLegend()
     // Load data and run functions to render charts
     Promise.all([
-        // d3.csv("https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@d5a987c/hosted_data/headlines_site.csv"),
         d3.csv("../data/processed/headlines_site_rapi.csv"),
-        d3.csv("../data/processed/country_time_freqrank_rapi_clean.csv", d3.autoType),
-        // d3.csv("https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@d5a987c/hosted_data/countries_clusters.csv"),
-        // d3.csv("https://raw.githubusercontent.com/lnicoletti/womeninnews/master/hosted_data/headlines_cl_sent_pol.csv"),
         d3.csv("../data/processed/headlines_cl_sent_sm_rapi.csv"),
         d3.csv("../data/processed/country_time_freqrank_rapi_clean.csv", d3.autoType),
         d3.csv("../data/processed/polarity_comparison.csv", d3.autoType),
         d3.csv("../data/processed/country_freqtheme_pivoted.csv", d3.autoType),
         d3.csv("../data/processed/word_themes.csv", d3.autoType)
-        // d3.csv("https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@d5a987c/hosted_data/countries_freq.csv"),
-        // d3.json("https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@d5a987c/hosted_data/word_connections_UK.json"),
-        // d3.json("https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@d5a987c/hosted_data/word_connections_USA.json"),
-        // d3.json("https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@d5a987c/hosted_data/word_connections_IN.json"),
-        // d3.json("https://cdn.jsdelivr.net/gh/lnicoletti/womeninnews@d5a987c/hosted_data/word_connections_SA.json"),
       ])
         .then((datasets) => {
             // define each dataset
             headlinesSite = datasets[0]
-            countries_data = datasets[1]
-            // countriesCls = datasets[1]
-            headlines = datasets[2]
-            tempWords = datasets[3]
-            polComparison = datasets[4]
-            dataWords = datasets[5]
-            themes = datasets[6]
-            // countries_data = datasets[3]
-            // UK_data = datasets[4]
-            // USA_data = datasets[5]
-            // IN_data = datasets[6]
-            // SA_data = datasets[7]
-            // console.log(SA_data)
-            // console.log(countries_data)
-            // console.log(headlinesSite) 
-            // console.log(countriesCls) 
-            // console.log(headlines) 
+            // countries_data = datasets[1]
+            headlines = datasets[1]
+            tempWords = datasets[2]
+            polComparison = datasets[3]
+            dataWords = datasets[4]
+            themes = datasets[5]
 
             // 1) stacked bars chart
             renderStackedBars(dataWords, themes)
@@ -163,11 +143,21 @@
             }
         });
 
+        // sticky filters for bubble charts
         $(window).scroll(function() {
             if ($(this).scrollTop() - $('#waveChartSection').position().top > -700){
                 $('.bubbleFilters').css({'position': 'static', 'top': '0px'}); 
             }else{
                 $('.bubbleFilters').css({'position': 'sticky', 'top': '0px'}); 
+            }
+        });
+
+        // sticky chart stacked bar
+        $(window).scroll(function() {
+            if ($(this).scrollTop() - $('#endStackedbarSection').position().top > -100){
+                $('#stickyStackedChart').css({'position': 'static', 'top': '0px'}); 
+            }else{
+                $('#stickyStackedChart').css({'position': 'sticky', 'top': '0px'}); 
             }
         });
 
