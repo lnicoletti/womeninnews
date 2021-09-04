@@ -1005,12 +1005,25 @@ span{
     /* text-align: center; */
     margin: auto;
     width: 60%;
+    /* overflow: auto; */
     /* align-items: center; */
 }
+
+/* #stickyStackedChart {
+    align-self: flex-start;
+} */
+
+#stickyStackedChart {
+    position: sticky;
+    top: 0;
+    align-self: flex-start; /* <-- this is the fix */
+    /* background-color: red;  Not necessary -- for example only */
+  }
 
 /* #stackedChart {
     text-align: center;
 }
+
 
 #stackedChartLegend {
     text-align: center;

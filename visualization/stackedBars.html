@@ -2,8 +2,12 @@
 <head>
     <link rel="stylesheet" href="../final_app/styles_light.css">
 </head>
-<div class="stackedBarSection" style="text-align: center;">
-    <svg id="stackedChart"></svg>
+<!-- STACKED BAR SECTION -->
+<div class="stackedBarSection" >
+    <!-- style="text-align: center;" -->
+    <div id="stickyStackedChart">
+      <svg id="stackedChart"></svg>
+    </div>
     <div id="stackedChartLegend">
         <p class="stackedChartDescription"> 
             Since 2005, a total of <b>406 unique words</b> have been used by Indian, South African, English, and American newsrooms in 
@@ -21,7 +25,7 @@
             Those words rank much lower in the frequency chart...
         </p>
     </div>
-</div>
+  </div>
 <script src="https://d3js.org/d3.v6.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="stackedBars.js"></script>

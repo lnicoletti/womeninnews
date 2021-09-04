@@ -1,0 +1,177 @@
+ #scrolly-side .scrolly {
+            display: flex;
+            max-width: 60rem;
+            margin: 3rem auto;
+            /* background-color: cornsilk; */
+            border: 1px;
+            padding: 1rem;
+            height: 430vh;
+        }
+        #scrolly-side {
+            height: 600vh;
+            /* background-color: grey; */
+            border: 1px
+
+        }
+        
+        * {
+             flex: 1;
+         }
+        
+        article {
+            padding-right: 1rem;
+            max-width: 30rem;
+        }
+            
+        .step {
+            min-height: 67vh;
+            margin-bottom: 1rem;
+            background-color: white;
+            transition: background-color 250ms ease-in-out;
+            max-width: 15vw;
+            
+            text-align: left;
+            /* text-anchor: middle; */
+            color: #282828;
+            /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
+            font-family: sans-serif;
+            font-size: 16px;
+            margin-bottom: 0;
+            transform:translateY(100vh)
+        }
+        
+        .step:last-of-type {
+            margin-bottom: 0;
+        }
+        .step.is-active {
+            background-color: gray;
+        }
+        
+        /* article > p {
+            margin: 0;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 400;
+            color: black;
+        }	 */
+        
+        #stickyStackedChart.sticky {
+            position: sticky;
+            width: 100%;
+            height: 100vh;
+            /* background: silver; */
+            margin: 0;
+            top: 5vh;
+            left: 0;
+        }
+
+        .stackedBarAnnotation {
+            fill: #E75C33;
+            font-family: Helvetica;
+            font-weight: 900;
+            font-size: 12px;
+            text-anchor:end;
+            text-transform: uppercase;
+            transform: translate(100px, 5px)
+          }
+        
+          .stackedBarTextAnnotation {
+            color: #E75C33;
+            font-family: Helvetica;
+            font-weight: 900;
+            font-size: 16px;
+            text-transform: uppercase;
+            /* transform: translate(100px, 5px) */
+          }
+
+          .stackedBarThemeAnnotation {
+            /* color: #E75C33; */
+            font-family: Helvetica;
+            font-weight: 900px;
+            font-size: 16px;
+            text-transform: uppercase;
+            /* transform: translate(100px, 5px) */
+          }
+
+          #inTextViolence {
+            color: #F2C5D3
+          }
+          #inTextBias {
+            color: #0BBF99
+          }
+          #inTextEmpowerment {
+            color: #F7DC5B
+          }
+        
+          .stackedBarTextAnnotation:hover {
+            background-color: #E75C33;
+            color: #FEFAF1;
+            
+          }
+
+          #inTextViolence:hover {
+            background-color: #F2C5D3;
+            color: #FEFAF1
+          }
+        
+          #inTextBias:hover {
+            background-color: #0BBF99;
+            color: #FEFAF1
+          }
+        
+          #inTextEmpowerment:hover {
+            background-color: #F7DC5B;
+            color: #FEFAF1
+          }
+        
+          .stackedBars {
+            transform: translateX(10px)
+          }
+        
+          .stackedChartCountries {
+            margin-bottom:20px;
+            margin-top:30px;
+            transform: translate(10px, 80px);
+            max-width: 13px;
+            text-align: center;
+            fill: #FEFAF1;
+            z-index: 10
+            
+        }
+        
+        .stackedChartTicks {
+            font-weight:900px;
+            font-size:12px;
+            font-family: Arial, Helvetica, sans-serif;
+            /* font-style: bold; */
+            text-transform: uppercase;
+            fill: #282828;
+        }
+
+        .stackedChartyTicks {
+            font-weight:900px;
+            font-size:15px;
+            font-family: Arial, Helvetica, sans-serif;
+            /* font-style: bold; */
+            text-transform: uppercase;
+            fill: #282828;
+        }
+        
+        
+        /* .bar-outer {
+            position: absolute;
+            top: 50%;
+            left: 5%;
+            transform: translateY(-50%);
+            width: 90%;
+            height: 4rem;
+            background-color: green;
+        }
+        
+        .bar-inner {
+            width: 10%;
+            height: 100%;
+            transition: width 1s ease-in-out;
+            background-color: red;
+        } */
+

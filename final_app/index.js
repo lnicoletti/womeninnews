@@ -152,14 +152,14 @@
             }
         });
 
-        // sticky chart stacked bar
-        $(window).scroll(function() {
-            if ($(this).scrollTop() - $('#endStackedbarSection').position().top > -100){
-                $('#stickyStackedChart').css({'position': 'static', 'top': '0px'}); 
-            }else{
-                $('#stickyStackedChart').css({'position': 'sticky', 'top': '0px'}); 
-            }
-        });
+        // // sticky chart stacked bar
+        // $(window).scroll(function() {
+        //     if ($(this).scrollTop() - $('#endStackedbarSection').position().top > -100){
+        //         $('#stickyStackedChart').css({'position': 'static', 'top': '0px'}); 
+        //     }else{
+        //         $('#stickyStackedChart').css({'position': 'sticky', 'top': '0px'}); 
+        //     }
+        // });
 
         // Text transition
         var TxtRotate = function(el, toRotate, period) {

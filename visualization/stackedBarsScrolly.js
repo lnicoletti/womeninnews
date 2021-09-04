@@ -11,7 +11,64 @@ Promise.all([
     })
 
 
-// const themes = [{}]
+// // const themes = [{}]
+// const container = d3.select('#scrolly-side');
+// var figure = container.select('stickyStackedChart');
+// var article = container.select('article');
+// const stepSel = article.selectAll('.step');
+
+// // instantiate the scrollama
+// const scroller = scrollama();
+
+// // generic window resize listener event
+// function handleResize() {
+//     // 1. update height of step elements
+//     var stepH = Math.floor(window.innerHeight * 0.75);
+//     stepSel.style('height', stepH + 'px');
+//     var figureHeight = window.innerHeight / 2
+//     var figureMarginTop = (window.innerHeight - figureHeight) / 2  
+//     figure
+//         .style('height', figureHeight + 'px')
+//         .style('top', figureMarginTop + 'px');
+//     // 3. tell scrollama to update new element dimensions
+//     scroller.resize();
+// }
+
+// // scrollama event handlers
+// function handleStepEnter(response) {
+//     console.log(response)
+//     updateChart(response.index)
+// }
+
+// function updateChart(index) {
+//     const sel = container.select(`[data-index='${index}']`);
+//     const width = sel.attr('data-width');
+//     stepSel.classed('is-active', (d, i) => i === index);
+//     container.select('.bar-inner').style('width', width);
+// }
+
+// function init() {
+//     Stickyfill.add(d3.select('.sticky').node());
+
+//     // 1. force a resize on load to ensure proper dimensions are sent to scrollama
+//     handleResize();
+
+//     // 2. setup the scroller passing options
+//     // this will also initialize trigger observations
+//     // 3. bind scrollama event handlers (this can be chained like below)
+//     scroller.setup({
+//         step: '#scrolly-side article .step',
+//         offset: 0.5,
+//         debug: false
+//     })
+//     .onStepEnter(handleStepEnter)
+
+//     // setup resize event
+//     window.addEventListener('resize', handleResize);
+
+// }
+
+// init()
 
 function renderStackedBars(data, themes) {
 
@@ -77,7 +134,8 @@ function renderStackedBars(data, themes) {
     
 
     yAxis = g => g
-    .attr("transform", `translate(${width+margin.right+30},210)`)
+    // .attr("transform", `translate(${width+margin.right+30},210)`)
+    .attr("transform", `translate(${margin.left},220)`)
     .call(d3.axisRight(y).tickSizeOuter(0).tickSizeInner(0))
     .call(g => g.selectAll(".domain").remove())
     // .call(g=>g.selectAll(".tick text")
@@ -91,11 +149,11 @@ function renderStackedBars(data, themes) {
 
     yAxis.selectAll(".tick")
         .append("text")
-        .text((d, i) => i == 8 ?"Frequency of use in news headlines ⇢": "")
+        .text((d, i) => i == 8 ?"Frequency of use in headlines ⇢": "")
         // .text((d, i)=>console.log("ytick"+i))
         .attr("x", 0)             
         .attr("y", 0)
-        .attr("class", "stackedChartTicks")
+        .attr("class", "stackedChartyTicks")
         .style("text-transform", "lowercase")
         .style("transform", "rotate(-90deg)")
         // .call(wrap, 10)
@@ -179,6 +237,8 @@ function renderStackedBars(data, themes) {
               .selectAll("rect:not(."+ word+")")
               .attr("opacity", "0.5")
 
+            d3.selectAll(".stackedChartyTicks").style("opacity", "0")
+
             if (hoverType === "chartHover") {
                 
                 svg.append("text")
@@ -201,6 +261,8 @@ function renderStackedBars(data, themes) {
             d3.selectAll(".stackedBars")
               .selectAll("rect")
               .attr("opacity", "1")
+
+            d3.selectAll(".stackedChartyTicks").style("opacity", "1")
         }
 
         function highlightThemes(theme) {
