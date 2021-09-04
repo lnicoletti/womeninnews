@@ -6,69 +6,93 @@ Promise.all([
         dataWords = datasets[0]
         themes = datasets[1]
 
-        renderStackedBars(dataWords, themes)
+        // renderStackedBars(dataWords, themes)
+        stackedBarScroll(dataWords, themes)
     
     })
 
 
-// // const themes = [{}]
-// const container = d3.select('#scrolly-side');
-// var figure = container.select('stickyStackedChart');
-// var article = container.select('article');
-// const stepSel = article.selectAll('.step');
+function stackedBarScroll(words, themes) {
 
-// // instantiate the scrollama
-// const scroller = scrollama();
+    const container = d3.select('#scrolly-side');
+    var figure = container.select('stickyStackedChart');
+    var article = container.select('article');
+    const stepSel = article.selectAll('.step');
+    // instantiate the scrollama
+    const scroller = scrollama();
 
-// // generic window resize listener event
-// function handleResize() {
-//     // 1. update height of step elements
-//     var stepH = Math.floor(window.innerHeight * 0.75);
-//     stepSel.style('height', stepH + 'px');
-//     var figureHeight = window.innerHeight / 2
-//     var figureMarginTop = (window.innerHeight - figureHeight) / 2  
-//     figure
-//         .style('height', figureHeight + 'px')
-//         .style('top', figureMarginTop + 'px');
-//     // 3. tell scrollama to update new element dimensions
-//     scroller.resize();
-// }
+    // generic window resize listener event
+    function handleResize() {
+        // 1. update height of step elements
+        var stepH = Math.floor(window.innerHeight * 0.75);
+        stepSel.style('height', stepH + 'px');
+        var figureHeight = window.innerHeight / 2
+        var figureMarginTop = (window.innerHeight - figureHeight) / 2  
+        figure
+            .style('height', figureHeight + 'px')
+            .style('top', figureMarginTop + 'px');
+        // 3. tell scrollama to update new element dimensions
+        scroller.resize();
+    }
 
-// // scrollama event handlers
-// function handleStepEnter(response) {
-//     console.log(response)
-//     updateChart(response.index)
-// }
+    // scrollama event handlers
+    function handleStepEnter(response) {
+        // console.log(response)
+        updateChart(response.index, "enter")
+    }
 
-// function updateChart(index) {
-//     const sel = container.select(`[data-index='${index}']`);
-//     const width = sel.attr('data-width');
-//     stepSel.classed('is-active', (d, i) => i === index);
-//     container.select('.bar-inner').style('width', width);
-// }
+    function handleStepExit (response) {
+        // console.log(response)
+        updateChart(response.index, "exit")
+    }
 
-// function init() {
-//     Stickyfill.add(d3.select('.sticky').node());
+    function updateChart(index, action) {
+        const sel = container.select(`[data-index='${index}']`);
+        // const width = sel.attr('data-width');
+        const task = sel.attr('task')
+        console.log(task)
+        if (task==="highlightwords") {
+            const word = sel.attr('word');
+            if (action==="enter") {
+                stepSel.classed('is-active', (d, i) => i === index);
+            // container.select('.bar-inner').style('width', width);
+                highlightWords(word, "inTextHover")
+            } else {
+                unHighlightWords(word)
+            }  
 
-//     // 1. force a resize on load to ensure proper dimensions are sent to scrollama
-//     handleResize();
+        } else if (task === "drawbars") {
+            renderStackedBars(words, themes)
+            sel.attr('task', 'none')
+        }
+        
+    }
 
-//     // 2. setup the scroller passing options
-//     // this will also initialize trigger observations
-//     // 3. bind scrollama event handlers (this can be chained like below)
-//     scroller.setup({
-//         step: '#scrolly-side article .step',
-//         offset: 0.5,
-//         debug: false
-//     })
-//     .onStepEnter(handleStepEnter)
+    function init() {
+        Stickyfill.add(d3.select('.sticky').node());
 
-//     // setup resize event
-//     window.addEventListener('resize', handleResize);
+        // 1. force a resize on load to ensure proper dimensions are sent to scrollama
+        handleResize();
 
-// }
+        // 2. setup the scroller passing options
+        // this will also initialize trigger observations
+        // 3. bind scrollama event handlers (this can be chained like below)
+        scroller.setup({
+            step: '#scrolly-side article .step',
+            offset: 0.5,
+            debug: false
+        })
+        .onStepEnter(handleStepEnter)
+        .onStepExit(handleStepExit)
 
-// init()
+        // setup resize event
+        window.addEventListener('resize', handleResize);
+
+    }
+
+    init()
+
+}
 
 function renderStackedBars(data, themes) {
 
@@ -225,97 +249,187 @@ function renderStackedBars(data, themes) {
                     .attr("xlink:href", d => flags.filter(c=>c.country===d)[0].flag)
 
 
-        function highlightWords(word, hoverType, d) {
+        // function highlightWords(word, hoverType, d) {
 
-            // console.log(themes.filter(c=>c.word===word)[0].theme)
-            // console.log(themes.filter(c=>c.word===word)[0].theme)
-            d3.selectAll("."+ word)
-            .attr("fill", "#E75C33")
-            //.attr("stroke-width", "0.1px")
+        //     // console.log(themes.filter(c=>c.word===word)[0].theme)
+        //     // console.log(themes.filter(c=>c.word===word)[0].theme)
+        //     d3.selectAll("."+ word)
+        //     .attr("fill", "#E75C33")
+        //     //.attr("stroke-width", "0.1px")
 
-            d3.selectAll(".stackedBars")
-              .selectAll("rect:not(."+ word+")")
-              .attr("opacity", "0.5")
+        //     d3.selectAll(".stackedBars")
+        //       .selectAll("rect:not(."+ word+")")
+        //       .attr("opacity", "0.5")
 
-            d3.selectAll(".stackedChartyTicks").style("opacity", "0")
+        //     d3.selectAll(".stackedChartyTicks").style("opacity", "0")
 
-            if (hoverType === "chartHover") {
+        //     if (hoverType === "chartHover") {
                 
-                svg.append("text")
-                    .attr("y", y(d.data[word]))
-                    .text(word)
-                    .attr("class", "stackedBarAnnotation")
+        //         svg.append("text")
+        //             .attr("y", y(d.data[word]))
+        //             .text(word)
+        //             .attr("class", "stackedBarAnnotation")
 
-            }
+        //     }
         
-        }
+        // }
 
-        function unHighlightWords(word) {
-            d3.selectAll("."+ word)
-            .attr("fill",   themes.filter(c=>c.word===word)[0].theme==="female_bias"?"#0BBF99":
-                            themes.filter(c=>c.word===word)[0].theme==="empowerement"?"#F7DC5B":
-                            themes.filter(c=>c.word===word)[0].theme==="violence"?"#F2C5D3":"#ccc")
-            // .attr("fill", "#FEFAF1")
-            d3.selectAll(".stackedBarAnnotation").remove()
+        // function unHighlightWords(word) {
+        //     d3.selectAll("."+ word)
+        //     .attr("fill",   themes.filter(c=>c.word===word)[0].theme==="female_bias"?"#0BBF99":
+        //                     themes.filter(c=>c.word===word)[0].theme==="empowerement"?"#F7DC5B":
+        //                     themes.filter(c=>c.word===word)[0].theme==="violence"?"#F2C5D3":"#ccc")
+        //     // .attr("fill", "#FEFAF1")
+        //     d3.selectAll(".stackedBarAnnotation").remove()
 
-            d3.selectAll(".stackedBars")
-              .selectAll("rect")
-              .attr("opacity", "1")
+        //     d3.selectAll(".stackedBars")
+        //       .selectAll("rect")
+        //       .attr("opacity", "1")
 
-            d3.selectAll(".stackedChartyTicks").style("opacity", "1")
-        }
+        //     d3.selectAll(".stackedChartyTicks").style("opacity", "1")
+        // }
 
-        function highlightThemes(theme) {
+        // function highlightThemes(theme) {
 
-            // console.log(themes.filter(c=>c.word===word)[0].theme)
-            // console.log(themes.filter(c=>c.word===word)[0].theme)
+        //     // console.log(themes.filter(c=>c.word===word)[0].theme)
+        //     // console.log(themes.filter(c=>c.word===word)[0].theme)
 
-            // d3.selectAll(".stackedBars")
-            //         .style("opacity", d=>themes.filter(c=>c.word===word)[0].theme===theme?"1":"0.2")
+        //     // d3.selectAll(".stackedBars")
+        //     //         .style("opacity", d=>themes.filter(c=>c.word===word)[0].theme===theme?"1":"0.2")
         
 
-            // d3.selectAll(".stackedBars")
-            //   .allLogos.style("opacity", d=>d.site.toLowerCase() === selection.toLowerCase()?"1":
-            //   selection===""?"1":"0.2")
+        //     // d3.selectAll(".stackedBars")
+        //     //   .allLogos.style("opacity", d=>d.site.toLowerCase() === selection.toLowerCase()?"1":
+        //     //   selection===""?"1":"0.2")
         
-        }
+        // }
 
-        // interaction with text
-        // words
-        $('.stackedBarTextAnnotation').on('mouseover', function () {
-            // var word = $(this)[0].innerText.toLowerCase()
-            var word = $(this)[0].attributes.value.value
-            console.log(word)
-            highlightWords(word, "inTextHover")
-            // d3.select("#rectsBlock").select("#barchart").select('svg rect[data-key='+key+']').style('fill', 'brown');
-        })
-        .on('mouseout', function () {
-            var word = $(this)[0].attributes.value.value
-            // console.log(word)
-            unHighlightWords(word)
-        })
+        // // interaction with text
+        // // words
+        // $('.stackedBarTextAnnotation').on('mouseover', function () {
+        //     // var word = $(this)[0].innerText.toLowerCase()
+        //     var word = $(this)[0].attributes.value.value
+        //     console.log(word)
+        //     highlightWords(word, "inTextHover")
+        //     // d3.select("#rectsBlock").select("#barchart").select('svg rect[data-key='+key+']').style('fill', 'brown');
+        // })
+        // .on('mouseout', function () {
+        //     var word = $(this)[0].attributes.value.value
+        //     // console.log(word)
+        //     unHighlightWords(word)
+        // })
 
-        // themes
-        $('.stackedBarThemeAnnotation').on('mouseover', function () {
-            // var word = $(this)[0].innerText.toLowerCase()
-            var theme = $(this)[0].attributes.value.value
-            console.log(theme)
-            // highlightThemes(theme)
-            d3.selectAll(".stackedBars")
-                    .selectAll("rect")//.attr("fill", d=>d.key==="man"?"red":"blue")
-                    .style("opacity", d=>themes.filter(c=>c.word===d.key)[0].theme===theme?"1":"0.2")
+        // // themes
+        // $('.stackedBarThemeAnnotation').on('mouseover', function () {
+        //     // var word = $(this)[0].innerText.toLowerCase()
+        //     var theme = $(this)[0].attributes.value.value
+        //     console.log(theme)
+        //     // highlightThemes(theme)
+        //     d3.selectAll(".stackedBars")
+        //             .selectAll("rect")//.attr("fill", d=>d.key==="man"?"red":"blue")
+        //             .style("opacity", d=>themes.filter(c=>c.word===d.key)[0].theme===theme?"1":"0.2")
         
-            // d3.select("#rectsBlock").select("#barchart").select('svg rect[data-key='+key+']').style('fill', 'brown');
-        })
-        .on('mouseout', function () {
-            d3.selectAll(".stackedBars")
-                    .selectAll("rect")
-                    .style("opacity", "1")
-        })
+        //     // d3.select("#rectsBlock").select("#barchart").select('svg rect[data-key='+key+']').style('fill', 'brown');
+        // })
+        // .on('mouseout', function () {
+        //     d3.selectAll(".stackedBars")
+        //             .selectAll("rect")
+        //             .style("opacity", "1")
+        // })
 
 
 
 };
+
+function highlightWords(word, hoverType, d) {
+
+    // console.log(themes.filter(c=>c.word===word)[0].theme)
+    // console.log(themes.filter(c=>c.word===word)[0].theme)
+    d3.selectAll("."+ word)
+    .attr("fill", "#E75C33")
+    //.attr("stroke-width", "0.1px")
+
+    d3.selectAll(".stackedBars")
+      .selectAll("rect:not(."+ word+")")
+      .attr("opacity", "0.5")
+
+    d3.selectAll(".stackedChartyTicks").style("opacity", "0")
+
+    if (hoverType === "chartHover") {
+        
+        d3.select("#stackedChart")
+            .append("text")
+            .attr("y", y(d.data[word]))
+            .text(word)
+            .attr("class", "stackedBarAnnotation")
+
+    }
+
+}
+
+function unHighlightWords(word) {
+    d3.selectAll("."+ word)
+    .attr("fill",   themes.filter(c=>c.word===word)[0].theme==="female_bias"?"#0BBF99":
+                    themes.filter(c=>c.word===word)[0].theme==="empowerement"?"#F7DC5B":
+                    themes.filter(c=>c.word===word)[0].theme==="violence"?"#F2C5D3":"#ccc")
+    // .attr("fill", "#FEFAF1")
+    d3.selectAll(".stackedBarAnnotation").remove()
+
+    d3.selectAll(".stackedBars")
+      .selectAll("rect")
+      .attr("opacity", "1")
+
+    d3.selectAll(".stackedChartyTicks").style("opacity", "1")
+}
+
+function highlightThemes(theme) {
+
+    // console.log(themes.filter(c=>c.word===word)[0].theme)
+    // console.log(themes.filter(c=>c.word===word)[0].theme)
+
+    // d3.selectAll(".stackedBars")
+    //         .style("opacity", d=>themes.filter(c=>c.word===word)[0].theme===theme?"1":"0.2")
+
+
+    // d3.selectAll(".stackedBars")
+    //   .allLogos.style("opacity", d=>d.site.toLowerCase() === selection.toLowerCase()?"1":
+    //   selection===""?"1":"0.2")
+
+}
+
+// interaction with text
+// words
+$('.stackedBarTextAnnotation').on('mouseover', function () {
+    // var word = $(this)[0].innerText.toLowerCase()
+    var word = $(this)[0].attributes.value.value
+    console.log(word)
+    highlightWords(word, "inTextHover")
+    // d3.select("#rectsBlock").select("#barchart").select('svg rect[data-key='+key+']').style('fill', 'brown');
+})
+.on('mouseout', function () {
+    var word = $(this)[0].attributes.value.value
+    // console.log(word)
+    unHighlightWords(word)
+})
+
+// themes
+$('.stackedBarThemeAnnotation').on('mouseover', function () {
+    // var word = $(this)[0].innerText.toLowerCase()
+    var theme = $(this)[0].attributes.value.value
+    console.log(theme)
+    // highlightThemes(theme)
+    d3.selectAll(".stackedBars")
+            .selectAll("rect")//.attr("fill", d=>d.key==="man"?"red":"blue")
+            .style("opacity", d=>themes.filter(c=>c.word===d.key)[0].theme===theme?"1":"0.2")
+
+    // d3.select("#rectsBlock").select("#barchart").select('svg rect[data-key='+key+']').style('fill', 'brown');
+})
+.on('mouseout', function () {
+    d3.selectAll(".stackedBars")
+            .selectAll("rect")
+            .style("opacity", "1")
+})
+
 
 
 // function to wrap text
