@@ -289,11 +289,6 @@ function renderStackedBars(data, themes) {
             // .attr("y", d => y(d[1]))
             .attr("y", d => y(d.data[d.key]))
 
-        
-           
-
-
-
 };
 
 function colorThemes(themes) {
@@ -303,9 +298,9 @@ function colorThemes(themes) {
       .selectAll("rect")
       .attr("fill", d=>themes.filter(c=>c.word===d.key)[0].theme==="female_bias"?"#0BBF99":
                         themes.filter(c=>c.word===d.key)[0].theme==="empowerement"?"#F7DC5B":
-                        themes.filter(c=>c.word===d.key)[0].theme==="violence"?"#F2C5D3":"#ccc")
-    .on("mouseover", (event, d) => highlightWords(d.key, "chartHover", d))
-    .on("mouseleave", (event,d)=> unHighlightWords(d.key))
+                        themes.filter(c=>c.word===d.key)[0].theme==="violence"?"#F2C5D3":"lightgrey")
+    // .on("mouseover", (event, d) => highlightWords(d.key, "chartHover", d))
+    // .on("mouseleave", (event,d)=> unHighlightWords(d.key))
 
 }
 
@@ -356,7 +351,7 @@ function unHighlightWords(word, hoverType) {
         d3.selectAll("."+ word)
           .attr("fill",   themes.filter(c=>c.word===word)[0].theme==="female_bias"?"#0BBF99":
                     themes.filter(c=>c.word===word)[0].theme==="empowerement"?"#F7DC5B":
-                    themes.filter(c=>c.word===word)[0].theme==="violence"?"#F2C5D3":"#ccc")
+                    themes.filter(c=>c.word===word)[0].theme==="violence"?"#F2C5D3":"lightgrey")
     }
     
     // .attr("fill", "#FEFAF1")
@@ -395,9 +390,10 @@ $('.stackedBarTextAnnotation').on('mouseover', function () {
 })
 .on('mouseout', function () {
     var word = $(this)[0].attributes.value.value
-    // console.log(word)
+    var hoverType = $(this)[0].attributes.hoverType.value
+    // console.log($(this)[0].attributes.hoverType.value)
     // if ATTRIBUTE hoverType === inTextHover do this, otherwise normal hover with themes!
-    unHighlightWords(word, "inTextHover")
+    unHighlightWords(word, hoverType)
 })
 
 // themes
