@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <head>
     <!-- <link rel="stylesheet" href="../final_app/styles_light.css"> -->
-    <meta charset="utf-8">
+    <!-- <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
-    <title>scrollytelling</title>
-    <script src="stickyfill.min.js"></script>
-    <script src="https://unpkg.com/intersection-observer@0.5.1/intersection-observer.js"></script>
-    <script src="https://unpkg.com/scrollama"></script>
+    <title>scrollytelling</title> -->
     <link rel="stylesheet" href="stackedBarScrolly.css">
+
     <style>
       /* #scrolly-side .scrolly {
         position: relative;
@@ -81,26 +79,27 @@
          Since 2005, a total of <b>406 unique words</b> have been used by Indian, South African, English, and American newsrooms in 
         headlines that speak about <b>women</b>. But do cultural/geographical/political differences influence the way we portray women?
        </div>
-       <div class='step' data-width='90%' word="man" task="highlightwords" data-index='1'>
+       <div class='step' data-width='90%' word="man" task="highlightwords" hovertype="inTextHover" data-index='1'>
         Across 4 continents, the words most frequently used in headlines about women are strikingly similar. 
             <span class="stackedBarTextAnnotation" id="inTextMan" value="man"><b>man</b></span> tops the charts in all 4 countries, followed by
             <span class="stackedBarTextAnnotation" id="inTextKill" value="kill"><b>kill</b></span>, <span class="stackedBarTextAnnotation" id="inTextDie" value="die"><b>die</b></span>,
             and <span class="stackedBarTextAnnotation" id="inTextPolice" value="police"><b>police</b></span>. You get the idea... 
       </div>
-      <div class='step' data-width='50%' word="marry" task="highlightwords" data-index='2'>
+      <div class='step' data-width='50%' word="marry" task="highlightwords" hovertype="inTextHover" data-index='2'>
         Talk about another word, for example <span class="stackedBarTextAnnotation" id="inTextMarry" value="marry"><b>marry</b></span>.
      </div>
       <div class='step' data-width='90%' theme="violence" task="highlightthemes" data-index='3'>
         In fact, it turns out that most words
             used in headlines about women can be categorized into distinct categories: 
             <span class="stackedBarThemeAnnotation" id="inTextViolence" value="violence"><b>violence</b></span> and 
-            <span class="stackedBarThemeAnnotation" id="inTextBias" value="female_bias"><b>women stereotypes</b>
-      </div>
-      <div class='step' data-width='50%' word="marry" task="highlightwords" data-index='4'>
-         But what about language that is <span class="stackedBarThemeAnnotation" id="inTextEmpowerment" value="empowerement"><b>empowering</b></span> towards women?
+            <span class="stackedBarThemeAnnotation" id="inTextBias" value="female_bias"><b>women stereotypes</b></span><br><br>
+        But what about language that is <span class="stackedBarThemeAnnotation" id="inTextEmpowerment" value="empowerement"><b>empowering</b></span> towards women?
         Those words rank much lower in the frequency chart...
       </div>
-      <div class='step' data-width='70%' word="baby" task="none" data-index='5'>
+      <div class='step' data-width='50%' word="boss" task="highlightwords" hovertype="normalHover" data-index='4'>
+        Talk about another word, for example <span class="stackedBarTextAnnotation" id="inTextBoss" value="boss"><b>boss</b></span>.
+      </div>
+      <div class='step' data-width='70%' word="baby" task="tooltip" data-index='5'>
         Explore and interact with the chart on your own!
       </div>
      </article>
@@ -116,5 +115,8 @@
 
 <script src="https://d3js.org/d3.v6.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://unpkg.com/intersection-observer@0.5.1/intersection-observer.js"></script>
+<script src="https://unpkg.com/scrollama"></script>
+<script src="stickyfill.min.js"></script>
 <script src="stackedBarsScrolly.js"></script>
 <script>
