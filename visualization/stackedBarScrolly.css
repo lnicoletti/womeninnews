@@ -1,14 +1,20 @@
- #scrolly-side .scrolly {
+body {
+    background-color: #FEFAF1;
+}
+
+#scrolly-side .scrolly {
             display: flex;
             max-width: 60rem;
             margin: 3rem auto;
             /* background-color: cornsilk; */
             border: 1px;
             padding: 1rem;
-            height: 590vh;
+            height: 800vh;
+            /* height:590vh */
         }
         #scrolly-side {
-            height: 750vh;
+            height: 1050vh;
+            /* height: 750vh; */
             /* background-color: grey; */
             border: 1px
 
@@ -26,7 +32,7 @@
         .step {
             min-height: 67vh;
             margin-bottom: 1rem;
-            background-color: white;
+            background-color: #FEFAF1;
             transition: background-color 250ms ease-in-out;
             max-width: 15vw;
             
@@ -44,7 +50,7 @@
             margin-bottom: 0;
         }
         .step.is-active {
-            background-color: gray;
+            background-color: #ffe5a7;
         }
         
         /* article > p {
@@ -148,6 +154,15 @@
             fill: #282828;
         }
 
+        .themesChartTicks {
+            font-weight:900px;
+            font-size:12px;
+            font-family: Arial, Helvetica, sans-serif;
+            /* font-style: bold; */
+            text-transform: uppercase;
+            fill: #282828;
+        }
+
         .stackedChartyTicks {
             font-weight:900px;
             font-size:15px;
@@ -155,6 +170,19 @@
             /* font-style: bold; */
             text-transform: uppercase;
             fill: #282828;
+        }
+
+        .themesChartyTicks {
+            font-weight:900px;
+            font-size:15px;
+            font-family: Arial, Helvetica, sans-serif;
+            /* font-style: bold; */
+            text-transform: uppercase;
+            fill: #282828;
+        }
+
+        .spacer {
+            height:25vh
         }
         
         
