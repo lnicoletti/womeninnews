@@ -2,23 +2,27 @@
 Promise.all([
     d3.csv("../data/processed/country_freqtheme_pivoted_all.csv", d3.autoType),
     // d3.csv("../data/processed/country_freqtheme_pivoted.csv", d3.autoType),
-    // d3.csv("../data/processed/word_themes.csv", d3.autoType)]).then((datasets) => {
+    // d3.csv("../data/processed/word_themes.csv", d3.autoType),
     d3.csv("../data/processed/word_themes_all.csv", d3.autoType),
-    d3.csv("../data/processed/word_themes_rank.csv", d3.autoType)]).then((datasets) => {
+    // d3.csv("../data/processed/word_themes_rank_old.csv", d3.autoType)]).then((datasets) => {
+    d3.csv("../data/processed/word_themes_rank.csv", d3.autoType),
+    d3.csv("../data/processed/words_theme_freq.csv", d3.autoType)]).then((datasets) => {
         
         data = datasets[0]
         themes = datasets[1]
         themesRank = datasets[2]
+        themesFreq = datasets[3]
         console.log(data)
         console.log(themes)
         console.log(themesRank)
+        console.log(themesFreq)
         // renderStackedBars(dataWords, themes)
         dataWords = prepareWordData(data, themes)
         // dataThemes = prepareThemesData(data, themes)
         console.log(data)
         console.log(dataWords)
         renderBarAxis(data, dataWords)
-        stackedBarScroll(dataWords, themes, themesRank)
+        stackedBarScroll(dataWords, themes, themesRank, themesFreq)
     
     })
 
@@ -50,7 +54,7 @@ function prepareWordData (data, themes) {
 
 // }
 
-function stackedBarScroll(words, themes, themesRank) {
+function stackedBarScroll(words, themes, themesRank, themesFreq) {
 
     const container = d3.select('#scrolly-side');
     var figure = container.select('stickyStackedChart');
@@ -107,8 +111,10 @@ function stackedBarScroll(words, themes, themesRank) {
             sel.attr('task', 'none')
         } else if (task === "tooltip") {
             activateTooltip()
+        // } else if (task === "exploreChart") {
+        //     d3.select("#stickyStackedChart").style("position", "absolute")
         } else if (task === "themeBarsTransition") {
-            renderThemeBars(themesRank)
+            renderThemeBars(themesRank, themesFreq)
         }
         
     }
@@ -368,7 +374,7 @@ function activateTooltip () {
 
 }
 
-function highlightWords(word, hoverType, d) {
+function highlightWords(word, hoverType, d, newScale, changeScale) {
 
     // console.log(themes.filter(c=>c.word===word)[0].theme)
     // console.log(themes.filter(c=>c.word===word)[0].theme)
@@ -392,6 +398,13 @@ function highlightWords(word, hoverType, d) {
             .text(word)
             .attr("class", "stackedBarAnnotation")
 
+    } else if (changeScale === "True") {
+        d3.select("#stackedChart")
+            .append("text")
+            // .attr("y", y(d.data[word]))
+            .attr("y", newScale(d.data[word]))
+            .text(word)
+            .attr("class", "stackedBarAnnotation")
     }
 
 }
@@ -405,7 +418,7 @@ function unHighlightWords(word, hoverType) {
 
     } else {
         d3.selectAll("."+ word)
-          .attr("fill",   themes.filter(c=>c.word===word)[0].theme==="female_bias"?"#0BBF99":
+          .attr("fill",   themes.filter(c=>c.word===word)[0].theme==="female stereotypes"?"#0BBF99":
                     themes.filter(c=>c.word===word)[0].theme==="empowerement"?"#F7DC5B":
                     themes.filter(c=>c.word===word)[0].theme==="violence"?"#F2C5D3":"lightgrey")
     }
@@ -435,65 +448,95 @@ function highlightThemes(theme) {
 
 }
 
-function renderThemeBars(data) {
+function renderThemeBars(data, dataFreq) {
+
+    data = data.filter(d=>d.theme!=="No theme")
+    // dataFreq = dataFreq.filter(d=>d.theme!=="No theme")
+    // console.log("themes, long", dataFreq.columns.slice(2))
+
+    console.log("original datafreq", dataFreq)
+    // stack data
+    var stackedData = d3.stack()
+        .keys(dataFreq.columns.slice(2))
+        .order(d3.stackOrderAscending)
+        // .keys(data.map(d=>d.country))
+    (dataFreq.filter(d=>d.theme!=="No theme"))
+        .map(d => (d.forEach(v => v.key = d.key), d))
+
+    console.log("stacked themes", stackedData)
 
     margin = ({top: 100, right: 0, bottom: 0, left: 100})
 
-    var height = 2000 - margin.top - margin.bottom
+    var height = 750 - margin.top - margin.bottom
     var width = 600 - margin.left - margin.right
+
+    // heightChart = 5000 - margin.top - margin.bottom
+    heightChart = height*4.4 - margin.top - margin.bottom
+    // heightChart = height*7.5 - margin.top - margin.bottom
+
     // var height = 600 - margin.top - margin.bottom
     // var width = 200 - margin.left - margin.right
 
 
     var svg = d3.select("#stackedChart")
-            .attr('width', width + margin.left + margin.right)
-            .attr('height', height + margin.top + margin.bottom);
-
-    // // stack data
-    // series = d3.stack()
-    //     .keys(data.columns.slice(2))
-    //     // .keys(data.map(d=>d.country))
-    // (data)
-    //     .map(d => (d.forEach(v => v.key = d.key), d))
+            // .attr('width', width + margin.left + margin.right)
+            // .attr('height', height + margin.top + margin.bottom)
 
     // console.log(data)
      xThemes = d3.scaleBand()
-    .domain(data.filter(d=>d.theme!=="No theme").map(d => d.theme))
+    .domain(data.map(d => d.theme))
     .range([margin.left, width - margin.right])
     .padding(0.1)
 
-    yThemes = d3.scaleLinear()
-    // .domain([d3.max(series, d => d3.max(d, d => d[1])), 0])
-    // .domain([data.length, 0])
-    .domain([d3.max(data.map(d=>d.rank)), 0])
-    // .domain([0, series.length])
-    .range([margin.top, height - margin.bottom])
+    // yThemes = d3.scaleLinear()
+    // // .domain([d3.max(series, d => d3.max(d, d => d[1])), 0])
+    // // .domain([data.length, 0])
+    // .domain([d3.max(dataNotheme.map(d=>d.rank)), 0])
+    // // .domain([0, series.length])
+    // .range([margin.top, height - margin.bottom])
+
+    yThemesStack = d3.scaleLinear()
+        .domain([d3.max(stackedData, d => d3.max(d, d => d[1])), 0])
+        .rangeRound([margin.top, height - margin.bottom])
+
+    // console.log(d3.extent(data.map(d=>d.rank)))
 
     // draw axes
     xAxis = g => g
-    .attr("transform", `translate(0,${height - margin.bottom})`)
+    // .attr("transform", `translate(0,${height-margin.top})`)
     .call(d3.axisBottom(xThemes).tickSizeOuter(0).tickSizeInner(0))
     .call(g => g.selectAll(".domain").remove())
     
 
+    // yAxis = g => g
+    // // .attr("transform", `translate(${width+margin.right+30},210)`)
+    // .attr("transform", `translate(${margin.left},0)`)
+    // .call(d3.axisRight(yThemes).tickSizeOuter(0).tickSizeInner(0))
+    // .call(g => g.selectAll(".domain").remove())
+    // // .call(g=>g.selectAll(".tick text")
+    // //                 .text((d, i) => i == 0 || i == 8 ? "↑ Frequency": "")).call(wrap, 100)
+
     yAxis = g => g
     // .attr("transform", `translate(${width+margin.right+30},210)`)
-    .attr("transform", `translate(${margin.left},220)`)
-    .call(d3.axisRight(yThemes).tickSizeOuter(0).tickSizeInner(0))
+    // .attr("transform", `translate(${margin.left},0)`)
+    .call(d3.axisRight(yThemesStack).tickSizeOuter(0).tickSizeInner(0))
     .call(g => g.selectAll(".domain").remove())
     // .call(g=>g.selectAll(".tick text")
     //                 .text((d, i) => i == 0 || i == 8 ? "↑ Frequency": "")).call(wrap, 100)
 
      // y axis
-    yAxis = svg.append("g")
-     .call(yAxis)
-     .attr("class", "themesChartyAxis")
-     .attr("id", "themeAxis")
+    // yAxis = svg.append("g")
+    //  .call(yAxis)
+    //  .attr("class", "themesChartyAxis")
+    //  .attr("id", "themeAxis")
+    //  .attr("transform", `translate(${margin.left},${heightChart-margin.top})`)
+    //  .attr("transform", `translate(0, ${heightChart})`)
+
     
-    yAxis.selectAll(".tick text").remove()
+    // yAxis.selectAll(".tick text").remove()
 
      // legend
-     d3.select("#themeAxis")
+    d3.select("#themeAxis")
      .selectAll(".tick")
      .append("text")
      .text((d, i) => i == 8 ?"Frequency of use in headlines ⇢": "")
@@ -513,6 +556,7 @@ function renderThemeBars(data) {
     xAxis = svg.append("g")
     .call(xAxis)
     .attr("class", "stackedChartCountries")
+    // .attr("transform", `translate(0,${heightChart-margin.top})`)
 
     xAxis.selectAll(".tick text").remove()
             // .call(wrap, x.bandwidth());
@@ -520,17 +564,20 @@ function renderThemeBars(data) {
 
     xAxis.selectAll(".tick")
         .append("text")
+        // .transition().duration("2000")
+        // .ease(d3.easeBounce)
         .text(d=>d)
         .attr("x", 0)             
         .attr("y", 0)
         .attr("class", "stackedChartTicks")
-        .attr("transform", `translate(0,${height - margin.bottom})`)
-        // .call(wrap, x.bandwidth())
+        // .attr("transform", `translate(0,${height-margin.top+25})`)
+        .attr("transform", `translate(0,${heightChart-margin.bottom-margin.top + height-margin.top/2-margin.bottom})`)
+        .call(wrap, x.bandwidth())
 
 
      // select bars with no theme AND not in ALL COUNTRIES and remove them
 
-     rectsNoThemes = d3.selectAll(".stackedBars")
+    rectsNoThemes = d3.selectAll(".stackedBars")
         .selectAll("rect")
         .filter(d=>(d.key.theme==="No theme")||(d.data.country!=="All countries"))
         .remove()
@@ -539,10 +586,20 @@ function renderThemeBars(data) {
     rectsThemes = d3.selectAll(".stackedBars")
         .selectAll("rect")
         .filter(d=>(d.key.theme!=="No theme")&&(d.data.country==="All countries"))
-    // console.log(rects)
 
+        // new
+        // .data(stackedData)
+
+        // test filter
+        console.log("test filter", stackedData.filter(d=>d.key === "kill")[0].filter(c=>c.data.theme==="violence"))
+        
     // transition the rects into new axis
-    // console.log(rects.map(d=>d.key))
+
+    // w = 100
+
+    // var totalScale = d3.scaleLinear()
+    //     .domain([d3.max(data.map(d=>d.count)), d3.min(data.map(d=>d.count))]) 
+    //     .range([w, 5]);
 
     rectsThemes
         // .attr("height", "4px")
@@ -550,11 +607,41 @@ function renderThemeBars(data) {
         // .on("mouseover", (event, d) => highlightWords(d.key, "chartHover", d))
         // .on("mouseleave", (event,d)=> unHighlightWords(d.key))
         .transition().duration("3000")
+        .ease(d3.easeCubic)
+        .delay((d, i) => {
+            // console.log(d, i)
+            return i * 20;
+            // return i * Math.random() * 50;
+            
+          })
         // .attr("y", d => y(d[1]))
         // .attr("y", d => y(d.data[d.key]))
-        .attr("x", (d, i) => xThemes(d.key.theme))
-        // .attr("y", d => yThemes(d.data[d.key.word]))
-        .attr("y", d => yThemes(data.filter(c=>c.word===d.key.word)[0].rank))
+        // OLD
+        // .attr("x", (d, i) => xThemes(d.key.theme))
+        // .attr("y", d => yThemes(data.filter(c=>c.word===d.key.word)[0].rank))
+
+        // // .attr("y", d => yThemes(data.filter(c=>c.word===d.key.word)[0].rank + totalScale(data.filter(c=>c.word===d.key.word)[0].count)))
+
+        // // .attr("y", d => w - totalScale(data.filter(c=>c.word===d.key.word)[0].rank))
+        
+        // .attr("height", d => totalScale(data.filter(c=>c.word===d.key.word)[0].count))
+
+        // NEW
+        // .attr("x", (d, i) => xThemes(d.data.theme))
+        .attr("x", d=> xThemes(stackedData.filter(c=>c.key === d.key.word)[0].filter(e=>e.data.theme===d.key.theme)[0].data.theme))
+        .attr("y", d => yThemesStack(stackedData.filter(c=>c.key === d.key.word)[0].filter(e=>e.data.theme===d.key.theme)[0][1]))
+        .attr("height", d => yThemesStack(stackedData.filter(c=>c.key === d.key.word)[0].filter(e=>e.data.theme===d.key.theme)[0][0]) - 
+                             yThemesStack(stackedData.filter(c=>c.key === d.key.word)[0].filter(e=>e.data.theme===d.key.theme)[0][1]))
+        .attr("width", xThemes.bandwidth())
+        .attr("transform", `translate(0,${heightChart-margin.top})`)
+        .on("mouseover", (event, d) => highlightWords(d.key.word, "chartHover", d, yThemesStack, "True"))
+        .on("mouseleave", (event,d)=> unHighlightWords(d.key.word))
+        // console.log("test scale", stackedData.filter(c=>c.key === "kill")[0].filter(e=>e.data.theme==="violence")[0][1])
+
+
+        // .attr("y", d => yThemesStack(d[1]))
+        // .attr("height", d => yThemesStack(d[0]) - yThemesStack(d[1]))
+
     // .style("opacity", d=>d.key.theme==="female_bias"?"1":0)
     
 }

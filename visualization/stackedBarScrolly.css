@@ -9,11 +9,11 @@ body {
             /* background-color: cornsilk; */
             border: 1px;
             padding: 1rem;
-            height: 800vh;
+            height: 600vh;
             /* height:590vh */
         }
         #scrolly-side {
-            height: 1050vh;
+            height: 950vh;
             /* height: 750vh; */
             /* background-color: grey; */
             border: 1px
@@ -182,8 +182,12 @@ body {
         }
 
         .spacer {
-            height:25vh
+            height:55vh
         }
+
+        /* #stepSpacer {
+            height:200vh
+        } */
         
         
         /* .bar-outer {
