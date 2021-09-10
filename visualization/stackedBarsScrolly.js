@@ -20,7 +20,7 @@ Promise.all([
         dataWords = prepareWordData(data, themes)
         // dataThemes = prepareThemesData(data, themes)
         console.log(data)
-        console.log(dataWords)
+        console.log("stacked",dataWords)
         renderBarAxis(data, dataWords)
         stackedBarScroll(dataWords, themes, themesRank, themesFreq)
     
@@ -335,15 +335,22 @@ function renderStackedBars(series) {
             .attr("stroke-width", "0.2px")
             .attr("x", (d, i) => x(d.data.country))
             // .attr("height", "4px")
-            .attr("height", height/series.length)
+            .attr("height", d => d.data[d.key.word]===0 || d.data[d.key.word]===null? 0:height/series.length)
             .attr("width", x.bandwidth())
             // .on("mouseover", (event, d) => highlightWords(d.key, "chartHover", d))
             // .on("mouseleave", (event,d)=> unHighlightWords(d.key))
-            .transition().duration("5000")
+            .transition().duration("4000")
+                .ease(d3.easeCubic)
+                .delay((d, i) => {
+                    // console.log(d, i)
+                    return i * 200;
+                    // return i * Math.random() * 50;
+                    
+                })
             // .attr("y", d => y(d[1]))
             // .attr("y", d => y(d.data[d.key]))
             // .attr("y", d => y(d.data[d.key.word]))
-            .attr("y", d => d.data[d.key.word]!==0? y(d.data[d.key.word]):y(null))
+            .attr("y", d => d.data[d.key.word]!==0 || d.data[d.key.word]!==null? y(d.data[d.key.word]):y(null))
 
 
 };
@@ -374,11 +381,12 @@ function activateTooltip () {
 
 }
 
-function highlightWords(word, hoverType, d, newScale, changeScale) {
+function highlightWords(word, hoverType, d, newScale, changeScale, transform) {
 
     // console.log(themes.filter(c=>c.word===word)[0].theme)
     // console.log(themes.filter(c=>c.word===word)[0].theme)
     console.log(word)
+    // console.log(transform)
     d3.selectAll("."+ word)
     .attr("fill", "#E75C33")
     //.attr("stroke-width", "0.1px")
@@ -398,13 +406,17 @@ function highlightWords(word, hoverType, d, newScale, changeScale) {
             .text(word)
             .attr("class", "stackedBarAnnotation")
 
-    } else if (changeScale === "True") {
+    } 
+    
+    if (changeScale === "True") {
+        console.log(d, newScale(d[1]))
         d3.select("#stackedChart")
             .append("text")
             // .attr("y", y(d.data[word]))
-            .attr("y", newScale(d.data[word]))
+            .attr("y", newScale(d[1])+transform)
             .text(word)
             .attr("class", "stackedBarAnnotation")
+            // .attr("transform", `translate(0, ${transform})`)
     }
 
 }
@@ -468,7 +480,9 @@ function renderThemeBars(data, dataFreq) {
     margin = ({top: 100, right: 0, bottom: 0, left: 100})
 
     var height = 750 - margin.top - margin.bottom
-    var width = 600 - margin.left - margin.right
+    // var width = 600 - margin.left - margin.right
+    var width = 400 - margin.left - margin.right
+
 
     // heightChart = 5000 - margin.top - margin.bottom
     heightChart = height*4.4 - margin.top - margin.bottom
@@ -575,23 +589,18 @@ function renderThemeBars(data, dataFreq) {
         .call(wrap, x.bandwidth())
 
 
-     // select bars with no theme AND not in ALL COUNTRIES and remove them
-
-    rectsNoThemes = d3.selectAll(".stackedBars")
-        .selectAll("rect")
-        .filter(d=>(d.key.theme==="No theme")||(d.data.country!=="All countries"))
-        .remove()
-
      // select bars with a theme and transition them in new axis
     rectsThemes = d3.selectAll(".stackedBars")
         .selectAll("rect")
         .filter(d=>(d.key.theme!=="No theme")&&(d.data.country==="All countries"))
+        .on("mouseover", (event, d) => highlightWords(d.key.word, "chartHover", d, yThemesStack, "True", heightChart-margin.top))
+        .on("mouseleave", (event,d)=> unHighlightWords(d.key.word))
 
         // new
         // .data(stackedData)
 
         // test filter
-        console.log("test filter", stackedData.filter(d=>d.key === "kill")[0].filter(c=>c.data.theme==="violence"))
+        // console.log("test filter", stackedData.filter(d=>d.key === "kill")[0].filter(c=>c.data.theme==="violence"))
         
     // transition the rects into new axis
 
@@ -607,10 +616,10 @@ function renderThemeBars(data, dataFreq) {
         // .on("mouseover", (event, d) => highlightWords(d.key, "chartHover", d))
         // .on("mouseleave", (event,d)=> unHighlightWords(d.key))
         .transition().duration("3000")
-        .ease(d3.easeCubic)
+        .ease(d3.easeLinear)
         .delay((d, i) => {
             // console.log(d, i)
-            return i * 20;
+            return i * 10;
             // return i * Math.random() * 50;
             
           })
@@ -634,8 +643,6 @@ function renderThemeBars(data, dataFreq) {
                              yThemesStack(stackedData.filter(c=>c.key === d.key.word)[0].filter(e=>e.data.theme===d.key.theme)[0][1]))
         .attr("width", xThemes.bandwidth())
         .attr("transform", `translate(0,${heightChart-margin.top})`)
-        .on("mouseover", (event, d) => highlightWords(d.key.word, "chartHover", d, yThemesStack, "True"))
-        .on("mouseleave", (event,d)=> unHighlightWords(d.key.word))
         // console.log("test scale", stackedData.filter(c=>c.key === "kill")[0].filter(e=>e.data.theme==="violence")[0][1])
 
 
@@ -643,6 +650,21 @@ function renderThemeBars(data, dataFreq) {
         // .attr("height", d => yThemesStack(d[0]) - yThemesStack(d[1]))
 
     // .style("opacity", d=>d.key.theme==="female_bias"?"1":0)
+
+    // select bars with no theme AND not in ALL COUNTRIES and remove them
+
+    rectsNoThemes = d3.selectAll(".stackedBars")
+        .selectAll("rect")
+        .filter(d=>(d.key.theme==="No theme")||(d.data.country!=="All countries"))
+        .transition().duration("3000")
+        .ease(d3.easeCubic)
+        .delay((d, i) => {
+            // console.log(d, i)
+            // return i * 10;
+            return i * Math.random() * 0.2;
+            
+          })
+        .remove()
     
 }
 
