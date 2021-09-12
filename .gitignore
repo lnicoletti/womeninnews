@@ -2,3 +2,7 @@ data/
 videos/
 old_misc/
 visualization/flags/
+
+visualization/index_bars.html
+
+visualization/text-transition.js
