@@ -54,6 +54,8 @@ function prepareWordData (data, themes) {
 
 // }
 
+
+
 function stackedBarScroll(words, themes, themesRank, themesFreq) {
 
     const container = d3.select('#scrolly-side');
@@ -92,6 +94,8 @@ function stackedBarScroll(words, themes, themesRank, themesFreq) {
         const sel = container.select(`[data-index='${index}']`);
         // const width = sel.attr('data-width');
         const task = sel.attr('task')
+        const hovertype = sel.attr('hovertype')
+
         console.log(task)
         if (task==="highlightwords") {
             const word = sel.attr('word');
@@ -100,7 +104,7 @@ function stackedBarScroll(words, themes, themesRank, themesFreq) {
             // container.select('.bar-inner').style('width', width);
                 highlightWords(word, "inTextHover")
             } else {
-                unHighlightWords(word)
+                unHighlightWords(word, hovertype)
             }  
 
         } else if (task === "drawbars") {
@@ -111,8 +115,8 @@ function stackedBarScroll(words, themes, themesRank, themesFreq) {
             sel.attr('task', 'none')
         } else if (task === "tooltip") {
             activateTooltip()
-        // } else if (task === "exploreChart") {
-        //     d3.select("#stickyStackedChart").style("position", "absolute")
+        } else if (task === "exploreChart") {
+            revertOriginal()
         } else if (task === "themeBarsTransition") {
             renderThemeBars(themesRank, themesFreq)
         }
@@ -142,6 +146,47 @@ function stackedBarScroll(words, themes, themesRank, themesFreq) {
     }
 
     init()
+
+}
+
+function revertOriginal() {
+
+    margin = ({top: 100, right: 0, bottom: 0, left: 100})
+
+    var height = 5000 - margin.top - margin.bottom
+    var width = 500 - margin.left - margin.right
+
+    d3.selectAll(".stackedBars")
+        .selectAll("rect")
+        // .transition().duration("3000")
+        // .ease(d3.easeCubic)
+        // .delay((d, i) => {
+        //     // console.log(d, i)
+        //     // return i * 10;
+        //     return i * Math.random() * 0.2;
+            
+        //   })
+        .attr("visibility", "visible")
+
+    // select bars with a theme and transition them back in old axis
+    rectsThemes = d3.selectAll(".stackedBars")
+         .selectAll("rect")
+         .filter(d=>(d.key.theme!=="No theme")&&(d.data.country==="All countries"))
+         .transition().duration("2500")
+         .ease(d3.easeLinear)
+         .delay((d, i) => {
+            // console.log(d, i)
+            return i * 2;
+            // return i * Math.random() * 0.5;
+            
+         })
+         .attr("x", (d, i) => x(d.data.country))
+         // .attr("height", "4px")
+         .attr("height", d => d.data[d.key.word]===0 || d.data[d.key.word]===null? 0:height/series.length)
+         .attr("width", x.bandwidth())
+         .attr("y", d => d.data[d.key.word]!==0 || d.data[d.key.word]!==null? y(d.data[d.key.word]):y(null))
+         .attr("transform", `translate(0,0)`)
+
 
 }
 
@@ -363,6 +408,14 @@ function colorThemes() {
     //   .attr("fill", d=>themes.filter(c=>c.word===d.key)[0].theme==="female_bias"?"#0BBF99":
     //                     themes.filter(c=>c.word===d.key)[0].theme==="empowerement"?"#F7DC5B":
     //                     themes.filter(c=>c.word===d.key)[0].theme==="violence"?"#F2C5D3":"lightgrey")
+    // .transition().duration("3000")
+    //     .ease(d3.easeLinear)
+    //     .delay((d, i) => {
+    //         // console.log(d, i)
+    //         // return i * 10;
+    //         return i * Math.random() * 0.02;
+            
+    //       })
     .attr("fill", d=>d.key.theme==="female stereotypes"?"#0BBF99":
                     d.key.theme==="empowerement"?"#F7DC5B":
                     d.key.theme==="violence"?"#F2C5D3":"lightgrey")
@@ -422,6 +475,11 @@ function highlightWords(word, hoverType, d, newScale, changeScale, transform) {
 }
 
 function unHighlightWords(word, hoverType) {
+
+//      // select bars and color them grey (needed for backwards scroll)
+//      d3.selectAll(".stackedBars")
+//      .selectAll("rect")
+//    .attr("fill", "lightgrey")
 
     if (hoverType === "inTextHover") {
 
@@ -485,7 +543,7 @@ function renderThemeBars(data, dataFreq) {
 
 
     // heightChart = 5000 - margin.top - margin.bottom
-    heightChart = height*4.4 - margin.top - margin.bottom
+    heightChart = height*4.8 - margin.top - margin.bottom
     // heightChart = height*7.5 - margin.top - margin.bottom
 
     // var height = 600 - margin.top - margin.bottom
@@ -656,15 +714,17 @@ function renderThemeBars(data, dataFreq) {
     rectsNoThemes = d3.selectAll(".stackedBars")
         .selectAll("rect")
         .filter(d=>(d.key.theme==="No theme")||(d.data.country!=="All countries"))
-        .transition().duration("3000")
-        .ease(d3.easeCubic)
-        .delay((d, i) => {
-            // console.log(d, i)
-            // return i * 10;
-            return i * Math.random() * 0.2;
+        // .transition().duration("3000")
+        // .ease(d3.easeCubic)
+        // .delay((d, i) => {
+        //     // console.log(d, i)
+        //     // return i * 10;
+        //     return i * Math.random() * 0.2;
             
-          })
-        .remove()
+        //   })
+        .attr("visibility", "hidden")
+        // .attr("opacity", 0)
+        // .remove()
     
 }
 

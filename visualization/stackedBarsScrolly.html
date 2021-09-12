@@ -75,48 +75,85 @@
       </div>
 
      <article id="stackedChartLegend">
-       <div class='step' word="steal" task="drawbars" data-index='0'>
-         Since 2005, a total of <b>406 unique words</b> have been used by Indian, South African, English, and American newsrooms in 
+       <div class='step' task="drawbars" data-index='0'>
+         Since 2005, a total of <b>1231 unique words</b> have been used by Indian, South African, English, and American newsrooms in 
         headlines that speak about <b>women</b>. But do cultural/geographical/political differences influence the way we portray women?
        </div>
-       <div class='step' word="man" task="highlightwords" hovertype="inTextHover" data-index='1'>
+       <div class='step' word="steal" task="highlightwords" hovertype="inTextHover" data-index='1'>
+        Highlight a word and allow them to hover and see random headlines, for example 
+            <span class="stackedBarTextAnnotation" id="inTextMan" value="steal" hovertype="inTextHover"><b>steal</b></span> is a word we could highlight. 
+      </div>
+      <div class='step' word="study" task="highlightwords" hovertype="inTextHover" data-index='2'>
+        Highlight differences between countries, the word  
+            <span class="stackedBarTextAnnotation" id="inTextMan" value="study" hovertype="inTextHover"><b>study</b></span> can be the first difference. 
+      </div>
+      <div class='step' word="marry" task="highlightwords" hovertype="inTextHover" data-index='3'>
+        Highlight differences between countries, the word  
+            <span class="stackedBarTextAnnotation" id="inTextMan" value="marry" hovertype="inTextHover"><b>marry</b></span> can be the second difference. 
+      </div>
+      <div class='step' word="man" task="highlightwords" hovertype="inTextHover" data-index='4'>
+        Highlight similarities. Start with
+            <span class="stackedBarTextAnnotation" id="inTextMan" value="man" hovertype="inTextHover"><b>man</b></span> and talk about the meaning. 
+      </div>
+       <!-- <div class='step' word="man" task="highlightwords" hovertype="inTextHover" data-index='1'>
         Across 4 continents, the words most frequently used in headlines about women are strikingly similar. 
             <span class="stackedBarTextAnnotation" id="inTextMan" value="man" hovertype="inTextHover"><b>man</b></span> tops the charts in all 4 countries, followed by
             <span class="stackedBarTextAnnotation" id="inTextKill" value="kill" hovertype="inTextHover"><b>kill</b></span>, 
             <span class="stackedBarTextAnnotation" id="inTextDie" value="die" hovertype="inTextHover"><b>die</b></span>,
             and <span class="stackedBarTextAnnotation" id="inTextPolice" value="police" hovertype="inTextHover"><b>police</b></span>. You get the idea... 
-      </div>
-      <div class='step' word="marry" task="highlightwords" hovertype="inTextHover" data-index='2'>
-        Talk about another word, for example <span class="stackedBarTextAnnotation" id="inTextMarry" value="marry" hovertype="inTextHover"><b>marry</b></span>.
+      </div> -->
+      <div class='step' word="first" task="highlightwords" hovertype="inTextHover" data-index='5'>
+        Continue with another similar word, for example <span class="stackedBarTextAnnotation" id="inTextMarry" value="first" hovertype="inTextHover"><b>first</b></span>
+        and talk about the meaning.
      </div>
-      <div class='step' theme="violence" task="highlightthemes" data-index='3'>
-        In fact, it turns out that most words
+      <div class='step' theme="violence" task="highlightthemes" data-index='6'>
+        Introduce themes. In fact, it turns out that most words
             used in headlines about women can be categorized into distinct categories: 
             <span class="stackedBarThemeAnnotation" id="inTextViolence" value="violence"><b>violence</b></span> and 
-            <span class="stackedBarThemeAnnotation" id="inTextBias" value="female_bias"><b>women stereotypes</b></span><br><br>
-        But what about language that is <span class="stackedBarThemeAnnotation" id="inTextEmpowerment" value="empowerement"><b>empowering</b></span> towards women?
+            <span class="stackedBarThemeAnnotation" id="inTextBias" value="female_bias"><b>women stereotypes</b></span>
+      </div>
+      <div class='step' word="kill" task="highlightwords" hovertype="inTextHoverThemes" data-index='7'>
+        Talk about how there are many stories of violence with words such as  
+            <span class="stackedBarTextAnnotation" id="inTextKill" value="kill" hovertype="inTextHover"><b>kill</b></span>, 
+            <span class="stackedBarTextAnnotation" id="inTextDie" value="die" hovertype="inTextHover"><b>die</b></span>,
+            and <span class="stackedBarTextAnnotation" id="inTextPolice" value="police" hovertype="inTextHover"><b>police</b></span>. 
+      </div>
+      <div class='step' word="pregnant" task="highlightwords" hovertype="inTextHoverThemes" data-index='8'>
+        Talk about how there are many stories where women embody gender stereotypes such as  
+            <span class="stackedBarTextAnnotation" id="inTextKill" value="mother" hovertype="inTextHover"><b>mother</b></span>, 
+            <span class="stackedBarTextAnnotation" id="inTextDie" value="wife" hovertype="inTextHover"><b>wife</b></span>,
+            and <span class="stackedBarTextAnnotation" id="inTextPolice" value="pregnant" hovertype="inTextHover"><b>pregnant</b></span>. 
+      </div>
+      <div class='step' theme="empowerement" task="highlightthemes" data-index='9'>
+        Talk about lack of empowerment. But what about language that is <span class="stackedBarThemeAnnotation" id="inTextEmpowerment" value="empowerement"><b>empowering</b></span> towards women?
         Those words rank much lower in the frequency chart...
       </div>
-      <div class='step' word="boss" task="highlightwords" data-index='4'>
-        Talk about another word, for example <span class="stackedBarTextAnnotation" id="inTextBoss" value="boss" hovertype="normalHover"><b>boss</b></span>.
+      <div class='step' word="success" task="highlightwords" hovertype="inTextHoverThemes" data-index='10'>
+        For example talk about the word 
+            <span class="stackedBarTextAnnotation" id="inTextKill" value="success" hovertype="inTextHover"><b>success</b></span>
       </div>
-      <div class='step' task="tooltip" data-index='5'>
+      <!-- <div class='step' word="boss" task="highlightwords" data-index='4'>
+        Talk about another word, for example <span class="stackedBarTextAnnotation" id="inTextBoss" value="boss" hovertype="normalHover"><b>boss</b></span>.
+      </div> -->
+      <div class='step' task="tooltip" data-index='11'>
         Explore and interact with the chart on your own!
       </div>
-      <div class='step' id="stepSpacer" task="exploreChart" data-index='6'>
+      <div class='step' id="stepSpacer" task="exploreChart" data-index='12'>
       </div>
-      <div class='step' id="stepSpacer" task="exploreChart" data-index='7'>
+      <div class='step' id="stepSpacer" task="exploreChart" data-index='13'>
       </div>
-      <div class='step' id="stepSpacer" task="exploreChart" data-index='8'>
+      <div class='step' id="stepSpacer" task="exploreChart" data-index='14'>
       </div>
-      <div class='step' id="stepSpacer" task="exploreChart" data-index='9'>
+      <div class='step' id="stepSpacer" task="exploreChart" data-index='15'>
       </div>
-      <div class='step' id="stepSpacer" task="exploreChart" data-index='10'>
+      <div class='step' id="stepSpacer" task="exploreChart" data-index='16'>
       </div>
+      <!-- <div class='step' id="stepSpacer" task="exploreChart" data-index='11'>
+      </div> -->
       <!-- <div class='step' class="spacer" data-index='6' task="none"></div>
       <div class='step' class="spacer" data-index='6' task="none"></div> -->
-      <div class='step' task="themeBarsTransition" data-index='11'>
-        Themes transition here...
+      <div class='step' task="themeBarsTransition" data-index='17'>
+        But how much fewer are empowering words compared to violence and women stereotypes?
       </div>
      </article>
      <!-- <div id="themesStackedChart">
